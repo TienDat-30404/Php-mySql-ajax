@@ -1,0 +1,370 @@
+
+.content 
+{
+    width : 80%;
+    display : flex;
+    margin : 0 auto;
+    background: linear-gradient(to bottom, rgb(255, 108, 107), #ff5050);
+    display : flex;
+    flex-wrap: wrap;
+}
+.content_category
+{
+    width : 80%;
+    display : flex;
+    margin : 0 auto;
+    background: linear-gradient(to bottom, rgb(255, 108, 107), #ff5050);
+    display : flex;
+    flex-wrap: wrap;
+}
+.content_searchAdvanced
+{
+    width : 80%;
+    display : flex;
+    margin : 0 auto;
+    background: linear-gradient(to bottom, rgb(255, 108, 107), #ff5050);
+    display : flex;
+    flex-wrap: wrap;
+}
+.content_search
+{
+    width : 80%;
+    display : flex;
+    margin : 0 auto;
+    /* background: linear-gradient(to bottom, rgb(255, 108, 107), #ff5050); */
+    display : flex;
+    flex-wrap: wrap;
+}
+.content_product
+{
+    width : 18%;
+    height : 400px;
+    padding-left : 20px;
+    display : flex;
+    align-items: center;
+}
+.content_product-information
+{
+    width : 100%;
+    height: 330px;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 0px 2px #f4f4f4;
+    border-radius: 15px;
+}
+
+.content_product-information img
+{
+    border-radius : 15px;
+    width : 100%;
+    height : 250px;
+}
+.content_product-information-bought
+{
+    width : 100%;
+    border-top : 1px solid rgba(255, 255, 255, 0.9);
+}
+.content_product-information-bought-name
+{
+    padding-left: 12px;
+    color: black;
+    font-weight: 600;
+    font-size: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+.content_product-information-bought-name:hover
+{
+    color : #f2586e;
+    cursor : pointer;
+}
+.content_product-information-bought-price
+{
+    display : flex;
+    margin-left : 11px;
+    margin-top : 10px;
+}
+.content_product-information-bought-price-number
+{
+    font-size: 15px;
+    color : black;
+    padding-right : 10px;
+    margin-top : 0;
+    margin-bottom : 0;
+}
+.content_product-information-bought-price-text
+{
+    font-size : 11px;
+    text-decoration: underline;
+    font-weight: 500;
+    margin-top : 0;
+    margin-bottom : 0;
+}
+.content_product-information-bought-priceOrigin
+{
+    display : flex;
+    padding-left : 11px;
+    margin-top : 5px;
+}
+.content_product-information-bought-priceOrigin-text
+{
+    padding-right : 8px;
+    color : #f58595;
+    font-weight: 500;
+    margin-top : 0;
+    margin-bottom : 0;
+    font-size : 15px;
+}
+.content_product-information-bought-priceOrigin-number
+{
+    color : #959595;
+    text-decoration : line-through;
+    margin-top : 0;
+    margin-bottom : 0;
+}
+.content_product-information-button
+{
+    width : 175px;
+    height : 40px;
+    background-color : white;
+    border : 1.6px dotted #fbd2d9;
+    display : flex;
+    justify-content: center;
+    align-items: center;
+    margin : 0 auto;
+    text-align: center;
+    border-radius: 5px;
+    color : #f2586e;
+    font-size : 15px;
+    font-weight: 600;
+    margin-top : 30px;
+}
+.content_product-information-button:hover
+{
+    background-color: #f2586e;
+    color : white;
+    cursor : pointer;
+}
+.content_product-information:hover img
+{
+    transform : scale(1.2);
+    transition : transform 0.5s;
+}
+.content_product-information:hover .content_product-information-bought
+
+{
+    transform: translateY(-50px); 
+    transition : transform 0.5s;
+}
+.content_product-information:hover .content_product-information-button
+{
+    transform: translateY(-50px); 
+    transition : transform 0.5s;
+}
+@media (max-width: 1500px){
+    .content_product
+    { 
+      width : 200px;
+      display : flex;
+      margin : 0 auto;
+    }
+}
+
+.pagination_homepage
+{
+    width : 20%;
+    height : 40px;
+    display : flex;
+    margin : 0 auto;
+    margin-top : 20px;
+    margin-bottom : 0px;
+}
+
+.pagination_homepage li
+{
+    width : 20%;
+    height : 100%;
+    list-style: none;
+    color : red;
+    background-color: #ccc;
+    cursor : pointer;
+    margin-left : 15px;
+    display : flex;
+    justify-content: center;
+    align-items: center;
+}
+@media (max-width : 1200px)
+{
+    .pagination_homepage 
+    {
+        display : flex;
+        justify-content: center;
+    }
+    .pagination_homepage li 
+    {
+        padding : 2px 20px;
+        margin : 0 auto;
+        margin-left : 10px;
+    }
+}
+.hide 
+{
+    display : none;
+}
+.pagination_homepage .headPage 
+{
+    background-color: #f2586e;
+    color : black;
+}
+
+.pagination_homepage .searchPagination 
+{
+    width : 100px;
+    height : 100px;
+    background-color: red;
+}
+
+
+.pagination_category
+{
+    width : 20%;
+    height : 40px;
+    display : flex;
+    margin : 0 auto;
+    margin-top : 20px;
+    margin-bottom : 20px;
+}
+
+.pagination_category li
+{
+    width : 20%;
+    height : 100%;
+    list-style: none;
+    color : red;
+    background-color: #ccc;
+    cursor : pointer;
+    margin-left : 15px;
+    display : flex;
+    justify-content: center;
+    align-items: center;
+}
+@media (max-width : 1200px)
+{
+    .pagination_category 
+    {
+        display : flex;
+        justify-content: center;
+    }
+    .pagination_category li 
+    {
+        padding : 2px 20px;
+        margin : 0 auto;
+        margin-left : 10px;
+    }
+}
+
+.pagination_category .headPage 
+{
+    background-color: #f2586e;
+    color : black;
+}
+
+.pagination_search
+{
+    width : 20%;
+    height : 40px;
+    display : flex;
+    margin : 0 auto;
+    margin-top : 20px;
+    margin-bottom : 20px;
+}
+
+.pagination_search li
+{
+    width : 20%;
+    height : 100%;
+    list-style: none;
+    color : red;
+    background-color: #ccc;
+    cursor : pointer;
+    margin-left : 15px;
+    display : flex;
+    justify-content: center;
+    align-items: center;
+}
+@media (max-width : 1200px)
+{
+    .pagination_search 
+    {
+        display : flex;
+        justify-content: center;
+    }
+    .pagination_search li 
+    {
+        padding : 2px 20px;
+        margin : 0 auto;
+        margin-left : 10px;
+    }
+}
+
+.pagination_search .headPage 
+{
+    background-color: #f2586e;
+    color : black;
+}
+.hide 
+{
+    display : none;
+}
+
+
+
+
+
+
+
+.pagination_searchAdvanced
+{
+    width : 100%;
+    height : 40px;
+    display : flex;
+    justify-content: center;
+    margin-top : 20px;
+    margin-bottom : 30px;
+    margin-right : 0;
+    padding-left : 0;
+}
+.searchAdvanced_block 
+{
+    display : none;
+}
+.pagination_searchAdvanced li
+{
+    width : 5%;
+    height : 100%;
+    list-style: none;
+    color : red;
+    background-color: #ccc;
+    cursor : pointer;
+    margin-left : 15px;
+    display : flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.pagination_searchAdvanced .headPage 
+{
+    background-color: #f2586e;
+    color : black;
+}
+.clickCategory:hover 
+{
+    cursor : pointer;
+}

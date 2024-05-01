@@ -1,0 +1,102 @@
+.container 
+{
+    display : flex;
+    width : 100%;
+}
+.container_left-content a
+{
+    text-decoration: none;
+    width : 100%;
+}
+.container_left 
+{
+    width : 20%;
+    background-color:  #00264d;
+    height : 677px;
+}
+.container_left-content 
+{
+    padding-left : 0;
+    display : flex;
+    flex-wrap: wrap;
+    width : 100%;
+}
+.container_left-content li 
+{
+    list-style : none;
+    width : 100%;
+    height : 70px;
+    display: flex;
+    align-items: center;
+}
+.container_left-content li:hover 
+{
+    background-color: rgb(51, 102, 255);
+}
+.container_left-content i
+{
+    color : white;
+    margin-left : 30px;
+    font-size: 25px;
+}
+.container_left-content h3 
+{
+    color : white;
+    padding-left : 25px;
+}
+.account 
+{
+    width : 100%;
+    display : flex;
+    height : 70px;
+}
+.account_content 
+{
+    display : none;
+}
+.account_title
+{
+    display : flex; 
+    flex-wrap : wrap;
+    margin-top : 0;
+    margin-bottom : 0;
+    width : 100%;
+    align-items: center;
+}
+.account_title:hover 
+{
+    background-color: rgb(51, 102, 255);
+    cursor : pointer;
+}
+
+.icondown_account:hover 
+{
+    opacity : 0.5;
+}
+.text_account-exist 
+{
+    width : 100%; 
+    padding : 7px;
+    font-size : 18px;
+    align-items: center;
+    color : #ccc;
+    padding-left : 30px;
+}
+.text_account-exist:hover 
+{
+    background-color: rgb(51, 102, 255);
+    cursor : pointer;
+}
+.text_account-delete 
+{
+    width : 100%; 
+    padding : 7px;
+    font-size : 18px;
+    color : #ccc;
+    padding-left : 30px;
+}
+.text_account-delete:hover 
+{
+    background-color: rgb(51, 102, 255);
+    cursor : pointer;
+}

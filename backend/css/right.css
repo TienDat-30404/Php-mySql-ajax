@@ -1,0 +1,340 @@
+.container_right 
+{
+    width : 80%;
+    background-color: rgb(224, 224, 235);
+}
+a 
+{
+    text-decoration: none;
+}
+.container_right-header 
+{
+    width : 100%;
+    height :  60px;
+    display : flex;
+    align-items: center;
+    background-color: white;
+    justify-content: space-between;
+    margin-bottom : 10px;
+}
+.container_right-header i 
+{
+    margin-left : 20px;
+    font-size : 20px;
+}
+.container_right-header img 
+{
+    width : 40px;
+    height : 40px;
+    margin-right : 20px;
+}
+.container_right-header-search 
+{
+    width : 35%;
+    height : 35px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    border : 2px solid #ccc;
+    overflow: hidden;
+}
+.container_right-header-search i 
+{
+    margin-right : 5px;
+    width : 5%;
+}
+.container_right-header-search input 
+{
+    outline : none;
+    border : none;
+    width : 95%;
+    height : 100%;
+    font-size: 16px;
+}
+.container_right-content
+{
+    width : 100%;
+}
+td 
+{
+    border: 1px solid rgba(0, 0, 0, 0.3); 
+    text-align: center;
+}
+th 
+{
+    border: 1px solid rgba(0, 0, 0, 0.3); 
+}
+thead tr th 
+{
+    height : 30px;
+}
+ tbody tr td
+{
+    height : 30px;
+}
+
+
+/* Add Usee */
+
+.modal 
+{
+    position : fixed;
+    top : 0;
+    bottom : 0;
+    left : 0;
+    right : 0;
+    z-index: 2;
+    display : flex;
+}
+.modal_base 
+{
+    position : absolute;
+    width : 100%;
+    height : 100%;
+    background-color : rgba(0, 0, 0, 0.5);
+}
+.modal_base-account
+{
+   height : 610px;
+   background-color: rgb(240, 245, 245);
+   width : 600px;
+    margin : auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+}
+.user_title 
+{
+    text-align: center;
+    margin-top : 10px;
+    margin-bottom : 0;
+}
+.user_add
+{
+    padding-left : 0;
+    width : 100%;
+    display : flex;
+    flex-wrap: wrap;
+    margin-left : 70px;    
+}
+.user_add input 
+{
+    border-radius: 15px;
+    outline: none;
+    border : 2px solid #ccc;
+}
+.user_add li select 
+{
+    width : 100%;
+    height : 30px;
+    border-radius: 15px;
+    text-align: center;
+}
+.user_add li h4
+{
+    margin-top : 15px;
+    margin-bottom : 15px;
+    font-family: nunito-sans, sans-serif, Helvetica, Arial;
+}
+.user_add li:nth-child(1) 
+{
+    width : 30%;
+    height : 25px;
+    font-size : 14px;
+    text-align: center;
+}
+.user_add li:nth-child(2) input
+{
+    width : 40%;
+    height : 25px;
+    font-size : 20px;
+    text-align: center;
+}
+.user_add li:nth-child(3) input
+{
+    width : 55%;
+    height : 35px;
+    font-size : 20px;
+    text-align: center;
+    margin-left : 75px;
+}
+.user_add li:nth-child(4) input
+{
+    width : 55%;
+    height : 35px;
+    font-size : 20px;
+    text-align: center;
+    margin-left : 55px;
+}
+.user_add li:nth-child(5) input
+{
+    width :55%;
+    height : 35px;
+    font-size : 20px;
+    text-align: center;
+    margin-left : 65px;
+}
+.user_add li:nth-child(6) input
+{
+    width :55%;
+    height : 35px;
+    font-size : 20px;
+    text-align: center;
+    margin-left : 75px;
+}
+.user_add li:nth-child(7) input
+{
+    width :55%;
+    height : 35px;
+    font-size : 20px;
+    text-align: center;
+    margin-left : 50px;
+}
+.user_add li 
+{
+    list-style : none;
+    width : 100%;
+    
+}
+
+.user_add li:nth-child(1)
+{
+    width : 20%;
+    margin-right : 40px;
+}
+.user_add li:nth-child(2)
+{
+    width : 70%;
+}
+.user_add li:nth-child(3)
+{
+    display : flex;
+    margin-top : 30px;
+}
+.user_add li:nth-child(4)
+{
+    display : flex;
+    margin-top : 30px;
+    align-items: center;
+} 
+.user_add li:nth-child(5)
+{
+    display : flex;
+    margin-top : 30px;
+    align-items: center;
+}
+.user_add li:nth-child(6)
+{
+    display : flex;
+    margin-top : 30px;
+    align-items: center;
+}
+.user_add li:nth-child(7)
+{
+    display : flex;
+    margin-top : 30px;
+    align-items: center;
+}
+.user_add li:nth-child(8)
+{
+    width : 100%;
+    display : flex;
+    margin-top : 30px;
+    justify-content: center;
+    margin-left : -70px;
+}
+.user_add li h4 
+{
+    font-family: "Roboto, sans-serif";
+    font-style: italic;
+    
+}
+.button_add 
+{
+    padding : 5px;
+    background-color: #f2586e;
+}
+.button_add:hover 
+{
+    opacity: 0.5;
+    cursor : pointer;
+}
+
+
+/* Add Product */
+.productAdd 
+{
+    width : 95%;
+    height : 95%;
+    background-color: #ccc;
+    border-radius: 10px;
+    margin : auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.add_product 
+{
+    width : 100%;
+    
+}
+.exit_add-product 
+{
+    position : absolute;
+    right : 20px;
+    top : 10px;
+    font-size : 35px;
+}
+.exit_add-product:hover 
+{
+    opacity: 0.5;
+}
+.add_product-title 
+{
+    text-align: center;
+    color : red;
+    margin-top : 7px;
+    margin-bottom : 0;
+}
+.add_product-content
+{
+    display : flex;
+    flex-wrap: wrap;
+    padding-left : 0;
+}
+.add_product-content li 
+{
+    display : flex;
+    height : 20px;
+    align-items: center;
+    margin-left : 20px;
+    margin-top : 20px;
+}
+.add_product-content li input 
+{
+    margin-left : 10px;
+    height : 22px;
+}
+.add_product-content li input[type="submit"]
+{
+    height : 40px;
+    width : 70px;
+    outline : none;
+    border : none;
+    font-size : 17px;
+}
+.add_product-content li input[type="submit"]:hover 
+{
+    background-color: #f2586e;
+    color : white;
+    cursor : pointer;
+}
+.product_noExist 
+{
+    height : 63%;
+    overflow-y: auto;
+    margin-top : 50px;
+}

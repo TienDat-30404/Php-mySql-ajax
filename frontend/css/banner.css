@@ -1,0 +1,56 @@
+.slideshow 
+{
+    width : 80%;
+    height : 350px;
+    display : flex;
+    margin : 0 auto;
+    margin-bottom : 30px;
+}
+.banner
+{
+    position : relative;
+    height : 100%;
+    width : 66%;
+    display : flex;
+    margin : auto;
+}
+.box 
+{
+    width : 100%;
+    height : 100%;
+    border : 1px solid #bbb;
+    border-radius: 6px;
+    box-sizing: border-box;
+    position : absolute;
+        overflow : hidden;
+}
+.box img 
+{
+    width : 100%;
+    height : 100%;
+}
+.promotion 
+{
+    width : 32.5%;
+    height : 100%;
+}
+.promotion_1 
+{
+    width : 100%;
+    height : 50%;
+}
+.promotion_2 
+{
+    width : 100%;
+    height : 50%;
+}
+.promotion_1 img 
+{
+    width : 100%;
+    height : 100%;
+}
+.promotion_2 img 
+{
+    width : 100%;
+    height : 100%;
+}

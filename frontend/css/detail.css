@@ -1,0 +1,195 @@
+.modal 
+{
+    position : fixed;
+    top : 0;
+    bottom : 0;
+    left : 0;
+    right : 0;
+    z-index: 3;
+    display : flex;
+}
+.modal_base 
+{
+    position : absolute;
+    width : 100%;
+    height : 100%;
+    background-color : rgba(0, 0, 0, 0.5);
+}
+
+.detail 
+{
+    display : flex;
+    background: #f1f1f1;
+    height : 75%;
+    width : 70%;
+    margin : auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 7px;
+    z-index : 2;
+}
+.detail_img 
+{
+    width : 40%;
+    height : 80%;
+    align-self: center;
+    margin-left : 20px;
+    
+}
+.detail_img-css
+{
+    
+    width : 100%;
+    height : 100%;
+}
+.detail_product 
+{
+    width : 60%;
+    margin : 0 auto;
+    padding : 30px;
+}
+.detail_product-name 
+{
+    color : rgb(51, 51, 51);
+    font-style : italic;
+    margin-bottom : 8px;    
+}
+.detail_product-category
+{
+    width : 100%;
+    padding-left : 0;
+    margin-top : 0;
+    display : flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.detail_product-category li 
+{
+    display : flex;
+    list-style: none;
+}
+.detail_product-category li:nth-child(2)
+{
+    padding-left : 40px;
+}
+
+.detail_product-category li h4 
+{
+    margin-top : 0;
+    margin-bottom : 0;
+    padding-top : 10px;
+    padding-bottom : 10px;
+}
+.detail_product-category li:nth-child(5)
+{
+    width : 100%;
+    display : flex;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.detail_product-category 
+{
+    display : flex;
+    align-items: center;
+}
+
+.detail_product-category-title 
+{
+    color : rgb(51, 51, 51);
+    font-family: "Roboto, sans-serif";
+    font-weight: 400;
+    font-size : 17px;
+    margin-bottom : 0;
+}
+.detail_product-category-name 
+{
+    padding-left : 3px;
+    font-family: "Roboto, sans-serif";
+    font-size : 17px;
+    margin-bottom : 0;
+}
+
+.detail_product-category li .story
+{
+    color : rgb(36, 137, 244);
+}
+.detail_product-category li .author
+{
+    color : black;
+}
+.detail_product-category li .publisher
+{
+    color : black;
+}
+.detail_product-category li .year
+{
+    color : rgb(36, 137, 244);
+}
+
+.detail_product-category li .descripbe
+{
+    color : #339966;
+    line-height : 22px;
+}
+.detail_product-category li:nth-child(6) .price
+{
+    color : rgb(201, 33, 39);
+    font-family: Roboto, sans-serif;
+    font-weight : 700;
+    font-size : 32px;
+}
+.detail_product-category li:nth-child(6) .text_price
+{
+    color : rgb(201, 33, 39);
+    font-family: Roboto, sans-serif;
+    font-weight : 700;
+    font-size : 32px;
+    margin-left : 7px;
+}
+.detail_product-category li:nth-child(7) .text_number 
+{
+    color : rgb(85, 85, 85);
+    font-size : 16px;
+    font-family: Roboto, sans-serif;
+    font-weight: 600;
+    margin-right : 30px;
+}
+.detail_product-category li:nth-child(7) input 
+{
+    border-radius: 5px;
+    font-size : 15px;
+    width : 40%;
+} 
+.detail_button 
+{
+    border-radius: 10px;
+    padding : 20px;
+    background-color: #f2586e;
+    border : none;
+    display : flex;
+    margin : 15px auto;
+    font-size : 16px;
+    color : white;
+
+}
+.detail_button:hover 
+{
+    background-color: red;
+    color : black;
+    cursor : pointer;
+}
+.detail_exit 
+{
+    position : absolute;
+    top : 3%;
+    right : 3%;
+    font-size : 22px;
+}
+.detail_exit:hover 
+{
+    opacity: 0.5;
+    cursor : pointer;
+}

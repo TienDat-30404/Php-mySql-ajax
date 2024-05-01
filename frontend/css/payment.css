@@ -1,0 +1,158 @@
+.payment 
+{
+    width : 100%;
+    box-sizing: border-box;
+    position : relative;
+    background-color: red;
+}
+.payment_title-text 
+{
+    font-family: cursive;
+    
+}
+.payment_information 
+{
+
+    width : 80%;
+    display : flex;
+    position : absolute;
+    left : 10%;
+}
+.payment_information-user 
+{
+    width : 40%;
+}
+
+.payment_information-user-order 
+{
+    padding-left : 0;
+    width : 100%;
+    display : flex;
+    flex-wrap: wrap;
+}
+.payment_information-user-order li select 
+{
+    width : 100%;
+    height : 30px;
+}
+
+.payment_information-user-order li:nth-child(2) input
+{
+    width : 60%;
+    height : 25px;
+    font-size : 14px;
+}
+.payment_information-user-order li:nth-child(3) textarea
+{
+    width : 79%;
+    height : 100px;
+    font-size: 20px;
+    font-family: "Roboto, sans-serif";
+}
+.payment_information-user-order li 
+{
+    list-style : none;
+    width : 100%;
+    
+}
+.payment_information-user-order li:nth-child(1)
+{
+    width : 40%;
+    margin-right : 45px;
+}
+.payment_information-user-order li:nth-child(2)
+{
+    width : 50%;
+}
+.payment_information-user-order li h4 
+{
+    font-family: "Roboto, sans-serif";
+    font-style: italic;
+    
+}
+.payment_information-user-order-method 
+{
+}
+.payment_information-product 
+{
+    width : 60%;
+    background-color: #ebe9e9;
+}
+.payment_information-prodcut-title 
+{
+    border-bottom : 1px solid #ccc;
+    height : 40px;
+}
+.payment_information-prodcut-title h2 
+{
+    font-family: "Roboto, sans-serif";
+    text-align: center;
+}
+.payment_information-product-order 
+{
+    padding-left : 30px;
+    width : 90%;
+    display : flex;
+    justify-content: space-between;
+    margin-bottom : 0;
+}
+
+.payment_information-product-order li h4 
+{
+    font-family: "Roboto, sans-serif";
+    font-style: italic;
+    font-weight: 500;
+    margin-top : 0;
+}
+.payment_information-product-order li h3 
+{
+    margin-top : 0;
+}
+.payment_information-product-order li
+{
+    list-style: none;
+}
+.payment_information-product-order li:nth-child(2)
+{
+    text-align: center;
+}
+.payment_information-product-order li:nth-child(3)
+{
+    text-align: center;
+}
+
+.payment_information-product-total 
+{
+    display : flex;
+    justify-content: space-between;
+    width : 88%;
+    padding-left : 30px;
+}
+.payment_information-product-total-text 
+{
+    margin-top : 0;
+}
+.payment_information-product-total-number 
+{
+    color : red;
+    margin-top : 0;
+}
+.payment_button
+{
+    width : 90%;
+    height : 40px;
+    border : none;
+    background-color: aqua;
+    margin-left: 30px;
+    margin-bottom  : 20px;
+    font-size : 20px;
+    color : rgb(255, 77, 0);
+    font-weight: 600;
+    font-family: "Roboto, sans-serif";
+}
+.payment_button:hover 
+{
+    background-color: #f2586e;
+    color : white;
+    cursor : pointer;
+}

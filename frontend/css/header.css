@@ -1,0 +1,388 @@
+.header 
+{
+    width : 100%;
+    height : 100px;
+    /* background-color: rgb(111, 212, 168); */
+}
+.header_content
+{
+    width : 80%;
+    height : 100%;
+    display : flex;
+    margin : 0 auto;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.header_content-logo 
+{
+    width : 20%;
+    height : 100%;
+}
+.header_content-logo-img
+{
+    width : 100%;
+    height :100%;
+    object-fit: contain;
+}
+.header_content-search 
+{
+    width : 40%;
+    height : 40%;
+    border-radius: 10px;
+    overflow: hidden;
+    border : 1px solid #ccc;
+
+}
+.header_content-search-input
+{
+    width : 80%;
+    height : 100%;
+    outline : none;
+    border : none;
+    font-size : 17px;
+    padding-left : 15px;
+    color : rgb(84, 80, 89);
+    font-weight: 100; 
+
+}
+.header_content-search-submit
+{
+    width : 15%;
+    height : 80%;
+    background-color: #ff5050;
+    border : none;
+    border-radius: 5px;
+    color : white;
+}
+.header_content-search-submit:hover 
+{
+    opacity : 0.5;
+    cursor : pointer;
+}
+.header_content-search form
+{
+    width : 100%;
+    height : 100%;
+}
+.header_content-user
+{
+    display : flex;
+    width : 25%;
+    align-items : center;
+    justify-content: space-evenly;
+    padding-left : 0;
+}
+.header_content-user-notification
+{
+    
+    align-items: center;
+}
+.header_content-user li 
+{
+    list-style: none;
+    padding-right : 15px;
+    text-align: center;
+    width : 40%;
+}
+.header_content-user li i 
+{
+    font-size : 22px;
+    color : rgb(100, 100, 100);
+    font-style :unset;
+}
+.header_content-user li h5 
+{
+    margin-top : 10px;
+    margin-bottom : 0;
+    color : rgb(122, 126, 127);
+    font-family: nunito-sans, sans-serif, Helvetica, Arial;
+    font-size : 12px;
+    font-weight: 400;
+}
+
+.header_search-advanced 
+{
+    display : flex;
+    flex-wrap: wrap;
+    width : 100%;
+    height : 60px;
+    justify-content: space-evenly;
+    margin-bottom : 10px;
+    z-index: 1;
+}
+
+.header_search-block
+{
+    box-shadow: 1px 1px 3px 3px #ccc;
+    width : 80%;
+    display : none;
+    height : 150px;
+    display : flex;
+    margin : 0 auto;
+    background : linear-gradient(#ff9933,#ffcc66);
+    
+}
+.header_search-advanced-name 
+{
+    display : flex;
+    width : 30%;
+    height : 40%;
+    align-items: center;
+    margin : auto 0;
+    color : rgb(51, 51, 51);
+    font-size : 18px;
+    font-style : italic;
+}
+.header_search-advanced-name input 
+{
+    height : 100%;
+    margin-bottom : 0;
+}
+.header_search-advanced-name h4 
+{
+    margin-bottom : 0;
+    margin-top : 0;
+    margin-right : 10px;
+}
+.header_search-advanced-divide 
+{
+    display : flex;
+    height : 100%;
+    align-items: center;
+}
+.header_search-advanced-divide-text 
+{
+    color : rgb(51, 51, 51);
+    font-size : 18px;
+    font-style : italic;
+    padding-right : 15px;
+}
+.header_search-advanced-divide-select 
+{
+    height : 50%;
+}
+.header_search-advanced-price 
+{
+    display : flex;
+    height : 100%;
+    align-items: center;
+}  
+
+
+.header_search-advanced-price-from 
+{
+    display : flex;
+    height : 60%;
+    align-items: center;
+    margin-right : 10px;
+}
+.header_search-advanced-price-from-text
+{
+    color : rgb(51, 51, 51);
+    font-size : 18px;
+    font-style : italic;
+    padding-right : 10px;
+}
+.header_search-advanced-price-from-input
+{
+    height : 60%;
+}
+.header_search-advanced-price-to
+{
+    display : flex;
+    height : 60%;
+    align-items: center;
+
+}
+.header_search-advanced-price-to-text
+{
+    margin-right : 10px;
+    color : rgb(51, 51, 51);
+    font-size : 18px;
+    font-style : italic;
+}
+.header_search-advanced-price-to-input 
+{
+    height : 60%;
+}
+.button_search-advanced 
+{
+    width : 30%;
+    height : 50%;
+    text-align: center;
+    margin-top : 15px;
+}
+.text_account 
+{
+    font-size : 12px;
+    color : rgb(122, 126, 127);
+    font-family: nunito-sans, sans-serif, Helvetica, Arial;
+}
+.header_search-advanced-submit
+{
+    height : 100%;
+    border : none;
+    color : #ffffcc;
+    font-size : 18px;
+    font-style : italic;
+    border-radius: 5px;
+    background-color: #00cc00
+    ;
+}
+.header_search-advanced-submit:hover 
+{
+    
+    background-color: #f2586e;
+    cursor : pointer;
+    border : none;
+    outline : none;
+    border-radius: 3px;
+    color : white;
+}
+.icon_advanced 
+{
+    font-size: 20px;
+}
+
+.icon_advanced:hover 
+{
+    opacity: 0.5;
+    cursor : pointer;
+}
+
+
+.toast 
+{
+    z-index : 3;
+    position : fixed;
+    right : 20px;
+    top : 20px;
+}
+.added
+{
+    display : flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 10px;
+    padding : 10px 0;
+    min-width : 250px;
+    max-width : 300px;
+    border-left: 8px solid #47d864;
+    box-shadow: 4px 5px 30px rgba(0, 0, 0, 0.3);
+    animation: slideAdd ease 0.7s, fadeAdd linear 1.2s 1s forwards;
+    transition : all linear .2s;
+}
+@keyframes slideAdd
+{
+    from 
+    {
+        opacity: 0;
+        transform : translateX(calc(100% + 20px))
+    }
+    to 
+    {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+@keyframes fadeAdd 
+{
+    to 
+    {
+        opacity : 0
+    }
+}
+.added__check
+{
+    margin-left : 7px;
+}
+.added__check-icon
+{
+    color : #47d864;
+}
+.added__text
+{
+    flex-grow: 1;
+    margin-left : 8px
+}
+.added__text-content
+{
+    font-size : 15px;
+}
+.added__exit
+{
+}
+.added__exit-icon
+{
+    margin-right : 15px;
+    color : #ccc;
+}
+
+
+
+.toast_fail 
+{
+    z-index : 3;
+    position : fixed;
+    right : 20px;
+    top : 20px;
+}
+.added_fail
+{
+    display : flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 10px;
+    padding : 10px 0;
+    min-width : 250px;
+    max-width : 300px;
+    border-left: 8px solid red;
+    box-shadow: 4px 5px 30px rgba(0, 0, 0, 0.3);
+    animation: slideAdd ease 0.7s, fadeAdd linear 1.2s 1s forwards;
+    transition : all linear .2s;
+}
+@keyframes slideAdd
+{
+    from 
+    {
+        opacity: 0;
+        transform : translateX(calc(100% + 20px))
+    }
+    to 
+    {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+@keyframes fadeAdd 
+{
+    to 
+    {
+        opacity : 0
+    }
+}
+.added__check
+{
+    margin-left : 7px;
+}
+.added__check-icon
+{
+    color : #47d864;
+}
+.added__text
+{
+    flex-grow: 1;
+    margin-left : 8px
+}
+.added__text-content
+{
+    font-size : 15px;
+}
+.added__exit
+{
+}
+.added__exit-icon
+{
+    margin-right : 15px;
+    color : #ccc;
+}

@@ -1,0 +1,136 @@
+.modal
+{
+    position : fixed;
+    top : 0;
+    bottom : 0;
+    right : 0;
+    left : 0;
+    display : flex;
+    z-index: 2;
+}
+.modal_base
+{
+    position : absolute;
+    width : 100%;
+    height : 100%;
+    background-color : rgba(0, 0, 0, 0.5);
+}
+.cart {
+    background: #f1f1f1;
+    margin : auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width : 85%;
+    overflow-y : auto;
+    height : 75%;
+}
+.cart table 
+{
+    width : 100%;
+}
+.cart tbody img 
+{
+    width : 200px;
+    height : 100px;
+    object-fit: contain;
+}
+.cart td 
+{
+    border: 1px solid rgba(0, 0, 0, 0.1); 
+    text-align: center;
+}
+.cart th 
+{
+    border: 1px solid rgba(0, 0, 0, 0.1); 
+}
+.cart thead tr th
+{
+    font-family: "Roboto, sans-serif";
+    font-style: italic;
+}
+.notification_cart 
+{
+    text-align: center;
+    font-family: "Roboto, sans-serif";
+    font-style : italic;
+    color : #ff9900;
+    padding-top : 20px;
+}
+.cart_empty 
+{
+    display : flex;
+    margin : 0 auto;
+}
+.increase_quantity 
+{
+   
+    font-size : 20px;
+}
+.increase_quantity:hover
+{
+   opacity: 0.5;
+   cursor : pointer;
+}
+.decrease_quantity 
+{
+
+    font-size : 30px;
+}
+.decrease_quantity:hover 
+{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.input_quantity 
+{
+    width : 30%;
+}
+.parent_quantity 
+{
+    display : flex; 
+    justify-content : space-around;
+    align-items: center ;
+}
+.total_price-cart-user
+{
+    font-size: 20px;
+    color : #cc0000;
+    font-weight: 600;
+    font-family: "Roboto, sans-serif";
+}
+
+.payment_cart-total 
+{
+    display : flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left : 20px;
+    padding-right: 20px;
+    height : 40px;
+}
+.payment_cart-total h5 
+{
+    padding-right : 10px;
+    font-weight: 600;
+    font-style: oblique;
+}
+.payment_cart-text 
+{
+    padding : 10px;
+    background-color: green;
+    border-radius: 5px;
+    font-style: italic;
+}
+.payment_cart-text a
+{
+    color : white;
+    font-size: 20px;
+    font-family: "Roboto, sans-serif";
+}
+.payment_cart-text:hover 
+{
+    opacity: 0.5;
+    cursor : pointer;
+}

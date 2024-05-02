@@ -1,7 +1,7 @@
 <div class = modal>
     <div class = "modal_base">
         <div class = "productAdd">
-            <form method = "GET" action = "crud/handle_addProduct.php" class = "add_product" enctype="multipart/form-data">
+            <form method = "POST" action = "crud/handle_addProduct.php" class = "add_product" enctype="multipart/form-data">
                 <a class = "exit_add-product" href="index.php?title=product">x</a>
                 <h2 class = "add_product-title">Tạo mới sản phẩm</h2>
                 <ul class = "add_product-content">
@@ -136,15 +136,42 @@
     async function addProduct(nameProduct, imageProduct, priceProduct, publisherProduct, quantityProduct, 
     yearProduct, detailProduct, categoryProduct, authorProduct)
     {
-        var link = await fetch(`crud/handle_addProduct.php?name_product=${nameProduct}&image_product=${imageProduct}&price_product=
-        ${priceProduct}&publisher_product=${publisherProduct}&quantity_product=${quantityProduct}&publish_year=${yearProduct}
-        &detail_product=${detailProduct}&category_product=${categoryProduct}&author_product=${authorProduct}`);
+        var formData = new FormData();
+        formData.append('name_product', nameProduct);
+        formData.append('image_product', imageProduct);
+        formData.append('price_product', priceProduct);
+        formData.append('publisher_product', publisherProduct);
+        formData.append('quantity_product', quantityProduct);
+        formData.append('publish_year', yearProduct);
+        formData.append('detail_product', detailProduct);
+        formData.append('category_product', categoryProduct);
+        formData.append('author_product', authorProduct);
+
+        var link = await fetch('crud/handle_addProduct.php', {
+            method: 'POST',
+            body: formData
+        });
+        var json = await link.json();
+        var success = `Thêm sản phẩm ${nameProduct} vào cửa hàng thành công`;
+        var fail = `Sản phẩm ${nameProduct} đã tồn tại trong cửa hàng`;
+        if(json.status === success)
+        {
+            alert(success)
+        }
+        if(json.status === fail)
+        {
+            alert(fail)
+        }
     }
     var addButton = document.querySelector('input[name="button_addProduct"]')
     addButton.addEventListener('click', function(event)
     {
         event.preventDefault();
         var nameProduct = document.querySelector('input[name="name_product"]').value
+        if(nameProduct === "")
+        {
+            alert("Tên không được rỗng")
+        }
         var fileImage = document.querySelector('input[name="image_product"]').files[0];
         var reader = new FileReader();
         reader.onloadend = function () {
@@ -155,16 +182,13 @@
         console.log(encodedBase64Image); // In ra chuỗi base64 của ảnh
         var priceProduct = document.querySelector('input[name="price_product"]').value
         var categoryProduct = document.querySelector('select[name="category_product"]').value
-        console.log(categoryProduct)
         var authorProduct = document.querySelector('select[name="author_product"]').value
-        console.log(authorProduct)
         var publisherProduct = document.querySelector('select[name="publisher_product"]').value
         var quantityProduct = document.querySelector('input[name="quantity_product"]').value
         var publishYear = document.querySelector('input[name="publish_year"]').value
         var detailProduct = document.querySelector('textarea[name="detail_product"]').value
         addProduct(nameProduct, encodedBase64Image, priceProduct, publisherProduct, quantityProduct, publishYear,
         detailProduct, categoryProduct, authorProduct);
-        alert("Thêm sản phẩm thành công")
         };
 
         reader.readAsDataURL(fileImage);

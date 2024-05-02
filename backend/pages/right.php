@@ -35,10 +35,13 @@
                 else if($title == 'product')
                 {
                     include "content/product.php";
-                    $action = $_GET['action'];
-                    if($action == 'add')
+                    if(isset($_GET['action']))
                     {
-                        include "crud/add_product.php";
+                        $action = $_GET['action'];
+                        if($action == 'add')
+                        {
+                            include "crud/add_product.php";
+                        }
                     }
                 }
                 else if($title == 'category')

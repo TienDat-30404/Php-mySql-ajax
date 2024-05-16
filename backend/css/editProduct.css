@@ -1,0 +1,88 @@
+.productEdit 
+{
+    width : 80%;
+    height : 55%;
+    background-color: #ccc;
+    border-radius: 10px;
+    margin : auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.edit_product 
+{
+    width : 100%;
+    
+}
+.exit_edit-product 
+{
+    position : absolute;
+    right : 20px;
+    top : 10px;
+    font-size : 35px;
+}
+.exit_edit-product:hover 
+{
+    opacity: 0.5;
+}
+.edit_product-title 
+{
+    text-align: center;
+    color : red;
+    margin-top : 7px;
+    margin-bottom : 0;
+}
+.edit_product-content
+{
+    display : flex;
+    flex-wrap: wrap;
+}
+.edit_product-content li 
+{
+    display : flex;
+    height : 20px;
+    align-items: center;
+    margin-left : 30px;
+    margin-top : 30px;
+}
+.edit_product-content li input 
+{
+    margin-left : 10px;
+    height : 22px;
+}
+.edit_product-content li input[type="submit"]
+{
+    height : 40px;
+    width : 100px;
+    outline : none;
+    border : none;
+    font-size : 17px;
+}
+.edit_product-content li input[type="submit"]:hover 
+{
+    background-color: #f2586e;
+    color : white;
+    cursor : pointer;
+}
+.product_noExist 
+{
+    height : 63%;
+    overflow-y: auto;
+    margin-top : 50px;
+}
+.border-message 
+{
+    border : 1px solid red;
+}
+.form-message 
+{
+    color : red;
+    font-size : 17px;
+}
+select 
+{
+    height : 25px;
+    margin-left : 30px;
+}
+

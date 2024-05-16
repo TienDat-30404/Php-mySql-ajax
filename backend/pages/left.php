@@ -32,6 +32,12 @@
                 <h3>Category</h3>
             </li>
         </a>
+        <a href="index.php?title=author">
+            <li>
+                <i class="fa-solid fa-copyright"></i>
+                <h3>Author</h3>
+            </li>
+        </a>
     </ul>
 </div>
 

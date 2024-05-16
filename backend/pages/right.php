@@ -48,6 +48,10 @@
                 {
                     include "content/category.php";
                 }
+                else if($title == 'author')
+                {
+                    include "content/author.php";
+                }
             }
         ?>
     </div>

@@ -19,7 +19,7 @@
     </thead>
     <tbody>
         <?php 
-              include_once $_SERVER['DOCUMENT_ROOT'] . "/project_web2-Copy-2/backend/database/connect.php";
+              include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
             $sql = "SELECT * FROM users WHERE active = 0";
             $result = DataSQL::querySQl($sql);
             while($row = mysqli_fetch_array($result))

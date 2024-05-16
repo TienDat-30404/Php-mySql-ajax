@@ -8,20 +8,24 @@
                     <li>
                         <h4>Tên sản phẩm</h4>
                         <input name = "name_product" type="text">
+                        <span class = "form-message"></span>
                     </li>
                     <li>
                         <h4>Ảnh sản phẩm</h4>
                         <input name = "image_product" type="file">
+                        <span class = "form-message"></span>
+
                     </li>
                     <li>
                         <h4>Giá sản phẩm</h4>
                         <input name = "price_product" type="text">
+                        <span class = "form-message"></span>
                     </li>
                     <li>
                         <h4>Thể loại sản phẩm</h4>
                         <select name="category_product" id="">
                             <?php 
-                                include_once $_SERVER['DOCUMENT_ROOT'] . "/project_web2-Copy-2/backend/database/connect.php";
+                                include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
                                 $sql = "SELECT * FROM categories";
                                 $result = DataSQL::querySQL($sql);
                                 while($row = mysqli_fetch_array($result))
@@ -68,10 +72,14 @@
                     <li>
                         <h4>Số lượng</h4>
                         <input name = "quantity_product" type="text">
+                        <span class = "form-message"></span>
+
                     </li>
                     <li>
                         <h4>Năm xuất bản</h4>
                         <input name = "publish_year" type="text">
+                        <span class = "form-message"></span>
+
                     </li>
                     <li style = "width : 50%; margin-top : 40px">
                         <h4>Chi tiết sản phẩm</h4>
@@ -103,8 +111,8 @@
                     </thead>
                     <tbody>
                         <?php 
-                            include_once $_SERVER['DOCUMENT_ROOT'] . "/project_web2-Copy-2/backend/database/connect.php";
-                            $sql = "SELECT * FROM products";
+                            include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
+                            $sql = "SELECT * FROM products WHERE isActive = 0";
                             $result = DataSQL::querySQl($sql);
                             while($row = mysqli_fetch_array($result))
                             {
@@ -118,7 +126,7 @@
                                     <td><?php echo $row['price']; ?></td>
                                     <td><?php echo $row['publish_year']; ?></td>
                                     <td>
-                                        <a href="">Khôi phục</a>
+                                        <a href = "" class = "restore_product" data-id-restore = <?php echo $row['id']; ?>>Khôi phục</a>
                                     </td>
                                 </tr>
                             <?php }
@@ -132,6 +140,69 @@
 </div>
 
 <script>
+    async function RestoreProduct(id)
+    {
+        var formData = new FormData();
+        formData.append('id_restore', id);
+        var link = await fetch('crud/restore.php', {
+            method : 'POST',
+            body : formData
+        });
+        LinkLoadProduct()
+    }
+    var buttonRestore = document.querySelectorAll('.restore_product')
+    buttonRestore.forEach(function(item)
+    {
+        item.addEventListener('click', function(event)
+        {
+            event.preventDefault();
+            var idProduct = this.getAttribute('data-id-restore')
+            console.log(idProduct)
+            RestoreProduct(idProduct);
+        })
+    })
+    async function LinkLoadProduct()
+    {
+        var link = await fetch('crud/productNoExist.php');
+        var json = await link.json();
+        console.log(json);
+        LoadProduct(json)
+        buttonRestore = document.querySelectorAll('.restore_product');
+        buttonRestore.forEach(function(item) {
+            item.addEventListener('click', function(event) {
+                event.preventDefault();
+                var idProduct = this.getAttribute('data-id-restore');
+                console.log(idProduct);
+                RestoreProduct(idProduct);
+            });
+    });
+    }
+    function LoadProduct(data)
+    {
+        var tableBody = document.querySelector('.product_noExist tbody')
+        tableBody.innerHTML = ''
+        data.forEach(function(value)
+        {
+            var row = document.createElement('tr')
+            row.innerHTML = 
+            `
+            <tr>
+                <td>${value.id}</td>
+                <td>${value.name}</td>
+                <td>
+                    <img style = "width : 80px; height : 80px;" src="${value.image}" alt="">
+                </td>
+                <td>${value.price}</td>
+                <td>${value.publish_year}</td>
+                <td>
+                    <a href = "" class = "restore_product" data-id-restore = ${value.id}>Khôi phục</a>
+                </td>
+            </tr>
+            `;
+            tableBody.appendChild(row);
+        })
+    }
+
     var addButton = document.querySelector('input[name="button_addProduct"]')
     async function addProduct(nameProduct, imageProduct, priceProduct, publisherProduct, quantityProduct, 
     yearProduct, detailProduct, categoryProduct, authorProduct)
@@ -168,18 +239,6 @@
     {
         event.preventDefault();
         var nameProduct = document.querySelector('input[name="name_product"]').value
-        if(nameProduct === "")
-        {
-            alert("Tên không được rỗng")
-        }
-        var fileImage = document.querySelector('input[name="image_product"]').files[0];
-        var reader = new FileReader();
-        reader.onloadend = function () {
-        // reader.result chứa dữ liệu ảnh dưới dạng chuỗi base64
-        var base64Image = reader.result;
-        var encodedBase64Image = base64Image.replace(/\+/g, '%2B'); // tìm tất cả dấu + trong chuỗi và mã hóa chúng, để tranh trường hợp
-        // khi truyền qua URL sẽ bị hiểu nhầm + là khoảng trắng -> dẫn đến sai
-        console.log(encodedBase64Image); // In ra chuỗi base64 của ảnh
         var priceProduct = document.querySelector('input[name="price_product"]').value
         var categoryProduct = document.querySelector('select[name="category_product"]').value
         var authorProduct = document.querySelector('select[name="author_product"]').value
@@ -187,11 +246,224 @@
         var quantityProduct = document.querySelector('input[name="quantity_product"]').value
         var publishYear = document.querySelector('input[name="publish_year"]').value
         var detailProduct = document.querySelector('textarea[name="detail_product"]').value
-        addProduct(nameProduct, encodedBase64Image, priceProduct, publisherProduct, quantityProduct, publishYear,
-        detailProduct, categoryProduct, authorProduct);
-        };
+        var fileImage = document.querySelector('input[name="image_product"]').files[0];
+        var firstFocus = null;
+        if(nameProduct == "" || fileImage == undefined || priceProduct == "" || isNaN(priceProduct) || priceProduct < 0 || quantityProduct == "" ||
+        isNaN(quantityProduct) || publishYear == "" || isNaN(publishYear))
+        {
+            if(nameProduct == "")
+            {
+                var ElementP = document.querySelector('input[name="name_product"]')
+                console.log(ElementP)
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Tên không được rông";
+                ElementP.classList.add('border-message')
+                if(firstFocus == null)
+                {
+                    firstFocus = ElementP;
+                    console.log(firstFocus)
+                }
 
-        reader.readAsDataURL(fileImage);
+            }
+            else 
+            {
+                var ElementP = document.querySelector('input[name="name_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(fileImage == undefined)
+            {
+                var ElementP = document.querySelector('input[name="image_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Vui lòng tải ảnh lên";
+                ElementP.classList.add('border-message')
+                if(firstFocus == null)
+                {
+                    firstFocus = ElementP;
+                }
+            
+            }
+            else 
+            {
+                var ElementP = document.querySelector('input[name="image_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(priceProduct == "")
+            {
+                var ElementP = document.querySelector('input[name="price_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Giá không được rông";
+                ElementP.classList.add('border-message')
+                if(firstFocus == null)
+                {
+                    firstFocus = ElementP;
+                }
+                
+            }
+            else 
+            {
+                var ElementP = document.querySelector('input[name="price_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(isNaN(priceProduct) && priceProduct != "")
+            {
+                var ElementP = document.querySelector('input[name="price_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Giá phải là số";
+                ElementP.classList.add('border-message')
+                if(firstFocus == null)
+                {
+                    firstFocus = ElementP;
+                }
+                
+            }
+            else if(!isNaN(priceProduct) && priceProduct != "")
+            {
+                var ElementP = document.querySelector('input[name="price_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(priceProduct <= 0 && priceProduct != "")
+            {
+                var ElementP = document.querySelector('input[name="price_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Giá phải lớn hơn 0";
+                ElementP.classList.add('border-message')
+                if(firstFocus == null)
+                {
+                    firstFocus = ElementP;
+                }
+                
+            }
+            else if(priceProduct > 0 && priceProduct != "") 
+            {
+                var ElementP = document.querySelector('input[name="price_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(quantityProduct == "")
+            {
+                var ElementP = document.querySelector('input[name="quantity_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Số lượng không được rỗng";
+                ElementP.classList.add('border-message')
+                if(firstFocus == null)
+                {
+                    firstFocus = ElementP;
+                }
+                
+            }
+            else 
+            {
+                var ElementP = document.querySelector('input[name="quantity_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(isNaN(quantityProduct) && quantityProduct != "")
+            {
+                var ElementP = document.querySelector('input[name="quantity_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Số lượng phải là số";
+                ElementP.classList.add('border-message')
+                if(firstFocus == null)
+                {
+                    firstFocus = ElementP;
+                }
+                
+            }
+            else if(!isNaN(quantityProduct) && quantityProduct != "")
+            {
+                var ElementP = document.querySelector('input[name="quantity_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(quantityProduct <= 0 && quantityProduct != "")
+            {
+                var ElementP = document.querySelector('input[name="quantity_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Số lượng phải lớn hơn 0";
+                ElementP.classList.add('border-message')
+                if(firstFocus == null)
+                {
+                    firstFocus = ElementP;
+                }
+                
+            }
+            else if(quantityProduct > 0 && quantityProduct != "")
+            {
+                var ElementP = document.querySelector('input[name="quantity_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(publishYear == "")
+            {
+                var ElementP = document.querySelector('input[name="publish_year"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Năm xuất bản ko được rỗng";
+                ElementP.classList.add('border-message')
+                if(firstFocus == null)
+                {
+                    firstFocus = ElementP;
+                }
+                
+            }
+            else 
+            {
+                var ElementP = document.querySelector('input[name="publish_year"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(isNaN(publishYear) && publishYear != "")
+            {
+                var ElementP = document.querySelector('input[name="publish_year"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Năm xuất bản phải là số";
+                ElementP.classList.add('border-message')
+                if(firstFocus == null)
+                {
+                    firstFocus = ElementP;
+                }
+                
+            }
+            else if(!isNaN(publishYear) && publishYear != "")
+            {
+                var ElementP = document.querySelector('input[name="publish_year"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            
+            firstFocus.focus();
+        }
+
+        else 
+        {
+
+            var reader = new FileReader();
+            reader.onloadend = function () {
+            // reader.result chứa dữ liệu ảnh dưới dạng chuỗi base64
+            var base64Image = reader.result;
+            var encodedBase64Image = base64Image.replace(/\+/g, '%2B'); // tìm tất cả dấu + trong chuỗi và mã hóa chúng, để tranh trường hợp
+            // khi truyền qua URL sẽ bị hiểu nhầm + là khoảng trắng -> dẫn đến sai
+            console.log(encodedBase64Image); // In ra chuỗi base64 của ảnh
+            addProduct(nameProduct, encodedBase64Image, priceProduct, publisherProduct, quantityProduct, publishYear,
+            detailProduct, categoryProduct, authorProduct);
+            nameProduct.innerText = "";
+            priceProduct.innerText = "";
+            }
+            reader.readAsDataURL(fileImage);
+        }
     })
 </script>
 

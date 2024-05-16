@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="css/left.css">
     <link rel="stylesheet" href="css/right.css">
+    <link rel="stylesheet" href="css/addProduct.css">
+    <link rel="stylesheet" href="css/editProduct.css">
+    <link rel="stylesheet" href="css/editCategory.css">
 </head>
 <body>
     <div class = "container">

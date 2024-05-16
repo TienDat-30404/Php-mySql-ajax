@@ -20,10 +20,10 @@
             $productId = mysqli_insert_id($connection);
     
             $sql_category = "INSERT INTO product_categories(product_id, category_id) VALUES('$productId', '$categoryProduct')";
-            // mysqli_query($connection, $sql_category);
+            mysqli_query($connection, $sql_category);
     
             $sql_author = "INSERT INTO product_authors(product_id, author_id) VALUES('$productId', '$authorProduct')";
-            // mysqli_query($connection, $sql_author);
+            mysqli_query($connection, $sql_author);
             echo json_encode(array("status" => "Thêm sản phẩm $nameProduct vào cửa hàng thành công"));
         }
         else 

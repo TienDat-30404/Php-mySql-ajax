@@ -11,7 +11,7 @@
                         <h4 style = "margin-top : 0; margin-bottom : 10px" class = "">Name Role</h4>
                         <select name="user_edit-roleName" id="select_edit" onChange="OnChangeIdRole()">
                         <?php 
-                            include_once $_SERVER['DOCUMENT_ROOT'] . "/project_web2-Copy-2/backend/database/connect.php";
+                            include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
                             $sql = "SELECT * FROM roles";
                             $result = DataSQL::querySQL($sql);
                             while($row = mysqli_fetch_array($result))
@@ -27,7 +27,7 @@
                         <input value = "1" class = "IdRole" name = "user_edit-roleId" type="text">
                     </li>
                     <?php 
-                        include_once $_SERVER['DOCUMENT_ROOT'] . "/project_web2-Copy-2/backend/database/connect.php";
+                        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
                         if(isset($_GET['id_edit']))
                         {
                             $idEdit = $_GET['id_edit'];

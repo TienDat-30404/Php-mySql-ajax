@@ -10,7 +10,13 @@
     $sql_1 = "SELECT categories.name as nameCategory FROM categories INNER JOIN product_categories ON categories.id = product_categories.category_id INNER JOIN products 
     ON products.id = product_categories.product_id WHERE products.id = '$id_detail'";
     $result_1 = mysqli_query($connection, $sql_1);
-    $row_1 = mysqli_fetch_array($result_1);
+    $categories = [];
+    while($row_1 = mysqli_fetch_array($result_1)) {
+        $categories[] = $row_1['nameCategory'];
+    }
+
+    $nameCategory = !empty($categories) ? implode(", ", $categories) : "Chưa có thể loại";
+
     $informations = array(
         'id' => $row['id'],
         'image' => $row['image'],
@@ -20,7 +26,7 @@
         'price' => $row['price'],
         'namePublisher' => $row['namePublisher'],
         'detail' => $row['detail'],
-        'nameCategory' => $row_1['nameCategory']
+        'nameCategory' => $nameCategory
     );
     $data = new stdClass();
     $data->informations = $informations;

@@ -14,6 +14,7 @@ function DisplayDetail(data)
     {
         value.detail = "Hiện chưa có chi tiết sản phẩm"
     }
+    
     var informations = `
         <div class = "modal"> 
             <div class = "modal_base">  
@@ -117,7 +118,7 @@ function displayProducts(data, content123) {
             </div>
         </a>
     `}).join('');
-    content123.innerHTML = productsHTML;
+    content123.innerHTML = productsHTML;    
     var button = document.querySelectorAll('.content_product-information-button');
     button.forEach(function(item)
     {
@@ -488,11 +489,11 @@ document.querySelector('.button_signup').addEventListener('click', function(even
 {
     event.preventDefault()
     fullname = document.getElementById('fullname').value;
-    var checkEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    var checkEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2, 3})+$/;
     email = document.getElementById('email').value;
     password = document.querySelector('#password').value;
     password_confirmation = document.querySelector('#password_confirmation').value
-    if(fullname == "" || !checkEmail.test(email) || email == "" || password <= 2 || password == "" || password != password_confirmation)
+    if(fullname == "" || email == "" || password <= 2 || password == "" || password != password_confirmation)
     {
         if(fullname == "")
         {
@@ -500,7 +501,7 @@ document.querySelector('.button_signup').addEventListener('click', function(even
             var notificationMessage = borderMessage.nextElementSibling;
             notificationMessage.innerText = "Vui lòng nhập vào trường này"
             borderMessage.classList.add('border-message')
-        }
+        }   
         else 
         {
             var borderMessage = document.querySelector('#fullname');

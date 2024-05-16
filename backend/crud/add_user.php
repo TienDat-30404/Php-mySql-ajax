@@ -51,7 +51,7 @@
     </div>
 </div>
 <?php 
-    include_once $_SERVER['DOCUMENT_ROOT'] . "/project_web2-Copy-2/backend/database/connect.php";
+    include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
     if(isset($_POST['button_add']))
     {
         $idRole = $_POST['user_add-roleId'];

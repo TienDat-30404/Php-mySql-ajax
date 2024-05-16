@@ -12,47 +12,48 @@
     {
     $sql = "SELECT products.*, products.name as nameProduct FROM products INNER JOIN product_categories ON products.id = product_categories.product_id INNER JOIN categories ON 
     product_categories.category_id = categories.id WHERE categories.id = '$selectSearch' AND products.name like '%" . $nameSearchAdvanced . "%'
-     AND price >= '$priceFrom' AND price <= '$priceTo' LIMIT $startPage, $pageSize";
+     AND price >= '$priceFrom' AND price <= '$priceTo' AND isActive = 1 LIMIT $startPage, $pageSize";
         $check = 1;
     }
     else if($selectSearch != 0 && (empty($priceFrom) || empty($priceTo) && !empty($nameSearchAdvanced)))
     {
         $sql = "SELECT products.*, products.name as nameProduct FROM products INNER JOIN product_categories ON products.id = product_categories.product_id INNER JOIN categories ON 
-    product_categories.category_id = categories.id WHERE categories.id = '$selectSearch' AND products.name like '%" . $nameSearchAdvanced . "%' LIMIT $startPage, $pageSize";
+    product_categories.category_id = categories.id WHERE categories.id = '$selectSearch' AND products.name like '%" . $nameSearchAdvanced . "%' AND isActive = 1 LIMIT $startPage, $pageSize";
         $check = 2;
     }
     else if($selectSearch != 0 && !empty($priceFrom) && !empty($priceTo) && empty($nameSearchAdvanced))
     {
         $sql = "SELECT products.*, products.name as nameProduct FROM products INNER JOIN product_categories ON products.id = product_categories.product_id INNER JOIN categories ON 
-        product_categories.category_id = categories.id WHERE categories.id = '$selectSearch' AND price >= '$priceFrom' AND price <= '$priceTo' LIMIT $startPage, $pageSize";
+        product_categories.category_id = categories.id WHERE categories.id = '$selectSearch' AND price >= '$priceFrom' AND price <= '$priceTo' AND isActive = 1 LIMIT $startPage, $pageSize";
         $check = 3;
     }
     else if($selectSearch != 0 && (empty($priceFrom) || empty($priceTo)) && empty($nameSearchAdvanced))
     {
         $sql = "SELECT products.*, products.name as nameProduct FROM products INNER JOIN product_categories ON products.id = product_categories.product_id INNER JOIN categories ON 
-        product_categories.category_id = categories.id WHERE categories.id = '$selectSearch' LIMIT $startPage, $pageSize";
+        product_categories.category_id = categories.id WHERE categories.id = '$selectSearch' AND isActive = 1 LIMIT $startPage, $pageSize";
         $check = 4;
     }
     else if($selectSearch == 0 && (empty($priceFrom) || empty($priceTo)) && !empty($nameSearchAdvanced))
     {
         $sql = "SELECT products.*, products.name as nameProduct FROM products WHERE products.name like '%" . $nameSearchAdvanced . "%'
-        LIMIT $startPage, $pageSize";
+        AND isActive = 1 LIMIT $startPage, $pageSize";
         $check = 5;
     }
     else if($selectSearch == 0 && !empty($priceFrom) && !empty($priceTo) && empty($nameSearchAdvanced))
     {
-        $sql = "SELECT products.*, products.name as nameProduct FROM products WHERE price >= '$priceFrom' AND price <= '$priceTo' LIMIT $startPage, $pageSize";
+        $sql = "SELECT products.*, products.name as nameProduct FROM products WHERE price >= '$priceFrom' 
+        AND price <= '$priceTo' AND isActive = 1 LIMIT $startPage, $pageSize";
         $check = 6;
     }
     else if($selectSearch == 0 && (empty($priceFrom) || empty($priceTo)) && empty($nameSearchAdvanced))
     {
-        $sql = "SELECT products.*, products.name as nameProduct FROM products LIMIT $startPage, $pageSize";
+        $sql = "SELECT products.*, products.name as nameProduct FROM products AND isActive = 1 LIMIT $startPage, $pageSize";
         $check = 7;
     }
     else if($selectSearch == 0 && !empty($priceFrom) && !empty($priceTo) && !empty($nameSearchAdvanced))
     {
         $sql = "SELECT products.*, products.name as nameProduct FROM products WHERE price >= '$priceFrom' AND price <= '$priceTo' AND
-         products.name like '%" . $nameSearchAdvanced . "%' LIMIT $startPage, $pageSize";
+         products.name like '%" . $nameSearchAdvanced . "%' AND isActive = 1 LIMIT $startPage, $pageSize";
         $check = 8;
     }
     $result = mysqli_query($connection, $sql);
@@ -67,39 +68,39 @@
     {
         $sql_count = "SELECT products.*, products.name as nameProduct FROM products INNER JOIN product_categories ON products.id = product_categories.product_id INNER JOIN categories ON 
         product_categories.category_id = categories.id WHERE categories.id = '$selectSearch' AND products.name like '%" . $nameSearchAdvanced . "%'
-         AND price >= '$priceFrom' AND price <= '$priceTo'";
+         AND price >= '$priceFrom' AND price <= '$priceTo' AND isActive = 1";
     }
     else if($check == 2)
     {
         $sql_count = "SELECT products.*, products.name as nameProduct FROM products INNER JOIN product_categories ON products.id = product_categories.product_id INNER JOIN categories ON 
-        product_categories.category_id = categories.id WHERE categories.id = '$selectSearch' AND products.name like '%" . $nameSearchAdvanced . "%'";
+        product_categories.category_id = categories.id WHERE categories.id = '$selectSearch' AND products.name like '%" . $nameSearchAdvanced . "%' AND isActive = 1";
     }
     else if($check == 3)
     {
         $sql_count = "SELECT products.*, products.name as nameProduct FROM products INNER JOIN product_categories ON products.id = product_categories.product_id INNER JOIN categories ON 
-        product_categories.category_id = categories.id WHERE categories.id = '$selectSearch' AND price >= '$priceFrom' AND price <= '$priceTo'";
+        product_categories.category_id = categories.id WHERE categories.id = '$selectSearch' AND price >= '$priceFrom' AND price <= '$priceTo' AND isActive = 1";
     }
     else if($check == 4)
     {
         $sql_count = "SELECT products.*, products.name as nameProduct FROM products INNER JOIN product_categories ON products.id = product_categories.product_id INNER JOIN categories ON 
-        product_categories.category_id = categories.id WHERE categories.id = '$selectSearch'";
+        product_categories.category_id = categories.id WHERE categories.id = '$selectSearch' AND isActive = 1";
     }
     else if($check == 5)
     {
-        $sql_count = "SELECT products.*, products.name as nameProduct FROM products WHERE products.name like '%" . $nameSearchAdvanced . "%'";
+        $sql_count = "SELECT products.*, products.name as nameProduct FROM products WHERE products.name like '%" . $nameSearchAdvanced . "%' AND isActive = 1";
     } 
     else if($check == 6)
     {
-        $sql_count = "SELECT products.*, products.name as nameProduct FROM products WHERE price >= '$priceFrom' AND price <= '$priceTo'";
+        $sql_count = "SELECT products.*, products.name as nameProduct FROM products WHERE price >= '$priceFrom' AND price <= '$priceTo' AND isActive = 1";
     }
     else if($check == 7)
     {
-        $sql_count = "SELECT products.*, products.name as nameProduct FROM products";
+        $sql_count = "SELECT products.*, products.name as nameProduct FROM products WHERE isActive = 1";
     }
     else if($check == 8)
     {
         $sql_count = "SELECT products.*, products.name as nameProduct FROM products WHERE price >= '$priceFrom' AND price <= '$priceTo' AND
-        products.name like '%" . $nameSearchAdvanced . "%'";
+        products.name like '%" . $nameSearchAdvanced . "%' AND isActive = 1";
     }
     $result_count = mysqli_query($connection, $sql_count);
     $row_count = mysqli_num_rows($result_count);

@@ -38,6 +38,12 @@
                 <h3>Author</h3>
             </li>
         </a>
+        <a href="index.php?title=publisher">
+            <li>
+                <i class="fa-solid fa-copyright"></i>
+                <h3>Publisher</h3>
+            </li>
+        </a>
     </ul>
 </div>
 

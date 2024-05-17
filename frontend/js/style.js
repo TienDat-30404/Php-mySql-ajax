@@ -14,7 +14,10 @@ function DisplayDetail(data)
     {
         value.detail = "Hiện chưa có chi tiết sản phẩm"
     }
-    
+    if(!value.nameAuthor)
+        {
+            value.nameAuthor = "Chưa có tác giả"
+        }
     var informations = `
         <div class = "modal"> 
             <div class = "modal_base">  

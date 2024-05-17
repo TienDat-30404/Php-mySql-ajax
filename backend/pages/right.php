@@ -52,6 +52,10 @@
                 {
                     include "content/author.php";
                 }
+                else if($title == 'publisher')
+                {
+                    include "content/publisher.php";
+                }
             }
         ?>
     </div>

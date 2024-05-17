@@ -66,6 +66,21 @@
     color : white;
     cursor : pointer;
 }
+.button_addAuthor 
+{
+    height : 40px;
+    width : 70px;
+    outline : none;
+    border : none;
+    font-size : 17px;
+    text-align: center;
+}
+.button_addAuthor:hover 
+{
+    background-color: #f2586e;
+    color : white;
+    cursor : pointer;
+}
 .product_noExist 
 {
     height : 63%;

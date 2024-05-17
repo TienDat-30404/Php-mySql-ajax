@@ -11,10 +11,10 @@
         //     $updateProduct = "UPDATE products SET isActive = 0 WHERE id = '$idProduct'";
         //     DataSQL::querySQL($updateProduct);
         // }
-        $sqlProductCategory = "DELETE FROM product_categories WHERE category_id = '$idDelete'";
+        $sqlProductCategory = "DELETE FROM product_authors WHERE author_id = '$idDelete'";
         DataSQL::querySQL($sqlProductCategory);
 
-        $sql = "DELETE FROM categories WHERE id = '$idDelete'";
+        $sql = "DELETE FROM authors WHERE id = '$idDelete'";
         DataSQL::querySQL($sql);
     }
 ?>

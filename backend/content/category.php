@@ -186,10 +186,18 @@
         if(json.success === success)
         {
             alert(success)
+            var ElementP = document.querySelector('input[name="name_category"]')
+            var notification = ElementP.nextElementSibling;
+            notification.innerText = "";
+            ElementP.classList.remove('border-message')
         }
         if(json.fail === fail)
         {
             alert(fail)
+            var ElementP = document.querySelector('input[name="name_category"]')
+            var notification = ElementP.nextElementSibling;
+            notification.innerText = "Tên thể loại đã tồn tại";
+            ElementP.classList.add('border-message')
         }
     }
 

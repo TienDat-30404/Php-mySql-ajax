@@ -271,3 +271,7 @@ thead tr th
     color : red;
     font-size : 17px;
 }
+a:hover 
+{
+    opacity: 0.5;
+}

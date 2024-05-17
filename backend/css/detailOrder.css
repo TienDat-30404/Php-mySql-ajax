@@ -1,0 +1,60 @@
+.detail_order
+{
+    width : 90%;
+    height : 75%;
+    background-color: #ccc;
+    border-radius: 10px;
+    margin : auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow-y : auto;
+    overflow-x: hidden;
+}
+.detail_order h3
+{
+    font-family: "Roboto, sans-serif";
+    font-weight : 400;
+    font-style: italic;
+    margin-left : 38px;
+}
+.detail_order h4 
+{
+    margin-left : 10px;
+}
+.detail_order span 
+{
+   padding-left : 20px;
+   padding-top : 20px;
+}
+.information_order 
+{
+    display : flex;
+    width : 100%;
+    flex-wrap : wrap;
+}
+.information_detail-order
+{
+    display : flex;
+    flex-wrap: wrap;
+    width : 100%;
+}
+.information_detail-order input 
+{
+    width : 100%;
+    height : 30px;
+    margin-left : 10px;
+}
+.information_detail-order li 
+{
+    display : flex;
+    height : 30px;
+    align-items: center;
+    margin-left : 40px;
+    margin-top : 30px;
+}
+.information_detail-order li:nth-child(1)
+{
+    width : 50%;
+}

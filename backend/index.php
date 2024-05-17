@@ -10,8 +10,12 @@
     <link rel="stylesheet" href="css/addProduct.css">
     <link rel="stylesheet" href="css/editProduct.css">
     <link rel="stylesheet" href="css/editCategory.css">
+    <link rel="stylesheet" href="css/detailOrder.css">
 </head>
 <body>
+    <?php 
+        include "crud/check_loginAdmin.php";
+    ?>
     <div class = "container">
         <?php
             include "pages/left.php"; 

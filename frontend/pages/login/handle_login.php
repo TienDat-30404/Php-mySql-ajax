@@ -17,6 +17,7 @@
                     unset($_SESSION['fail_login']);
                     $_SESSION['account'] = array(
                         'id_user' => $row['id'],
+                        'id_role' => $row['role_id'],
                         'email' => $email,
                         'fullname' => $nameLogin
                     );
@@ -28,6 +29,7 @@
                     unset($_SESSION['fail_login']);
                     $_SESSION['account'] = array(
                         'id_user' => $row['id'],
+                        'id_role' => $row['role_id'],
                         'email' => $email,
                         'fullname' => $nameLogin
                     );

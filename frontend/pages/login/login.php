@@ -55,21 +55,3 @@
         </div>
 </div>
 
-<script>
-    document.querySelector('.exitLogin').addEventListener('click', function()
-    {
-        <?php 
-            if(isset($_SESSION['fail_login']))
-            {
-                unset($_SESSION['fail_login']);
-            }
-        ?>
-    })
-    document.addEventListener('DOMContentLoaded', function() {
-        var inputField = document.getElementById('email'); 
-        inputField.focus(); 
-        var valueLength = inputField.value.length; 
-        inputField.setSelectionRange(valueLength, valueLength); 
-    });
-
-</script>

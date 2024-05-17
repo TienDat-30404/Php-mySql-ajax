@@ -12,14 +12,28 @@
             $nameLogin = $row['fullname'];
             if($email == $row['email'] && $password == $row['password'])
             {
-                unset($_SESSION['fail_login']);
-                $_SESSION['account'] = array(
-                    'id_user' => $row['id'],
-                    'email' => $email,
-                    'fullname' => $nameLogin
-                );
-                header('location: ../../../index.php?');
-                break;
+                if($row['role_id'] == 1)
+                {    
+                    unset($_SESSION['fail_login']);
+                    $_SESSION['account'] = array(
+                        'id_user' => $row['id'],
+                        'email' => $email,
+                        'fullname' => $nameLogin
+                    );
+                    header('location: ../../../backend/index.php');
+                    break;
+                }
+                else if($row['role_id'] == 3)
+                {
+                    unset($_SESSION['fail_login']);
+                    $_SESSION['account'] = array(
+                        'id_user' => $row['id'],
+                        'email' => $email,
+                        'fullname' => $nameLogin
+                    );
+                    header('location: ../../../index.php');
+                    break;
+                }
             }
             else 
             {

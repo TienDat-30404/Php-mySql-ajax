@@ -44,6 +44,12 @@
                 <h3>Publisher</h3>
             </li>
         </a>
+        <a href="index.php?title=order">
+            <li>
+                <i class="fa-solid fa-copyright"></i>
+                <h3>Order</h3>
+            </li>
+        </a>
     </ul>
 </div>
 

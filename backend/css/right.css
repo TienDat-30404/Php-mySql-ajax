@@ -262,3 +262,12 @@ thead tr th
     cursor : pointer;
 }
 
+.border-message 
+{
+    border : 1px solid red;
+}
+.form-message 
+{
+    color : red;
+    font-size : 17px;
+}

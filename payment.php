@@ -109,12 +109,15 @@
         $result_total = mysqli_query($connection, $sql_total);
         $row_total = mysqli_fetch_assoc($result_total);
         $totalPrice = $row_total['total_price'];
+
         $sql = "INSERT INTO bills(user_id, total_price, address, payment_method, bill_status_id, number_account_bank) 
         VALUES( '$idUser', '$totalPrice', '$inputAdress', '$inputPaymentMethod', '$statusOrder', '$inputBankAccount')";
         mysqli_query($connection, $sql);
+
+        $lastIdBill = mysqli_insert_id($connection);
         $sqlBillDetail = "SELECT bills.id as idBill, products.id as idProduct, products.*, cart_products.quantity as quantityCart FROM 
         products INNER JOIN cart_products ON products.id = cart_products.product_id INNER JOIN bills ON cart_products.user_id = bills.user_id
-        WHERE bills.user_id = '$idUser'";
+        WHERE bills.user_id = '$idUser' AND bills.id = '$lastIdBill'";
         $result = mysqli_query($connection, $sqlBillDetail);
         while($row = mysqli_fetch_array($result))
         {

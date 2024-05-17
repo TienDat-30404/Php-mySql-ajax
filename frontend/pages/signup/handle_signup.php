@@ -5,7 +5,7 @@
     $email = $_GET['email'];
     $password = $_GET['password'];
     $password_confirmation = $_GET['password_confirmation'];
-    $roleId = 1;
+    $roleId = 3;
     $address = "";
     $phone = "";
     $active = 1;

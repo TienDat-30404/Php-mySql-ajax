@@ -15,9 +15,13 @@ function DisplayDetail(data)
         value.detail = "Hiện chưa có chi tiết sản phẩm"
     }
     if(!value.nameAuthor)
-        {
-            value.nameAuthor = "Chưa có tác giả"
-        }
+    {
+        value.nameAuthor = "Chưa có tác giả"
+    }
+    if(value.namePublisher == null)
+    {
+        value.namePublisher = "Chưa có nhà xuất bản"
+    }
     var informations = `
         <div class = "modal"> 
             <div class = "modal_base">  

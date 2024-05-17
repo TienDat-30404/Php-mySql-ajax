@@ -17,7 +17,7 @@ if (!defined('DB_PASSWORD')) {
 }
 
 if (!defined('DB_NAME')) {
-    define('DB_NAME', 'Php-thuan');
+    define('DB_NAME', 'php_thuan');
 }
 
 // Tạo kết nối đến cơ sở dữ liệu

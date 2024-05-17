@@ -56,6 +56,10 @@
                 {
                     include "content/publisher.php";
                 }
+                else if($title = 'order')
+                {
+                    include "content/order.php";
+                }
             }
         ?>
     </div>

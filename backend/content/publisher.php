@@ -15,7 +15,7 @@
     <tbody>
         <?php 
               include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
-            $sql = "SELECT * FROM publishers";
+            $sql = "SELECT * FROM publishers ORDER BY id ASC";
             $result = DataSQL::querySQl($sql);
             while($row = mysqli_fetch_array($result))
             {

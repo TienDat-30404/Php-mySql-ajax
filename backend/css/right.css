@@ -275,3 +275,21 @@ a:hover
 {
     opacity: 0.5;
 }
+.acceptReceipt 
+{
+    padding : 20px;
+    outline : none;
+    border : none;
+    display : flex;
+    margin : 0 auto;
+    align-items: center;
+    text-align: center;
+    font-size : 15px;
+    margin-top : 20px;
+}
+.acceptReceipt:hover 
+{
+    background-color: orange;
+    cursor : pointer;
+    color : white;
+}

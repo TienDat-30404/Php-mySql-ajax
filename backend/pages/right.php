@@ -60,6 +60,10 @@
                 {
                     include "content/order.php";
                 }
+                else if($title == 'receipt')
+                {
+                    include "content/receipt.php";
+                }
             }
         ?>
     </div>

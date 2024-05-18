@@ -19,14 +19,7 @@
             $result = DataSQL::querySQl($sql);
             while($row = mysqli_fetch_array($result))
             {
-                // $idNameStaff = $row['staff_id'];
-                // $sqlNameStaff = "SELECT * FROM users JOIN bills ON users.id = bills.user_id";
-                // $resultNameStaff = DataSQL::querySQL($sqlNameStaff);
-                // $rowNameStaff = mysqli_fetch_array($resultNameStaff);
-                // if($rowNameStaff == null)
-                // {
-                //     $rowNameStaff = "";
-                // }
+
                 ?>
                 <tr>
                     <td><?php echo $row['idBill']; ?></td>

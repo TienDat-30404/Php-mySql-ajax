@@ -50,6 +50,12 @@
                 <h3>Order</h3>
             </li>
         </a>
+        <a href="index.php?title=receipt">
+            <li>
+                <i class="fa-solid fa-copyright"></i>
+                <h3>Receipt</h3>
+            </li>
+        </a>
     </ul>
 </div>
 

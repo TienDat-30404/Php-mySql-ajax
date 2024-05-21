@@ -13,6 +13,8 @@
     <canvas id="myChart5" style="width:100%;max-width: 1000px;"></canvas>
     <div style = "margin-bottom : 30px;" class = "statistics_3"></div>
     <canvas id="myChart6" style="width:100%;max-width: 1000px;"></canvas>
+    <div style = "margin-bottom : 30px;" class = "statistics_4"></div>
+    <canvas id="myChart7" style="width:100%;max-width: 1000px;"></canvas>
 <script>
 
 
@@ -114,13 +116,15 @@ async function GetRevenueCategory()
 {
     var response = await fetch(`crud/statistics_category.php`)
     var json = await response.json()
+    var dataArray = Object.entries(json);
+    dataArray.sort((a, b) => b[1] - a[1]);
     var nameCategory = []
     var revenueCategory = []
-    for(var item in json)
+    dataArray.forEach(function(value)
     {
-        nameCategory.push(item)
-        revenueCategory.push(json[item])
-    }
+        nameCategory.push(value[0])
+        revenueCategory.push(value[1])
+    })
 
     var predefinedColors = [
         "#b91d47", "#00aba9", "#2b5797", "#e8c3b9", "#1e7145", "#ff5733", "#33ff57", "#5733ff", "#ff33a1", "#a1ff33"
@@ -263,14 +267,12 @@ async function GetProfitEachMonth()
 {
     var response = await fetch(`crud/statistics_profit.php`)
     var json = await response.json();
-    // console.log(json)
     const xValues = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
     var profit = []
     for(var item in json)
     {
         profit.push(json[item].profit)
     }
-    console.log(profit)
     new Chart("myChart6", {
     type: "line",
     data: {
@@ -297,8 +299,79 @@ async function GetProfitEachMonth()
         }
     }
     });
+
+
+    var tableStatistics_4 = document.createElement('table');
+    tableStatistics_4.setAttribute('cellspacing', '0');
+    tableStatistics_4.setAttribute('cellpadding', '10');
+
+    var thead = document.createElement('thead');
+    thead.innerHTML = `
+        <tr>
+            ${xValues.map(month => `<th>${month}</th>`).join('')}
+            <th>Tổng lợi nhuân</th>
+        </tr>
+    `;
+    tableStatistics_4.appendChild(thead);
+
+    var totalPrice = 0
+    var tbody = document.createElement('tbody');
+    var row = document.createElement('tr');
+    profit.forEach(value => {
+        var cell = document.createElement('td');
+        cell.textContent = value;
+        row.appendChild(cell);
+        totalPrice = totalPrice + Number(value)
+    });
+    var cell = document.createElement('td')
+    cell.textContent = totalPrice
+    row.appendChild(cell)
+    tbody.appendChild(row);
+    tableStatistics_4.appendChild(tbody);
+
+    document.querySelector('.statistics_4').appendChild(tableStatistics_4);
 }
 GetProfitEachMonth()
+
+async function GetTop10Staff()
+{
+    var response = await fetch(`crud/statistics_top10Staff.php`)
+    var json = await response.json()
+    console.log(json)
+    var dataArray = Object.entries(json);
+    dataArray.sort((a, b) => b[1] - a[1]);
+    var nameStaff = []
+    var totalPrice = []
+    dataArray.forEach(function(value)
+    {
+        nameStaff.push(value[0])
+        totalPrice.push(value[1])
+    })
+    var predefinedColors = [
+        "pink", "green", "orange",  "purple", "yellow", "brown", "cyan", "blue", "magenta",  "red"
+    ];
+    var barColors = nameStaff.map((_, index) => predefinedColors[index % predefinedColors.length]);
+    new Chart("myChart7", {
+    type: "bar",
+    data: {
+        labels: nameStaff,
+        datasets: [{
+        backgroundColor: barColors,
+        data: totalPrice
+        }]
+    },
+    options: {
+        legend: {display: false},
+        title: {
+        display: true,
+        text: "Top 10 nhân viên chạy KPI tốt nhất"
+        },
+        
+    }
+    });
+
+}
+GetTop10Staff()
 </script>
 
 </body>

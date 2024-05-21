@@ -24,6 +24,7 @@
                     <li>
                         <h4>Thể loại sản phẩm</h4>
                         <select name="category_product" id="">
+                            <option value = "0">Chọn thể loại</option>
                             <?php 
                                 include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
                                 $sql = "SELECT * FROM categories";
@@ -35,10 +36,12 @@
                                 <?php }
                             ?>
                         </select>
+                        <span class = "form-message"></span>
                     </li>
                     <li>
                         <h4>Tên tác giả</h4>
                         <select name="author_product" id="">
+                            <option value = "0">Chọn tác giả</option>
                             <?php
                                 include_once $_SERVER['DOCUMENT_ROOT'] . "/project_web2-Copy-2/backend/database/connect.php";
                                 $sql = "SELECT * FROM authors";
@@ -50,11 +53,12 @@
                                 <?php }
                             ?>
                         </select>
+                        <span class = "form-message"></span>
                     </li>
                     <li>
                         <h4>Nhà xuất bản</h4>
-                        <!-- <input name = "publisher_product" type="text"> -->
                         <select name="publisher_product" id="">
+                            <option value = "-1">Chọn nhà xuất bản</option>
                             <?php 
                                 include_once $_SERVER['DOCUMENT_ROOT'] . "/project_web2-Copy-2/backend/database/connect.php";
                                 $sql = "SELECT * FROM publishers";
@@ -66,6 +70,7 @@
                                 <?php }
                             ?>
                         </select>
+                        <span class = "form-message"></span>
                     </li>
                     
                    
@@ -144,7 +149,7 @@
     {
         var formData = new FormData();
         formData.append('id_restore', id);
-        var link = await fetch('crud/restore.php', {
+        var link = await fetch('crud/restore_product.php', {
             method : 'POST',
             body : formData
         });
@@ -207,31 +212,44 @@
     async function addProduct(nameProduct, imageProduct, priceProduct, publisherProduct, quantityProduct, 
     yearProduct, detailProduct, categoryProduct, authorProduct)
     {
-        var formData = new FormData();
-        formData.append('name_product', nameProduct);
-        formData.append('image_product', imageProduct);
-        formData.append('price_product', priceProduct);
-        formData.append('publisher_product', publisherProduct);
-        formData.append('quantity_product', quantityProduct);
-        formData.append('publish_year', yearProduct);
-        formData.append('detail_product', detailProduct);
-        formData.append('category_product', categoryProduct);
-        formData.append('author_product', authorProduct);
-
-        var link = await fetch('crud/handle_addProduct.php', {
-            method: 'POST',
-            body: formData
-        });
-        var json = await link.json();
-        var success = `Thêm sản phẩm ${nameProduct} vào cửa hàng thành công`;
-        var fail = `Sản phẩm ${nameProduct} đã tồn tại trong cửa hàng`;
-        if(json.status === success)
+        if(confirm("Xác nhận thêm sản phẩm?"))
         {
-            alert(success)
-        }
-        if(json.status === fail)
-        {
-            alert(fail)
+            var formData = new FormData();
+            formData.append('name_product', nameProduct);
+            formData.append('image_product', imageProduct);
+            formData.append('price_product', priceProduct);
+            formData.append('publisher_product', publisherProduct);
+            formData.append('quantity_product', quantityProduct);
+            formData.append('publish_year', yearProduct);
+            formData.append('detail_product', detailProduct);
+            formData.append('category_product', categoryProduct);
+            formData.append('author_product', authorProduct);
+    
+            var link = await fetch('crud/handle_addProduct.php', {
+                method: 'POST',
+                body: formData
+            });
+            var json = await link.json();
+            var success = `Thêm sản phẩm ${nameProduct} vào cửa hàng thành công`;
+            var fail = `Sản phẩm ${nameProduct} đã tồn tại trong cửa hàng`;
+            if(json.status === success)
+            {
+                alert(success)
+                document.querySelector('input[name="name_product"]').value = ""
+                document.querySelector('input[name="price_product"]').value = ""
+                document.querySelector('select[name="category_product"]').value = "0"
+                document.querySelector('select[name="author_product"]').value = "0"
+                document.querySelector('select[name="category_product"]').value = "0"
+                document.querySelector('select[name="publisher_product"]').value = "0"
+                document.querySelector('input[name="quantity_product"]').value = ""
+                document.querySelector('input[name="publish_year"]').value = ""
+                document.querySelector('textarea[name="detail_product"]').value = ""
+                document.querySelector('input[name="image_product"]').files[0] = ""
+            }
+            if(json.status === fail)
+            {
+                alert(fail)
+            }
         }
     }
     var addButton = document.querySelector('input[name="button_addProduct"]')
@@ -242,13 +260,15 @@
         var priceProduct = document.querySelector('input[name="price_product"]').value
         var categoryProduct = document.querySelector('select[name="category_product"]').value
         var authorProduct = document.querySelector('select[name="author_product"]').value
+        var categoryProduct = document.querySelector('select[name="category_product"]').value
         var publisherProduct = document.querySelector('select[name="publisher_product"]').value
         var quantityProduct = document.querySelector('input[name="quantity_product"]').value
         var publishYear = document.querySelector('input[name="publish_year"]').value
         var detailProduct = document.querySelector('textarea[name="detail_product"]').value
         var fileImage = document.querySelector('input[name="image_product"]').files[0];
         var firstFocus = null;
-        if(nameProduct == "" || fileImage == undefined || priceProduct == "" || isNaN(priceProduct) || priceProduct < 0 || quantityProduct == "" ||
+        if(nameProduct == "" || fileImage == undefined || priceProduct == "" || categoryProduct == 0 || authorProduct == 0 || publisherProduct == -1 ||
+        isNaN(priceProduct) || priceProduct < 0 || quantityProduct == "" ||
         isNaN(quantityProduct) || publishYear == "" || isNaN(publishYear))
         {
             if(nameProduct == "")
@@ -344,6 +364,60 @@
             else if(priceProduct > 0 && priceProduct != "") 
             {
                 var ElementP = document.querySelector('input[name="price_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(categoryProduct == 0)
+            {
+                var ElementP = document.querySelector('select[name="category_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Vui lòng chọn thể loại sản phẩm";
+                ElementP.classList.add('border-message')
+                if(firstFocus == null)
+                {
+                    firstFocus = ElementP;
+                }
+            }
+            else 
+            {
+                var ElementP = document.querySelector('select[name="category_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(authorProduct == 0)
+            {
+                var ElementP = document.querySelector('select[name="author_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Vui lòng chọn tác giả";
+                ElementP.classList.add('border-message')
+                if(firstFocus == null)
+                {
+                    firstFocus = ElementP;
+                }
+            }
+            else 
+            {
+                var ElementP = document.querySelector('select[name="author_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(publisherProduct == -1)
+            {
+                var ElementP = document.querySelector('select[name="publisher_product"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Vui lòng chọn nhà xuất bản";
+                ElementP.classList.add('border-message')
+                if(firstFocus == null)
+                {
+                    firstFocus = ElementP;
+                }
+            }
+            else 
+            {
+                var ElementP = document.querySelector('select[name="publisher_product"]')
                 var notification = ElementP.nextElementSibling;
                 notification.innerText = "";
                 ElementP.classList.remove('border-message')
@@ -459,8 +533,12 @@
             console.log(encodedBase64Image); // In ra chuỗi base64 của ảnh
             addProduct(nameProduct, encodedBase64Image, priceProduct, publisherProduct, quantityProduct, publishYear,
             detailProduct, categoryProduct, authorProduct);
-            nameProduct.innerText = "";
-            priceProduct.innerText = "";
+            document.querySelectorAll('.form-message').forEach(element => {
+                    element.innerText = "";
+                });
+                document.querySelectorAll('.border-message').forEach(element => {
+                    element.classList.remove('border-message');
+                });
             }
             reader.readAsDataURL(fileImage);
         }

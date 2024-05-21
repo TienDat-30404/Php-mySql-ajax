@@ -64,6 +64,14 @@
                 {
                     include "content/receipt.php";
                 }
+                else if($title == 'statistical')
+                {
+                    include "content/statistical.php";
+                }
+                else if($title == 'dashboard')
+                {
+                    include "content/dashboard.php";
+                }
             }
         ?>
     </div>

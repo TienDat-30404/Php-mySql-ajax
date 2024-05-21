@@ -26,11 +26,13 @@
                     <td>
                         <a data-id-author = <?php echo $row['id']; ?> class = "editAuthor" href="">
                             <i class="fa-solid fa-pen-to-square"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
                         </a>
                     </td>
                     <td>
                         <a data-id-author = <?php echo $row['id']; ?> class = "deleteAuthor" href="">
-                            <i class="fa-solid fa-trash"></i>
+                            <i style = "color : red" class="fa-solid fa-trash"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
                         </a>
                     </td>
                 </tr>
@@ -122,32 +124,35 @@
     }
     async function HandleEditAuthor(idAuthor, nameAuthor)
     {
-        var formData = new FormData();
-        formData.append('id_author', idAuthor);
-        formData.append('name_author', nameAuthor);
-        var link = await fetch('crud/handle_editAuthor.php', {
-            method: 'POST',
-            body: formData
-        });
-        var json = await link.json();
-        var success = `Chỉnh sửa tác giả ${nameAuthor} thành công`
-        var fail = `Tác giả ${nameAuthor} đã tồn tại. Không thể chỉnh sửa tác giả này`
-        if(json.success === success)
+        if(confirm("Xác nhân chỉnh sửa?"))
         {
-            alert(success)
-            var ElementP = document.querySelector('input[name="name_author"]')
-            var notification = ElementP.nextElementSibling;
-            notification.innerText = "";
-            ElementP.classList.remove('border-message')
-        }
-        if(json.fail === fail)
-        {
-            alert(fail)
-            var ElementP = document.querySelector('input[name="name_author"]')
-            ElementP.focus()
-            var notification = ElementP.nextElementSibling;
-            notification.innerText = "Tên tác giả đã tồn tại";
-            ElementP.classList.add('border-message')
+            var formData = new FormData();
+            formData.append('id_author', idAuthor);
+            formData.append('name_author', nameAuthor);
+            var link = await fetch('crud/handle_editAuthor.php', {
+                method: 'POST',
+                body: formData
+            });
+            var json = await link.json();
+            var success = `Chỉnh sửa tác giả ${nameAuthor} thành công`
+            var fail = `Tác giả ${nameAuthor} đã tồn tại. Không thể chỉnh sửa tác giả này`
+            if(json.success === success)
+            {
+                alert(success)
+                var ElementP = document.querySelector('input[name="name_author"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(json.fail === fail)
+            {
+                alert(fail)
+                var ElementP = document.querySelector('input[name="name_author"]')
+                ElementP.focus()
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Tên tác giả đã tồn tại";
+                ElementP.classList.add('border-message')
+            }
         }
     }
 
@@ -216,31 +221,34 @@
 
     async function HandleAddAuthor(nameAuthor)
     {
-        var formData = new FormData();
-        formData.append('name_author', nameAuthor);
-        var link = await fetch('crud/handle_addAuthor.php', {
-            method: 'POST',
-            body: formData
-        });
-        var json = await link.json();
-        var success = `Thêm tác giả ${nameAuthor} vào cửa hàng thành công`;
-        var fail = `Tác giả ${nameAuthor} đã tồn tại trong cửa hàng`;
-        if(json.status === success)
+        if(confirm("Xác nhận thêm?"))
         {
-            alert(success)
-            var ElementP = document.querySelector('input[name="name_author"]')
-            var notification = ElementP.nextElementSibling;
-            notification.innerText = "";
-            ElementP.classList.remove('border-message')
-        }
-        if(json.status === fail)
-        {
-            alert(fail)
-            var ElementP = document.querySelector('input[name="name_author"]')
-            ElementP.focus()
-            var notification = ElementP.nextElementSibling;
-            notification.innerText = "Tên tác giả đã tồn tại";
-            ElementP.classList.remove('border-message')
+            var formData = new FormData();
+            formData.append('name_author', nameAuthor);
+            var link = await fetch('crud/handle_addAuthor.php', {
+                method: 'POST',
+                body: formData
+            });
+            var json = await link.json();
+            var success = `Thêm tác giả ${nameAuthor} vào cửa hàng thành công`;
+            var fail = `Tác giả ${nameAuthor} đã tồn tại trong cửa hàng`;
+            if(json.status === success)
+            {
+                alert(success)
+                var ElementP = document.querySelector('input[name="name_author"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(json.status === fail)
+            {
+                alert(fail)
+                var ElementP = document.querySelector('input[name="name_author"]')
+                ElementP.focus()
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Tên tác giả đã tồn tại";
+                ElementP.classList.remove('border-message')
+            }
         }
     }
 
@@ -248,8 +256,11 @@
     // Delete Author
     async function DeleteAuthor(id)
     {
-        var link = await fetch(`crud/delete_author.php?id_delete=${id}`)
-        LinkLoadAuthor()
+        if(confirm("Xác nhận xóa tác giả?"))
+        {     
+            var link = await fetch(`crud/delete_author.php?id_delete=${id}`)
+            LinkLoadAuthor()
+        }
     }
     var elementDel = document.querySelectorAll(".deleteAuthor")
     elementDel.forEach(function(item)
@@ -294,11 +305,13 @@
                     <td>
                         <a class = "editAuthor" data-id-author = ${value.id} href="">
                             <i class="fa-solid fa-pen-to-square"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
                         </a>
                     </td>
                     <td>
                         <a class = "deleteAuthor" data-id-author = ${value.id} href="">
-                            <i class="fa-solid fa-trash"></i>
+                            <i style = "color : red" class="fa-solid fa-trash"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
                         </a>
                     </td>
                 </tr>

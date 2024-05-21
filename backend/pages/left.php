@@ -1,6 +1,6 @@
 <div class = "container_left">
     <ul class = "container_left-content">
-        <a href="">
+        <a href="index.php?title=dashboard">
             <li>
                 <i class="fa-solid fa-house"></i>
                 <h3>Dashboard</h3>
@@ -54,6 +54,12 @@
             <li>
                 <i class="fa-solid fa-copyright"></i>
                 <h3>Receipt</h3>
+            </li>
+        </a>
+        <a href="index.php?title=statistical">
+            <li>
+                <i class="fa-solid fa-copyright"></i>
+                <h3>Statistical</h3>
             </li>
         </a>
     </ul>

@@ -134,7 +134,7 @@
 
 
     var informations = []
-
+    var stt = 0
    // Create Receipt --------------------------------------------------------------------------------------------------------
    function CreateReceipt()
     {
@@ -150,6 +150,7 @@
                             <li>
                                 <h4>Tên sản phẩm</h4>
                                 <select name="name_product" id="">
+                                    <option value = "0">Chọn sản phẩm</option>
                                     <?php 
                                         include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
                                         $sql = "SELECT * FROM products";
@@ -177,6 +178,7 @@
                             <li>
                                 <h4>Nhà cung cấp</h4>
                                 <select name="name_supplier" id="">
+                                    <option value = "0">Chọn nhà cung cấp</option>
                                     <?php 
                                         include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
                                         $sql = "SELECT * FROM suppliers";
@@ -188,6 +190,7 @@
                                         <?php }
                                     ?>
                                 </select>
+                                <span class = "form-message"></span>
                             </li>
                             <li>
                                 <h4>Tên nhân viên</h4>
@@ -199,10 +202,10 @@
                                         $sql = "SELECT * FROM users WHERE users.id = '$idStaff'";
                                         $result = DataSQL::querySQL($sql);
                                         $row = mysqli_fetch_array($result);
-
                                     }
                                 ?>
-                                <input style="outline: none; border: 1px solid black; background-color: transparent" value = "<?php echo $row['id']; ?>" name = "name_staff" type="text" readonly>
+                                <input style="outline: none; border: 1px solid black; background-color: transparent" id-data-staff = <?php echo $row['id']; ?>
+                                value = "<?php echo $row['fullname']; ?>" name = "name_staff" type="text" readonly>
                                 <span class = "form-message"></span>
                             </li>
                             <li style = "margin-top : 40px">
@@ -228,7 +231,7 @@
                                 </tr>
                             </thead>
                             <tbody style = "overflow-y : auto;" class = "tbodyReceipt">`;
-                                if(informations.length > 0)
+                            if(informations.length > 0)
                                 {
                                     for(var i = 0; i < informations.length; i++)
                                     {
@@ -238,6 +241,12 @@
                                                 <td>${dataReceipt.nameProduct}</td>
                                                 <td>${dataReceipt.priceProduct}</td>
                                                 <td>${dataReceipt.quantityProduct}</td>
+                                                <td>
+                                                    <a id-data-create-receipt = "${value.stt}" class = "delete_create-receipt" href="">
+                                                        <i style = "color : red" class="fa-solid fa-trash"></i>
+                                                        <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         `
                                     }
@@ -252,6 +261,7 @@
         </div>
         `;
         document.body.insertAdjacentHTML('beforeend', createReceipt);
+        // button add 
         var addButton = document.querySelector('input[name="button_addReceipt"]')
         var copyNameSupplier;
         addButton.addEventListener('click', function(event)
@@ -266,9 +276,27 @@
             var nameSupplier = document.querySelector('select[name="name_supplier"]').value
             copyNameSupplier = nameSupplier
             var firstFocus = null;
-            if( priceProduct == "" ||  quantityProduct == "" || isNaN(priceProduct) || priceProduct < 0 || 
-            quantityProduct <= 0 || isNaN(quantityProduct) )
-            {
+            if( nameProductSelect.value == 0 || priceProduct == "" ||  quantityProduct == "" || isNaN(priceProduct) || priceProduct < 0 || 
+            quantityProduct <= 0 || isNaN(quantityProduct) || nameSupplier == 0)
+            {   
+                if(nameProductSelect.value == 0)
+                {
+                    var ElementP = document.querySelector('select[name="name_product"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "Vui lòng chọn sản phẩm";
+                    ElementP.classList.add('border-message')
+                    if(firstFocus == null)
+                    {
+                        firstFocus = ElementP;
+                    }
+                }
+                else 
+                {
+                    var ElementP = document.querySelector('select[name="name_product"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "";
+                    ElementP.classList.remove('border-message')
+                }
                 if(priceProduct == "")
                 {
                     var ElementP = document.querySelector('input[name="price_product"]')
@@ -383,40 +411,82 @@
                     notification.innerText = "";
                     ElementP.classList.remove('border-message')
                 }
+                if(nameSupplier == 0)
+                {
+                    var ElementP = document.querySelector('select[name="name_supplier"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "Vui lòng chọn nhà cung cấp";
+                    ElementP.classList.add('border-message')
+                    if(firstFocus == null)
+                    {
+                        firstFocus = ElementP;
+                    }
+                }
+                else 
+                {
+                    var ElementP = document.querySelector('select[name="name_supplier"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "";
+                    ElementP.classList.remove('border-message')
+                }
                 firstFocus.focus();
             }
 
             else 
             {
                 var dataReceipt = {
+                    stt : stt,
                     idProduct : idProduct,
                     nameProduct: nameProduct,
                     priceProduct: priceProduct,
                     quantityProduct: quantityProduct,
                 };
                 informations.push(dataReceipt);
+                stt++
+                console.log(informations)
                 UpdateDisplayReceipt(informations)
-                // HandleCreateReceipt(nameStaff,nameProduct, priceProduct, quantityProduct, nameSupplier);
+                document.querySelectorAll('.form-message').forEach(element => {
+                    element.innerText = "";
+                });
+                document.querySelectorAll('.border-message').forEach(element => {
+                    element.classList.remove('border-message');
+                });
+                nameProductSelect.value = "0";
+                document.querySelector('input[name="price_product"]').value = "";
+                document.querySelector('input[name="quantity_product"]').value = "";
             }
         })
+        // button accept
         var acceptReceipt = document.querySelector('.acceptReceipt')
         acceptReceipt.addEventListener('click', function(event)
         {
-            var nameStaffReceipt = document.querySelector('input[name="name_staff"]').value
-            HandleCreateReceipt(informations, nameStaffReceipt, copyNameSupplier);
+            var idStaffReceipt = document.querySelector('input[name="name_staff"]').getAttribute('id-data-staff')
+            if(informations.length == 0)
+            {
+                alert("Vui lòng nhập hàng")
+                return;
+            }
+            HandleCreateReceipt(informations, idStaffReceipt, copyNameSupplier);
         })
+
+
     }
+
+
     var addReceipt = document.querySelector('.addReceipt')
     addReceipt.addEventListener('click', function(e)
     {
         e.preventDefault()
         CreateReceipt()
     })
+
+
+    // Load Table --------------------------------------------------------------
     function UpdateDisplayReceipt(data)
     {
         var tableBody = document.querySelector('.tbodyReceipt')
         tableBody.innerHTML = ""
-        data.forEach(function(value)
+        data.forEach(function(value, index)
         {
             var row = document.createElement('tr')
             row.innerHTML= 
@@ -425,40 +495,147 @@
                 <td>${value.nameProduct}</td>
                 <td>${value.priceProduct}</td>
                 <td>${value.quantityProduct}</td>
+                <td>
+                    <a id-data-create-receipt = "${value.stt}" class = "delete_create-receipt" href="">
+                        <i style = "color : red" class="fa-solid fa-trash"></i>
+                        <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
+                    </a>
+                </td>
+            </tr>
+            `
+            tableBody.appendChild(row)
+            var deleteCreateReceipt = document.querySelectorAll('.delete_create-receipt');
+            deleteCreateReceipt.forEach(function(item) {
+                item.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    var indexCreateReceipt = parseInt(this.getAttribute('id-data-create-receipt'));
+                    console.log(indexCreateReceipt)
+                    informations = informations.filter(info => info.stt != indexCreateReceipt );
+                    console.log(informations)
+                    UpdateDisplayReceipt(informations); 
+                });
+            });
+
+        })
+    }
+    
+
+
+    // Insert Data -------------------------------------------------------------------
+    async function HandleCreateReceipt(data, idStaff, idSupplier)
+    {
+        if(confirm("Bạn có chắc muốn nhập hàng?"))
+        {
+            var formData = new FormData();
+            formData.append('id_staff', idStaff);
+            formData.append('id_supplier', idSupplier);
+            for(var i = 0; i < informations.length; i++)
+            {
+                formData.append('id_product[]', informations[i].idProduct);
+                formData.append('price_product[]', informations[i].priceProduct);
+                formData.append('quantity_product[]', informations[i].quantityProduct);
+            }
+    
+           
+            var response = await fetch('crud/handle_createReceipt.php', {
+                method: 'POST',
+                body: formData
+            });
+            alert("Tạo phiếu nhập thành công")
+            informations = []
+            UpdateDisplayReceipt(informations)
+            // nameProductSelect.value = "0";
+            document.querySelector('select[name="name_product"]').value = "0";
+            document.querySelector('select[name="name_supplier"]').value = "0";
+            document.querySelector('input[name="price_product"]').value = "";
+            document.querySelector('input[name="quantity_product"]').value = "";
+        }
+    }
+
+
+    // Load Receipt -----------------------------------------------------------------------------
+    async function LinkLoadReceipt()
+    {
+        var link = await fetch('crud/get_all_receipt.php');
+        var json =  await link.json();
+        LoadReceipt(json)
+        var elementDel = document.querySelectorAll(".deleteReceipt")
+        elementDel.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+            {
+                event.preventDefault();
+                var idReceipt = this.getAttribute('data-id-receipt')
+                DeleteReceipt(idReceipt)
+            })
+        })
+        var elementEdit = document.querySelectorAll('.detailReceipt')
+        elementEdit.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+            {
+                checkExit = true
+            event.preventDefault();
+            var idReceipt = this.getAttribute('data-id-receipt')
+            DetailReceipt(idReceipt)
+            })
+        })
+    }
+    function LoadReceipt(data)
+    {
+        var tableBody = document.querySelector('table tbody')
+        tableBody.innerHTML = ""
+        data.forEach(function(value)
+        {
+            var row = document.createElement('tr')
+            row.innerHTML = 
+            `
+            <tr>
+                <td>${value.id}</td>
+                <td>${value.staff_id}</td>
+                <td>${value.date_entry}</td>
+                <td>${value.total_price}</td>
+                <td>${value.supplier_id}</td>
+                <td>
+                    <a data-id-receipt = "${value.id}" class = "detailReceipt" href="">
+                        <i style = "color : blue" class="fa-solid fa-circle-info"></i>
+                        <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Chi tiết</h5>
+                    </a>
+                </td>
+                <td>
+                    <a data-id-receipt = "${value.id}" class = "deleteReceipt" href="">
+                        <i style = "color : red" class="fa-solid fa-trash"></i>
+                        <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
+                    </a>
+                </td>
             </tr>
             `
             tableBody.appendChild(row)
         })
     }
-    async function HandleCreateReceipt(data, idStaff, idSupplier)
-    {
-        var formData = new FormData();
-        formData.append('id_staff', idStaff);
-        formData.append('id_supplier', idSupplier);
-        for(var i = 0; i < informations.length; i++)
-        {
-            formData.append('id_product[]', informations[i].idProduct);
-            formData.append('name_product[]', informations[i].nameProduct);
-            formData.append('price_product[]', informations[i].priceProduct);
-            formData.append('quantity_product[]', informations[i].quantityProduct);
-        }
 
-       
-        var response = await fetch('crud/handle_createReceipt.php', {
-            method: 'POST',
-            body: formData
-        });
-        if (response.ok) 
+
+
+    // DELETE RECEIPT ---------------------------------------------------------------------------------
+    async function DeleteReceipt(id)
+    {
+        if(confirm("Bạn có chắc muốn xóa phiếu nhập này?"))
         {
-            alert("Success");
-        } 
-        else 
-        {
-            alert("Error: " + response.statusText);
+            var link = await fetch(`crud/delete_receipt.php?id_delete=${id}`)
+            LinkLoadReceipt()
         }
     }
-
-
+    var elementDel = document.querySelectorAll(".deleteReceipt")
+    elementDel.forEach(function(item)
+    {
+        item.addEventListener('click', function(event)
+        {
+            console.log(item)
+            event.preventDefault();
+            var idReceipt = this.getAttribute('data-id-receipt')
+            DeleteReceipt(idReceipt)
+        })
+    })
     
 
     // 

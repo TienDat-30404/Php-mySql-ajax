@@ -28,11 +28,13 @@
                     <td>
                         <a data-id-category = <?php echo $row['id']; ?> class = "editCategory" href="">
                             <i class="fa-solid fa-pen-to-square"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
                         </a>
                     </td>
                     <td>
                         <a data-id-category = <?php echo $row['id']; ?> class = "deleteCategory" href="">
-                            <i class="fa-solid fa-trash"></i>
+                            <i style = "color : red" class="fa-solid fa-trash"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
                         </a>
                     </td>
                 </tr>
@@ -172,32 +174,35 @@
     }
     async function HandleEditCategory(idCategory, nameCategory, imageCategory)
     {
-        var formData = new FormData();
-        formData.append('id_category', idCategory);
-        formData.append('name_category', nameCategory);
-        formData.append('image_category', imageCategory);
-        var link = await fetch('crud/handle_editCategory.php', {
-            method: 'POST',
-            body: formData
-        });
-        var json = await link.json();
-        var success = `Chỉnh sửa thể loại ${nameCategory} thành công`
-        var fail = `Thể loại ${nameCategory} đã tồn tại. Không thể chỉnh sửa thể loại này`
-        if(json.success === success)
+        if(confirm("Xác nhân chỉnh sửa thể loại?"))
         {
-            alert(success)
-            var ElementP = document.querySelector('input[name="name_category"]')
-            var notification = ElementP.nextElementSibling;
-            notification.innerText = "";
-            ElementP.classList.remove('border-message')
-        }
-        if(json.fail === fail)
-        {
-            alert(fail)
-            var ElementP = document.querySelector('input[name="name_category"]')
-            var notification = ElementP.nextElementSibling;
-            notification.innerText = "Tên thể loại đã tồn tại";
-            ElementP.classList.add('border-message')
+            var formData = new FormData();
+            formData.append('id_category', idCategory);
+            formData.append('name_category', nameCategory);
+            formData.append('image_category', imageCategory);
+            var link = await fetch('crud/handle_editCategory.php', {
+                method: 'POST',
+                body: formData
+            });
+            var json = await link.json();
+            var success = `Chỉnh sửa thể loại ${nameCategory} thành công`
+            var fail = `Thể loại ${nameCategory} đã tồn tại. Không thể chỉnh sửa thể loại này`
+            if(json.success === success)
+            {
+                alert(success)
+                var ElementP = document.querySelector('input[name="name_category"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(json.fail === fail)
+            {
+                alert(fail)
+                var ElementP = document.querySelector('input[name="name_category"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Tên thể loại đã tồn tại";
+                ElementP.classList.add('border-message')
+            }
         }
     }
 
@@ -217,12 +222,12 @@
                         <h2 class = "edit_category-title">Thêm thể loại sản phẩm</h2>
                         <ul class = "edit_category-content">
                             <li>
-                                <h4>Tên sản phẩm</h4>
+                                <h4>Tên thể loại</h4>
                                 <input style = "width : 400px" name = "name_category" type="text">
                                 <span class = "form-message"></span>
                             </li>
                             <li>
-                                <h4>Ảnh sản phẩm</h4>
+                                <h4>Ảnh thể loại</h4>
                                 <input name = "image_category" type="file">
                                 <img class = "image_display" style = "width : 60px; height : 40px" src="" alt="">
                                 <span class = "form-message"></span>
@@ -315,24 +320,27 @@
 
     async function HandleAddCategory(nameCategory, imageCategory)
     {
-        var formData = new FormData();
-        formData.append('name_category', nameCategory);
-        formData.append('image_category', imageCategory);
-       
-        var link = await fetch('crud/handle_addCategory.php', {
-            method: 'POST',
-            body: formData
-        });
-        var json = await link.json();
-        var success = `Thêm thể loại ${nameCategory} vào cửa hàng thành công`;
-        var fail = `Thể loại ${nameCategory} đã tồn tại trong cửa hàng`;
-        if(json.status === success)
+        if(confirm("Xác nhận thêm thể loại?"))
         {
-            alert(success)
-        }
-        if(json.status === fail)
-        {
-            alert(fail)
+            var formData = new FormData();
+            formData.append('name_category', nameCategory);
+            formData.append('image_category', imageCategory);
+           
+            var link = await fetch('crud/handle_addCategory.php', {
+                method: 'POST',
+                body: formData
+            });
+            var json = await link.json();
+            var success = `Thêm thể loại ${nameCategory} vào cửa hàng thành công`;
+            var fail = `Thể loại ${nameCategory} đã tồn tại trong cửa hàng`;
+            if(json.status === success)
+            {
+                alert(success)
+            }
+            if(json.status === fail)
+            {
+                alert(fail)
+            }
         }
     }
 
@@ -340,8 +348,11 @@
     // Delete Category
     async function DeleteCategory(id)
     {
-        var link = await fetch(`crud/delete_category.php?id_delete=${id}`)
-        LinkLoadProduct()
+        if(confirm("Xác nhận xóa thể loại?"))
+        {
+            var link = await fetch(`crud/delete_category.php?id_delete=${id}`)
+            LinkLoadCategory()
+        }
     }
     var elementDel = document.querySelectorAll(".deleteCategory")
     elementDel.forEach(function(item)
@@ -354,7 +365,7 @@
             DeleteCategory(idCategory)
         })
     })
-    async function LinkLoadProduct()
+    async function LinkLoadCategory()
     {
         var link = await fetch('crud/get_all_category.php');
         var json =  await link.json();
@@ -389,11 +400,13 @@
                     <td>
                         <a class = "editCategory" data-id-category = ${value.id} href="">
                             <i class="fa-solid fa-pen-to-square"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
                         </a>
                     </td>
                     <td>
                         <a class = "deleteCategory" data-id-category = ${value.id} href="">
-                            <i class="fa-solid fa-trash"></i>
+                            <i style = "color : red" class="fa-solid fa-trash"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
                         </a>
                     </td>
                 </tr>

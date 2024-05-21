@@ -36,11 +36,13 @@
                     <td>
                         <a data-id-product = <?php echo $row['id']; ?> class = "elementEdit" href="">
                             <i class="fa-solid fa-pen-to-square"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
                         </a>
                     </td>
                     <td>
                         <a class = "elementDel" data-id-product = <?php echo $row['id']; ?> href="">
-                            <i class="fa-solid fa-trash"></i>
+                            <i style = "color : red" class="fa-solid fa-trash"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
                         </a>
                     </td>
                 </tr>
@@ -52,8 +54,11 @@
 <script>
     async function deleteProduct(id)
     {
-        var link = await fetch(`crud/delete_product.php?id_delete=${id}`)
-        LinkLoadProduct()
+        if(confirm("Xác nhận xóa sản phẩm?"))
+        {
+            var link = await fetch(`crud/delete_product.php?id_delete=${id}`)
+            LinkLoadProduct()
+        }
     }
     var elementDel = document.querySelectorAll(".elementDel")
     elementDel.forEach(function(item)
@@ -101,11 +106,13 @@
                     <td>
                         <a href=index.php?title=product&action=edit&id_edit=${value.id}">
                             <i class="fa-solid fa-pen-to-square"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
                         </a>
                     </td>
                     <td>
                         <a class = "elementDel" data-id-product = ${value.id} href="">
-                            <i class="fa-solid fa-trash"></i>
+                            <i style = "color : red" class="fa-solid fa-trash"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
                         </a>
                     </td>
                 </tr>
@@ -116,6 +123,7 @@
 
     async function EditProduct(id)
     {
+
         var link = await fetch(`crud/edit_product.php?id_edit=${id}`)
         var json = await link.json();
         console.log(json)
@@ -137,32 +145,35 @@
     async function HandleEditProduct(idProduct, nameProduct, imageProduct, priceProduct, publisherProduct, quantityProduct, 
     yearProduct, detailProduct, categoryProduct, authorProduct)
     {
-        var formData = new FormData();
-        formData.append('id_product', idProduct);
-        formData.append('name_product', nameProduct);
-        formData.append('image_product', imageProduct);
-        formData.append('price_product', priceProduct);
-        formData.append('publisher_product', publisherProduct);
-        formData.append('quantity_product', quantityProduct);
-        formData.append('publish_year', yearProduct);
-        formData.append('detail_product', detailProduct);
-        formData.append('category_product', categoryProduct);
-        formData.append('author_product', authorProduct);
-        
-        var link = await fetch('crud/handle_editProduct.php', {
-            method: 'POST',
-            body: formData
-        });
-        var json = await link.json();
-        var success = `Chỉnh sửa sản phẩm ${nameProduct} thành công`
-        var fail = `Sản phẩm ${nameProduct} đã tồn tại. Không thể chỉnh sửa sản phẩm này`
-        if(json.success === success)
+        if(confirm("Xác nhận chỉnh sửa sản phẩm?"))
         {
-            alert(success)
-        }
-        if(json.fail === fail)
-        {
-            alert(fail)
+            var formData = new FormData();
+            formData.append('id_product', idProduct);
+            formData.append('name_product', nameProduct);
+            formData.append('image_product', imageProduct);
+            formData.append('price_product', priceProduct);
+            formData.append('publisher_product', publisherProduct);
+            formData.append('quantity_product', quantityProduct);
+            formData.append('publish_year', yearProduct);
+            formData.append('detail_product', detailProduct);
+            formData.append('category_product', categoryProduct);
+            formData.append('author_product', authorProduct);
+            
+            var link = await fetch('crud/handle_editProduct.php', {
+                method: 'POST',
+                body: formData
+            });
+            var json = await link.json();
+            var success = `Chỉnh sửa sản phẩm ${nameProduct} thành công`
+            var fail = `Sản phẩm ${nameProduct} đã tồn tại. Không thể chỉnh sửa sản phẩm này`
+            if(json.success === success)
+            {
+                alert(success)
+            }
+            if(json.fail === fail)
+            {
+                alert(fail)
+            }
         }
     }
 

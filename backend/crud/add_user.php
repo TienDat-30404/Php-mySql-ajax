@@ -58,51 +58,54 @@
 <script>
     async function HandleAddUser(idRole, name, email, password, address, phone)
     {
-        var formData = new FormData();
-        formData.append('user_add-roleId', idRole);
-        formData.append('user_add-name', name);
-        formData.append('user_add-email', email);
-        formData.append('user_add-password', password);
-        formData.append('user_add-address', address);
-        formData.append('user_add-phone', phone);
-        var link = await fetch('crud/handle_addUser.php', {
-            method: 'POST',
-            body: formData
-        });
-        var json = await link.json();
-        var success = `Thêm tài khoản ${name} thành công`;
-        var fail = `Tài khoản ${name} đã tồn tại`;
-        if(json.status === success)
+        if(confirm("Xác nhận thêm ?"))
         {
-            alert(success)
-            var ElementP = document.querySelector('input[name="user_add-name"]')
-            var notification = ElementP.nextElementSibling;
-            notification.innerText = "";
-            ElementP.classList.remove('border-message')
-
-            var ElementP1 = document.querySelector('input[name="user_add-email"]')
-            var notification1 = ElementP1.nextElementSibling;
-            notification1.innerText = "";
-            ElementP1.classList.remove('border-message')
-
-            var ElementP2 = document.querySelector('input[name="user_add-password"]')
-            var notification2 = ElementP2.nextElementSibling;
-            notification2.innerText = "";
-            ElementP2.classList.remove('border-message')
-
-            var ElementP3 = document.querySelector('input[name="user_add-address"]')
-            var notification3 = ElementP3.nextElementSibling;
-            notification3.innerText = "";
-            ElementP3.classList.remove('border-message')
-
-            var ElementP4 = document.querySelector('input[name="user_add-phone"]')
-            var notification4 = ElementP4.nextElementSibling;
-            notification4.innerText = "";
-            ElementP4.classList.remove('border-message')
-        }
-        if(json.status === fail)
-        {
-            alert(fail)
+            var formData = new FormData();
+            formData.append('user_add-roleId', idRole);
+            formData.append('user_add-name', name);
+            formData.append('user_add-email', email);
+            formData.append('user_add-password', password);
+            formData.append('user_add-address', address);
+            formData.append('user_add-phone', phone);
+            var link = await fetch('crud/handle_addUser.php', {
+                method: 'POST',
+                body: formData
+            });
+            var json = await link.json();
+            var success = `Thêm tài khoản ${name} thành công`;
+            var fail = `Tài khoản ${name} đã tồn tại`;
+            if(json.status === success)
+            {
+                alert(success)
+                var ElementP = document.querySelector('input[name="user_add-name"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+    
+                var ElementP1 = document.querySelector('input[name="user_add-email"]')
+                var notification1 = ElementP1.nextElementSibling;
+                notification1.innerText = "";
+                ElementP1.classList.remove('border-message')
+    
+                var ElementP2 = document.querySelector('input[name="user_add-password"]')
+                var notification2 = ElementP2.nextElementSibling;
+                notification2.innerText = "";
+                ElementP2.classList.remove('border-message')
+    
+                var ElementP3 = document.querySelector('input[name="user_add-address"]')
+                var notification3 = ElementP3.nextElementSibling;
+                notification3.innerText = "";
+                ElementP3.classList.remove('border-message')
+    
+                var ElementP4 = document.querySelector('input[name="user_add-phone"]')
+                var notification4 = ElementP4.nextElementSibling;
+                notification4.innerText = "";
+                ElementP4.classList.remove('border-message')
+            }
+            if(json.status === fail)
+            {
+                alert(fail)
+            }
         }
     }
     var addButton = document.querySelector('input[name="button_add"]')

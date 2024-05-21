@@ -14,7 +14,7 @@
             <th>FullName</th>
             <th>Address</th>
             <th>Number Phone</th>
-            <th colspan = "2">Action</th>
+            <th>Restore</th>
         </tr>
     </thead>
     <tbody>
@@ -33,15 +33,10 @@
                     <td><?php echo $row['fullname']; ?></td>
                     <td><?php echo $row['address']; ?></td>
                     <td><?php echo $row['phone_number']; ?></td>
-                    
                     <td>
-                        <a href="index.php?title=account&action=delete">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="../backend/crud/delete_user.php?id_delete=<?php echo $row['id']; ?>">
-                            <i class="fa-solid fa-trash"></i>
+                        <a class = "restore_user" data-id-user = <?php echo $row['id']; ?> href="">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Khôi phục</h5>
                         </a>
                     </td>
                 </tr>
@@ -49,3 +44,72 @@
         ?>
     </tbody>
 </table>
+
+<script>
+    async function RestoreUser(id)
+    {
+        var formData = new FormData();
+        formData.append('id_user', id);
+        var link = await fetch('crud/restore_user.php', {
+            method : 'POST',
+            body : formData
+        });
+        LinkLoadUser()
+    }
+    var buttonRestore = document.querySelectorAll('.restore_user')
+    buttonRestore.forEach(function(item)
+    {
+        item.addEventListener('click', function(event)
+        {
+            event.preventDefault();
+            var idUser = this.getAttribute('data-id-user')
+            console.log(idUser)
+            RestoreUser(idUser);
+        })
+    })
+    async function LinkLoadUser()
+    {
+        var link = await fetch('crud/get_all_noExistUser.php');
+        var json =  await link.json();
+        LoadUser(json)
+        var elementDel = document.querySelectorAll(".restore_user")
+        elementDel.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+        {
+            console.log(item)
+            event.preventDefault();
+            var idUser = this.getAttribute('data-id-user')
+            RestoreUser(idUser)
+        })
+        })
+    }
+    function LoadUser(data)
+    {
+        var tableBody = document.querySelector('table tbody')
+        tableBody.innerHTML = ""
+        data.forEach(function(value)
+        {
+            var row = document.createElement('tr')
+            row.innerHTML = 
+            `
+            <tr>
+                <td>${value.id}</td>
+                <td>${value.role_id}</td>
+                <td>${value.email}</td>
+                <td>${value.password}</td>
+                <td>${value.fullname}</td>
+                <td>${value.address}</td>
+                <td>${value.phone_number}</td>
+                <td>
+                    <a class = "restore_user" data-id-user = "${value.id} href="">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Khôi phục</h5>
+                    </a>
+                </td>
+            </tr>
+            `
+            tableBody.appendChild(row)
+        })
+    }
+</script>

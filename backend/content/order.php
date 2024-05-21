@@ -77,7 +77,6 @@
     {
         item.addEventListener('click', function(event)
         {
-            checkExit = true
            event.preventDefault();
            var idOrder = this.getAttribute('data-id-order')
            DetailOrder(idOrder)
@@ -158,8 +157,11 @@
     // Delete Order
     async function DeleteOrder(id)
     {
-        var link = await fetch(`crud/delete_order.php?id_delete=${id}`)
-        LinkLoadOrder()
+        if(confirm("Xác nhận xóa đơn hàng này?"))
+        {
+            var link = await fetch(`crud/delete_order.php?id_delete=${id}`)
+            LinkLoadOrder()
+        }
     }
     var elementDel = document.querySelectorAll(".deleteOrder")
     elementDel.forEach(function(item)
@@ -230,6 +232,16 @@
                 DeleteOrder(idBill)
             })
         })
+        var elementEdit = document.querySelectorAll('.detailOrder')
+        elementEdit.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+            {
+                event.preventDefault();
+                var idOrder = this.getAttribute('data-id-order')
+                DetailOrder(idOrder)
+            })
+        })
     }
     function LoadOrder(data)
     {
@@ -273,7 +285,7 @@
                         </a>
                     </td>
                     <td>
-                        <a data-id-author = ${value.idBill} class = "deleteAuthor" href="">
+                        <a data-id-order = ${value.idBill} class = "detailOrder" href="">
                             <i style = "color : blue" class="fa-solid fa-circle-info"></i>
                             <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Chi tiết</h5>
                         </a>

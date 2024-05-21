@@ -26,11 +26,13 @@
                     <td>
                         <a data-id-publisher = <?php echo $row['id']; ?> class = "editPublisher" href="">
                             <i class="fa-solid fa-pen-to-square"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
                         </a>
                     </td>
                     <td>
                         <a data-id-publisher = <?php echo $row['id']; ?> class = "deletePublisher" href="">
-                            <i class="fa-solid fa-trash"></i>
+                            <i style = "color : red" class="fa-solid fa-trash"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
                         </a>
                     </td>
                 </tr>
@@ -56,7 +58,7 @@
             checkExit = true
            event.preventDefault();
            var idPublisher = this.getAttribute('data-id-publisher')
-           EditPublisher(idPublisher)
+            EditPublisher(idPublisher)
         })
     })
     function DisplayPublisher(data)
@@ -122,39 +124,42 @@
     }
     async function HandleEditPublisher(idPublisher, namePublisher)
     {
-        var formData = new FormData();
-        formData.append('id_publisher', idPublisher);
-        formData.append('name_publisher', namePublisher);
-        var link = await fetch('crud/handle_editPublisher.php', {
-            method: 'POST',
-            body: formData
-        });
-        var json = await link.json();
-        var success = `Chỉnh sửa nhà cung cấp ${namePublisher} thành công`
-        var fail = `Nhà cung cấp ${namePublisher} đã tồn tại. Không thể chỉnh sửa nhà cung cấp này`
-        if(json.success === success)
+        if(confirm("Xác nhận chỉnh sửa"))
         {
-            alert(success)
-            var ElementP = document.querySelector('input[name="name_publisher"]')
-            var notification = ElementP.nextElementSibling;
-            notification.innerText = "";
-            ElementP.classList.remove('border-message')
-        }
-        if(json.fail === fail)
-        {
-            alert(fail)
-            var ElementP = document.querySelector('input[name="name_publisher"]')
-            ElementP.focus()
-            var notification = ElementP.nextElementSibling;
-            notification.innerText = "Tên nhà cung cấp đã tồn tại";
-            ElementP.classList.add('border-message')
+            var formData = new FormData();
+            formData.append('id_publisher', idPublisher);
+            formData.append('name_publisher', namePublisher);
+            var link = await fetch('crud/handle_editPublisher.php', {
+                method: 'POST',
+                body: formData
+            });
+            var json = await link.json();
+            var success = `Chỉnh sửa nhà cung cấp ${namePublisher} thành công`
+            var fail = `Nhà cung cấp ${namePublisher} đã tồn tại. Không thể chỉnh sửa nhà cung cấp này`
+            if(json.success === success)
+            {
+                alert(success)
+                var ElementP = document.querySelector('input[name="name_publisher"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(json.fail === fail)
+            {
+                alert(fail)
+                var ElementP = document.querySelector('input[name="name_publisher"]')
+                ElementP.focus()
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Tên nhà cung cấp đã tồn tại";
+                ElementP.classList.add('border-message')
+            }
         }
     }
 
 
 
 
-    // Add Author
+    // Add Publisher
     function AddPublisher()
     {
         var addPublisher = 
@@ -216,40 +221,46 @@
 
     async function HandleAddPublisher(namePublisher)
     {
-        var formData = new FormData();
-        formData.append('name_publisher', namePublisher);
-        var link = await fetch('crud/handle_addPublisher.php', {
-            method: 'POST',
-            body: formData
-        });
-        var json = await link.json();
-        var success = `Thêm nhà cung cấp ${namePublisher} vào cửa hàng thành công`;
-        var fail = `Nhà cung cấp ${namePublisher} đã tồn tại trong cửa hàng`;
-        if(json.status === success)
+        if(confirm("Xác nhân thêm nhà cung cấp này?"))
         {
-            alert(success)
-            var ElementP = document.querySelector('input[name="name_publisher"]')
-            var notification = ElementP.nextElementSibling;
-            notification.innerText = "";
-            ElementP.classList.remove('border-message')
-        }
-        if(json.status === fail)
-        {
-            alert(fail)
-            var ElementP = document.querySelector('input[name="name_publisher"]')
-            ElementP.focus()
-            var notification = ElementP.nextElementSibling;
-            notification.innerText = "Tên nhà cung cấp đã tồn tại";
-            ElementP.classList.remove('border-message')
+            var formData = new FormData();
+            formData.append('name_publisher', namePublisher);
+            var link = await fetch('crud/handle_addPublisher.php', {
+                method: 'POST',
+                body: formData
+            });
+            var json = await link.json();
+            var success = `Thêm nhà cung cấp ${namePublisher} vào cửa hàng thành công`;
+            var fail = `Nhà cung cấp ${namePublisher} đã tồn tại trong cửa hàng`;
+            if(json.status === success)
+            {
+                alert(success)
+                var ElementP = document.querySelector('input[name="name_publisher"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+            }
+            if(json.status === fail)
+            {
+                alert(fail)
+                var ElementP = document.querySelector('input[name="name_publisher"]')
+                ElementP.focus()
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "Tên nhà cung cấp đã tồn tại";
+                ElementP.classList.remove('border-message')
+            }
         }
     }
 
 
-    // Delete Author
+    // Delete Publisher
     async function DeletePublisher(id)
     {
-        var link = await fetch(`crud/delete_publisher.php?id_delete=${id}`)
-        LinkLoadPublisher()
+        if(confirm("Xác nhận xóa nhà cung cấp này?"))
+        {
+            var link = await fetch(`crud/delete_publisher.php?id_delete=${id}`)
+            LinkLoadPublisher()
+        }
     }
     var elementDel = document.querySelectorAll(".deletePublisher")
     elementDel.forEach(function(item)
@@ -272,10 +283,21 @@
         {
             item.addEventListener('click', function(event)
             {
-            console.log(item)
-            event.preventDefault();
-            var idAuthor = this.getAttribute('data-id-publisher')
-            DeleteAuthor(idAuthor)
+                console.log(item)
+                event.preventDefault();
+                var idPublisher = this.getAttribute('data-id-publisher')
+                DeletePublisher(idPublisher)
+            })
+        })
+        var elementEdit = document.querySelectorAll('.editPublisher')
+        elementEdit.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+            {
+                checkExit = true
+                event.preventDefault();
+                var idPublisher = this.getAttribute('data-id-publisher')
+                EditPublisher(idPublisher)
             })
         })
     }
@@ -292,13 +314,15 @@
                     <td>${value.id}</td>
                     <td>${value.name}</td>
                     <td>
-                        <a class = "editAuthor" data-id-publisher = ${value.id} href="">
+                        <a class = "editPublisher" data-id-publisher = ${value.id} href="">
                             <i class="fa-solid fa-pen-to-square"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
                         </a>
                     </td>
                     <td>
-                        <a class = "deleteAuthor" data-id-publisher = ${value.id} href="">
-                            <i class="fa-solid fa-trash"></i>
+                        <a class = "deletePublisher" data-id-publisher = ${value.id} href="">
+                            <i style = "color : red" class="fa-solid fa-trash"></i>
+                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
                         </a>
                     </td>
                 </tr>

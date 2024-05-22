@@ -1,5 +1,5 @@
 
-<table style = "width : 100%; background-color : white" cellspacing = "0" cellpading = "10">
+<table class = "tableMain" style = "width : 100%; background-color : white" cellspacing = "0" cellpading = "10">
     <thead>
         <tr>
             <th colspan = "9">
@@ -17,40 +17,10 @@
         </tr>
     </thead>
     <tbody>
-        <?php 
-              include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
-            $sql = "SELECT * FROM products WHERE isActive = 1";
-            $result = DataSQL::querySQl($sql);
-            while($row = mysqli_fetch_array($result))
-            {
-                ?>
-                <tr>
-                    <td><?php echo $row['id']; ?></td>
-                    <td><?php echo $row['name']; ?></td>
-                    <td>
-                        <img style = "width : 80px; height : 80px;" src="<?php echo $row['image']; ?>" alt="">
-                    </td>
-                    <td><?php echo $row['price']; ?></td>
-                    <td><?php echo $row['quantity']; ?></td>
-                    <td><?php echo $row['publish_year']; ?></td>
-                    <td>
-                        <a data-id-product = <?php echo $row['id']; ?> class = "elementEdit" href="">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
-                        </a>
-                    </td>
-                    <td>
-                        <a class = "elementDel" data-id-product = <?php echo $row['id']; ?> href="">
-                            <i style = "color : red" class="fa-solid fa-trash"></i>
-                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
-                        </a>
-                    </td>
-                </tr>
-            <?php }
-        ?>
+        
     </tbody>
 </table>
-
+<div class = "pagination"></div>
 <script>
     async function deleteProduct(id)
     {
@@ -195,7 +165,7 @@
                     <div class = "productEdit">
                         <form method = "" action = "" class = "edit_product" enctype="multipart/form-data">
                                             
-                            <a href = "index.php?title=product" style = "cursor : pointer;" class = "exit_edit-product">x</a>
+                            <a href = "" style = "cursor : pointer;" class = "exit_edit-product">x</a>
                             <h2 class = "edit_product-title">Chỉnh sửa sản phẩm</h2>
                             <ul class = "edit_product-content">
                             
@@ -265,7 +235,6 @@
             `
             document.body.insertAdjacentHTML('beforeend', editProduct);
             
-
             // Add combobox category
             var categorySelect = document.querySelector('select[name="category_product"]');
             data.categories.forEach(function(value)
@@ -546,23 +515,233 @@
                 }
             })
 
-             // Exit Edit 
-            // var exitEdit = document.querySelector('.exit_edit-product')
-            // var modalEdit = document.querySelector('.modal')
-            // console.log(checkExit)
-            // exitEdit.addEventListener('click', function(event)
-            // {
-            //     event.preventDefault();
-            //     if(checkExit == true)
-            //     {
-            //         document.querySelector('.modal').style.display = "none"
-            //         checkExit = true
-            //     }
-            // })
+
         })
     }
 
    
-    
-    
+    // Search ----------------------------------------------------------------
+    var currentPage = 1
+    var pageSize = 5
+    var pagination = document.querySelector('.pagination')
+    function DisplayProduct(data, element)
+    {
+        var informations
+        if(data.number != 0)
+        {
+
+            document.querySelector('table').innerHTML = ""
+            informations =
+                `<thead>
+                        <tr>
+                            <th colspan = "9">
+                                <a href="index.php?title=product&action=add">Add Product</a>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style = "width : 60px">Id</th>
+                            <th style = "width : 500px">Name</th>
+                            <th>image</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Publish Year</th>
+                            <th colspan = "2">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>`
+                        data.informations.forEach(function(value)
+                        {
+                            informations += `
+                            <tr>
+                                <td>${value.id}</td>
+                                <td>${value.nameProduct}</td>
+                                <td>
+                                    <img style = "width : 80px; height : 80px;" src="${value.imageProduct}" alt="">
+                                </td>
+                                <td>${value.price}</td>
+                                <td>${value.quantity}</td>
+                                <td>${value.publish_year}</td>
+                                <td>
+                                    <a data-id-product = "${value.id}" class = "elementEdit" href="">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                        <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class = "elementDel" data-id-product = "${value.id}" href="">
+                                        <i style = "color : red" class="fa-solid fa-trash"></i>
+                                        <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
+                                    </a>
+                                </td>
+                            </tr>
+                            `
+                        })
+                    informations += `
+                    </tbody>
+                `
+        }
+        else 
+        {
+            informations = ""
+        }
+        document.querySelector(element).innerHTML = informations
+        var elementEdit = document.querySelectorAll('.elementEdit')
+        elementEdit.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+            {
+                checkExit = true
+            event.preventDefault();
+            var idProduct = this.getAttribute('data-id-product')
+            EditProduct(idProduct)
+            })
+        })
+
+        var elementDel = document.querySelectorAll(".elementDel")
+        elementDel.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+        {
+            event.preventDefault();
+            var idProduct = this.getAttribute('data-id-product')
+            deleteProduct(idProduct)
+            document.querySelector('.container_right-header-search input[type="text"]').value = ""
+            document.querySelector("#select_search-product").value = "0"
+            DisPlayMain()
+
+        })
+        })
+    }
+    async function DisPlayMain()
+    {
+        var response = await fetch(`../frontend/pages/product.php?page=${currentPage}&pageSize=${pageSize}`);
+        var json = await response.json()
+        console.log(json)
+        DisplayProduct(json, "table")
+        DisplayPagination(json, 0)
+    }
+    DisPlayMain()
+    async function SearchAllProduct()
+    {
+        var response = await fetch(`../frontend/pages/product.php?page=${currentPage}&pageSize=${pageSize}`);
+        var json = await response.json()
+        console.log(json)
+        DisplayProduct(json, "table")
+        DisplayPagination(json, 0)
+    }
+    async function SearchNameProduct(nameSearch)
+    {
+        var response = await fetch(`../frontend/pages/search.php?page=${currentPage}&pageSize=${pageSize}&inputSearchName=${nameSearch}`);
+        var json = await response.json()
+        console.log(json)
+        DisplayProduct(json, "table")
+        DisplayPagination(json, 2)
+    }
+    async function SearchIdProduct(idProduct)
+    {
+        var response = await fetch(`crud/searchIdProduct.php?page=${currentPage}&pageSize=${pageSize}&inputSearchName=${idProduct}`);
+        var json = await response.json()
+        console.log(json)
+        DisplayProduct(json, "table")
+    }
+    var copySearch
+    var checkSelect = document.querySelector("#select_search-product")
+    checkSelect.addEventListener("change", function(e)
+    {
+   
+            document.querySelector('.container_right-header-search input[type="text"]').value = ""
+    })
+    document.querySelector('.button_search').addEventListener('click', function(event)
+    {
+        currentPage = 1
+        pagination.innerHTML = ""
+        var inputSearch = document.querySelector('.container_right-header-search input[type="text"]').value
+        copySearch = inputSearch
+        event.preventDefault();
+      
+        var indexSelect = checkSelect.value
+        if(indexSelect == 0)
+        {
+            SearchAllProduct()
+        }
+        else if(indexSelect == 1)
+        {
+            SearchIdProduct(inputSearch)
+        }
+        else if(indexSelect == 2) 
+        {
+            SearchNameProduct(inputSearch)
+        }
+    })
+
+
+    function DisplayPagination(data, check) {
+    pagination.innerHTML = "";
+    var maxPage = Math.ceil(data.number/ pageSize);
+    console.log(maxPage)
+    var start = 1;
+    var end = maxPage;
+    if(currentPage > 2 && maxPage > 3 && currentPage < maxPage)
+    {
+        start = currentPage - 1;
+        end = currentPage + 1;
+    }
+    else if(currentPage == maxPage && maxPage > 3)
+    {
+        start = currentPage - 2;
+        end = maxPage;
+    }
+    else if(maxPage > 3 && currentPage <= 2)
+    {
+        end = 3;
+    }
+    else if(maxPage == 1)
+    {
+        pagination.classList.add('hide');
+    }
+    if(maxPage > 1)
+    {
+        pagination.classList.remove('hide')
+    }
+    if(currentPage > 1)
+    {
+        var prevPage = document.createElement('li');
+        prevPage.innerText = "Prev";
+        prevPage.setAttribute('onclick', "ChangePage(" + (currentPage - 1) +", " + check + ")");
+        pagination.appendChild(prevPage);
+    }
+    for (var i = start; i <= end; i++) {
+        var pageButton = document.createElement('li');
+        pageButton.innerText = i;
+        if(i == currentPage)
+        {
+            pageButton.classList.add('headPage')
+        }
+        pageButton.setAttribute('onclick', "ChangePage(" + (i) + ", " + check + ")")
+        pagination.appendChild(pageButton);
+    }
+    if(currentPage < maxPage)
+    {
+        var nextPage = document.createElement('li')
+        nextPage.innerText = "Next";
+        nextPage.setAttribute('onclick', "ChangePage(" + (currentPage + 1) +", " + check + ")");
+        pagination.appendChild(nextPage)
+    }
+    }
+    function ChangePage(index, check)
+    {
+        currentPage = index;
+        if(check == 0)
+        {
+            SearchAllProduct()
+        }
+        else if(check == 1)
+        {
+            SearchIdProduct(copySearch)
+        }
+        else if(check == 2)
+        {
+            SearchNameProduct(copySearch)
+        }
+    }
 </script>

@@ -297,3 +297,51 @@ a:hover
 {
     cursor : pointer;
 }
+.button_search
+{
+    outline : none;
+    border : none;
+    padding : 7px;
+    font-weight: 600;
+}
+.button_search:hover 
+{
+    color : white;
+    background-color: #f2586e;
+    cursor : pointer;
+}
+
+/* pagination -------------------------- */
+.pagination
+{
+    width : 20%;
+    height : 40px;
+    display : flex;
+    margin : 0 auto;
+    margin-top : 20px;
+    margin-bottom : 0px;
+}
+
+.pagination li
+{
+    width : 20%;
+    height : 100%;
+    list-style: none;
+    color : red;
+    background-color: #ccc;
+    cursor : pointer;
+    margin-left : 15px;
+    display : flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hide 
+{
+    display : none;
+}
+.pagination .headPage 
+{
+    background-color: #f2586e;
+    color : black;
+}

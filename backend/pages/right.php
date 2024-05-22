@@ -1,10 +1,16 @@
+
 <div class = "container_right">
     <div class = "container_right-header">
         <i class="fa-solid fa-bars"></i>
+        <select name="" id="select_search-product">
+            <option value="0">Tất cả</option>
+            <option value="1">Tìm kiếm theo mã</option>
+            <option value="2">Tìm kiếm theo tên</option>
+        </select>
         <div class = "container_right-header-search">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder = "Search here">
+            <input style = "text-align : center" type="text" placeholder = "Search here">
         </div>
+        <input class = "button_search" type="submit" value = "Tìm kiếm">
         <img src="image/user.png" alt="">
     </div>
     <div class = "container_right-content">

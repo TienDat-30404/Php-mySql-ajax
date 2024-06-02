@@ -69,7 +69,6 @@
     {
         var link = await fetch(`crud/detail_order.php?id_order=${id}`)
         var json = await link.json();
-        console.log(json)
         DisplayDetailOrder(json)
     }
     var elementEdit = document.querySelectorAll('.detailOrder')
@@ -168,7 +167,6 @@
     {
         item.addEventListener('click', function(event)
         {
-            console.log(item)
             event.preventDefault();
             var idOrder = this.getAttribute('data-id-order')
             DeleteOrder(idOrder)
@@ -302,5 +300,13 @@
         })
     }
 
-    // 
+    // Seacrh Order -----------------------------------
+    async function SearchOrder(idOrder, nameCustomer, dateFrom, dateTo, status)
+    {
+        var response = await fetch(`crud/search_order.php?id_order=${idOrder}&name_customer=${nameCustomer}&date_from=${dateFrom}&
+        date_to=${dateTo}&status=${status}`)
+        var json = await response.json();
+        console.log(json)
+    }
+    SearchOrder(51, "", "", "", 0)
 </script>

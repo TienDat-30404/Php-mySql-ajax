@@ -14,34 +14,10 @@
         </tr>
     </thead>
     <tbody>
-        <?php 
-              include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
-            $sql = "SELECT * FROM categories";
-            $result = DataSQL::querySQl($sql);
-            while($row = mysqli_fetch_array($result))
-            {
-                ?>
-                <tr>
-                    <td><?php echo $row['id']; ?></td>
-                    <td><?php echo $row['name']; ?></td>
-                    <td><img style = "width : 50px; height : 50px" src="<?php echo $row['image']; ?>" alt=""></td>
-                    <td>
-                        <a data-id-category = <?php echo $row['id']; ?> class = "editCategory" href="">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
-                        </a>
-                    </td>
-                    <td>
-                        <a data-id-category = <?php echo $row['id']; ?> class = "deleteCategory" href="">
-                            <i style = "color : red" class="fa-solid fa-trash"></i>
-                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
-                        </a>
-                    </td>
-                </tr>
-            <?php }
-        ?>
+       
     </tbody>
 </table>
+<div class = "pagination"></div>
 <script>
 
     // Edit Category -------------------------------------------------------------------------------
@@ -65,7 +41,7 @@
     })
     function DisplayCategory(data)
     {
-        data.forEach(function(value)
+        data.informations.forEach(function(value)
         {
             var editCategory = 
             `
@@ -77,15 +53,15 @@
                             <h2 class = "edit_category-title">Chỉnh sửa thể loại sản phẩm</h2>
                             <ul class = "edit_category-content">
                                 <li>
-                                    <h4>Tên sản phẩm</h4>
-                                    <input style = "width : 400px" value = "${value.name}" name = "name_category" type="text">
+                                    <h4>Tên thể loại</h4>
+                                    <input style = "width : 400px" value = "${value.name}" name="name_category" type="text">
                                     <span class = "form-message"></span>
                                 </li>
                                 <li>
-                                    <h4>Ảnh sản phẩm</h4>
+                                    <h4>Ảnh thể loại</h4>
                                     <input name = "image_category" type="file">
-                                    <img class = "image_display" style = "width : 60px; height : 40px" src="${value.image}" alt="">
                                     <span class = "form-message"></span>
+                                    <img class = "image_display" style = "width : 60px; height : 40px" src="${value.image}" alt="">
 
                                 </li>
                                 <li>
@@ -113,6 +89,7 @@
                     if(nameCategory == "")
                     {
                         var ElementP = document.querySelector('input[name="name_category"]')
+                        console.log(ElementP)
                         var notification = ElementP.nextElementSibling;
                         notification.innerText = "Tên không được rông";
                         ElementP.classList.add('border-message')
@@ -352,6 +329,7 @@
         {
             var link = await fetch(`crud/delete_category.php?id_delete=${id}`)
             LinkLoadCategory()
+            DisplayDefaultCategory(0, "")
         }
     }
     var elementDel = document.querySelectorAll(".deleteCategory")
@@ -413,5 +391,245 @@
             `
             tableBody.appendChild(row)
         })
+    }
+
+
+
+    /* Search ----------------------------------------------------------------------- */
+    var currentPage = 1
+    var pageSize = 7
+    var pagination = document.querySelector('.pagination')
+    function DisplaySearchCategory(data, element)
+    {
+        var informations
+        if(data.number != 0)
+        {
+            document.querySelector('table').innerHTML = ""
+            informations =
+                ` <thead>
+                        <tr>
+                            <th colspan = "5">
+                                <a class = "addCategory" href="">Add Category</a>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Image</th>
+                            <th colspan = "2">Action</th>
+                        </tr>
+                    </thead>
+                <tbody>`
+                    data.informations.forEach(function(value)
+                    {
+                        informations += `
+                        <tr>
+                            <td>${value.id}</td>
+                            <td>${value.name}</td>
+                            <td><img style = "width : 50px; height : 50px" src="${value.image}" alt=""></td>
+                            <td>
+                                <a data-id-category = "${value.id}" class = "editCategory" href="">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
+                                </a>
+                            </td>
+                            <td>
+                                <a data-id-category = "${value.id}" class = "deleteCategory" href="">
+                                    <i style = "color : red" class="fa-solid fa-trash"></i>
+                                    <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
+                                </a>
+                            </td>
+                        </tr>
+                        `
+                    })
+                informations += `
+                </tbody>
+                `
+        }
+        else 
+        {
+            informations = ""
+        }
+        document.querySelector(element).innerHTML = informations
+
+        var addCategory = document.querySelector('.addCategory')
+        addCategory.addEventListener('click', function(e)
+        {
+            e.preventDefault()
+            AddCategory()
+        })
+        
+        var elementEdit = document.querySelectorAll('.editCategory')
+        elementEdit.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+            {
+                checkExit = true
+            event.preventDefault();
+            var idCategory = this.getAttribute('data-id-category')
+            console.log(idCategory)
+            EditCategory(idCategory)
+            })
+        })
+
+        var elementDel = document.querySelectorAll(".deleteCategory")
+        elementDel.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+        {
+            event.preventDefault();
+            var idCategory = this.getAttribute('data-id-category')
+            DeleteCategory(idCategory)
+            // SearchIdAndName(0, "")
+
+        })
+        })
+    }
+    
+    async function SearchIdAndName(idCategory, nameCategory)
+    {
+        var response = await fetch(`crud/search_category.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idCategory}&
+        name_search=${nameCategory}`);
+        var json = await response.json()
+        console.log(json)
+        DisplaySearchCategory(json, "table")
+        // DisplayPagination(json, 0)
+        checkSelect.addEventListener("change", function(e)
+        {
+            if(checkSelect.value == 0)
+            {
+                DisplayPagination(json, 1)
+            }
+            else if(checkSelect.value == 2)
+            {
+                DisplayPagination(json, 1)
+            }
+
+        })
+    }
+
+
+    async function DisplayDefaultCategory(idCategory, nameCategory)
+    {
+        var response = await fetch(`crud/search_category.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idCategory}&
+        name_search=${nameCategory}`);
+        var json = await response.json()
+        console.log(json)
+        DisplaySearchCategory(json, "table")
+        DisplayPagination(json, 0)
+    }
+    DisplayDefaultCategory(0, "")
+    async function SearchIdAndName(idCategory, nameCategory)
+    {
+        var response = await fetch(`crud/search_category.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idCategory}&
+        name_search=${nameCategory}`);
+        var json = await response.json()
+        console.log(json)
+        DisplaySearchCategory(json, "table")
+        var indexSelect = checkSelect.value
+        if(indexSelect == 0)
+        {
+            DisplayPagination(json, 0)
+        }
+        else if(indexSelect == 2)
+        {
+            DisplayPagination(json, 1)
+        }
+    }
+    var copySearch
+    var checkSelect = document.querySelector("#select_search-category")
+    checkSelect.addEventListener("change", function(e)
+    {
+        document.querySelector('input[name="name_search-category"').value = ""
+
+    })
+    document.querySelector('.button_search').addEventListener('click', function(event)
+    {
+        currentPage = 1
+        pagination.innerHTML = ""
+        var inputSearch = document.querySelector('input[name="name_search-category"').value
+        copySearch = inputSearch
+        event.preventDefault();
+        var indexSelect = checkSelect.value
+        if(indexSelect == 0)
+        {
+           SearchIdAndName(0, "")
+        }
+        else if(indexSelect == 1)
+        {
+            SearchIdAndName(inputSearch, "")
+        }
+        else if(indexSelect == 2)
+        {
+            SearchIdAndName(0, inputSearch)
+        }
+
+    })
+
+
+    function DisplayPagination(data, check) {
+    pagination.innerHTML = "";
+    var maxPage = Math.ceil(data.number/ pageSize);
+    console.log(maxPage)
+    var start = 1;
+    var end = maxPage;
+    if(currentPage > 2 && maxPage > 3 && currentPage < maxPage)
+    {
+        start = currentPage - 1;
+        end = currentPage + 1;
+    }
+    else if(currentPage == maxPage && maxPage > 3)
+    {
+        start = currentPage - 2;
+        end = maxPage;
+    }
+    else if(maxPage > 3 && currentPage <= 2)
+    {
+        end = 3;
+    }
+    else if(maxPage == 1)
+    {
+        pagination.classList.add('hide');
+    }
+    if(maxPage > 1)
+    {
+        pagination.classList.remove('hide')
+    }
+    if(currentPage > 1)
+    {
+        var prevPage = document.createElement('li');
+        prevPage.innerText = "Prev";
+        prevPage.setAttribute('onclick', "ChangePage(" + (currentPage - 1) +", " + check + ")");
+        pagination.appendChild(prevPage);
+    }
+    for (var i = start; i <= end; i++) {
+        var pageButton = document.createElement('li');
+        pageButton.innerText = i;
+        if(i == currentPage)
+        {
+            pageButton.classList.add('headPage')
+        }
+        pageButton.setAttribute('onclick', "ChangePage(" + (i) + ", " + check + ")")
+        pagination.appendChild(pageButton);
+    }
+    if(currentPage < maxPage)
+    {
+        var nextPage = document.createElement('li')
+        nextPage.innerText = "Next";
+        nextPage.setAttribute('onclick', "ChangePage(" + (currentPage + 1) +", " + check + ")");
+        pagination.appendChild(nextPage)
+    }
+    }
+    function ChangePage(index, check)
+    {
+        currentPage = index
+        if(check == 0)
+        {
+            SearchIdAndName(0, "")
+        }
+        else if(check == 1)
+        {
+            SearchIdAndName(0, copySearch)
+        }
     }
 </script>

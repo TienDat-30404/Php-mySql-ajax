@@ -96,7 +96,6 @@
 
         var link = await fetch(`crud/edit_product.php?id_edit=${id}`)
         var json = await link.json();
-        console.log(json)
         DisplayEditProduct(json)
         
     }
@@ -311,14 +310,12 @@
                     if(nameProduct == "")
                     {
                         var ElementP = document.querySelector('input[name="name_product"]')
-                        console.log(ElementP)
                         var notification = ElementP.nextElementSibling;
                         notification.innerText = "Tên không được rông";
                         ElementP.classList.add('border-message')
                         if(firstFocus == null)
                         {   
                             firstFocus = ElementP;
-                            console.log(firstFocus)
                         }
 
                     }
@@ -495,7 +492,6 @@
                         var base64Image = reader.result;
                         var encodedBase64Image = base64Image.replace(/\+/g, '%2B'); // tìm tất cả dấu + trong chuỗi và mã hóa chúng, để tranh trường hợp
                         // khi truyền qua URL sẽ bị hiểu nhầm + là khoảng trắng -> dẫn đến sai
-                        console.log(encodedBase64Image); // In ra chuỗi base64 của ảnh
                         
                         HandleEditProduct(idProduct, nameProduct, encodedBase64Image, priceProduct, publisherProduct, quantityProduct, publishYear,
                         detailProduct, categoryProduct, authorProduct);
@@ -507,7 +503,6 @@
                         var imageDisplay = document.querySelector('.image_display');
                         var base64Image = imageDisplay.src;
                         var encodedBase64Image = base64Image.replace(/\+/g, '%2B');
-                        console.log(encodedBase64Image);
 
                         HandleEditProduct(idProduct, nameProduct, encodedBase64Image, priceProduct, publisherProduct, quantityProduct, publishYear,
                         detailProduct, categoryProduct, authorProduct);
@@ -556,7 +551,7 @@
                                 <td>${value.id}</td>
                                 <td>${value.nameProduct}</td>
                                 <td>
-                                    <img style = "width : 80px; height : 80px;" src="${value.imageProduct}" alt="">
+                                    <img style = "width : 80px; height : 80px;" src="${value.image}" alt="">
                                 </td>
                                 <td>${value.price}</td>
                                 <td>${value.quantity}</td>
@@ -616,62 +611,95 @@
     {
         var response = await fetch(`../frontend/pages/product.php?page=${currentPage}&pageSize=${pageSize}`);
         var json = await response.json()
-        console.log(json)
         DisplayProduct(json, "table")
-        DisplayPagination(json, 0)
+        DisplayPagination(json, 2)
     }
     DisPlayMain()
     async function SearchAllProduct()
     {
         var response = await fetch(`../frontend/pages/product.php?page=${currentPage}&pageSize=${pageSize}`);
         var json = await response.json()
-        console.log(json)
         DisplayProduct(json, "table")
         DisplayPagination(json, 0)
-    }
-    async function SearchNameProduct(nameSearch)
-    {
-        var response = await fetch(`../frontend/pages/search.php?page=${currentPage}&pageSize=${pageSize}&inputSearchName=${nameSearch}`);
-        var json = await response.json()
-        console.log(json)
-        DisplayProduct(json, "table")
-        DisplayPagination(json, 2)
     }
     async function SearchIdProduct(idProduct)
     {
         var response = await fetch(`crud/searchIdProduct.php?page=${currentPage}&pageSize=${pageSize}&inputSearchName=${idProduct}`);
         var json = await response.json()
-        console.log(json)
         DisplayProduct(json, "table")
     }
-    var copySearch
+    async function SearchAdvanced(nameSearch, categorySearch, priceFrom, priceTo)
+    {
+        var link = await fetch(`../frontend/pages/search_advanced.php?page=${currentPage}&pageSize=${pageSize}&nameSearchAdvanced=${nameSearch}&search_select=${categorySearch}
+        &priceFrom=${priceFrom}&priceTo=${priceTo}`)
+        var json =  await link.json();
+        DisplayProduct(json, "table")
+        DisplayPagination(json, 0)
+    }
+    
+    var copySearchName
+    var copySearchPriceFrom
+    var copySearchPriceTo
     var checkSelect = document.querySelector("#select_search-product")
     checkSelect.addEventListener("change", function(e)
     {
-   
-            document.querySelector('.container_right-header-search input[type="text"]').value = ""
+        document.querySelector('.container_right-header-search input[name="inputName"]').value = ""
+        document.querySelector('input[name="inputFrom"]').value = ""
+        document.querySelector('input[name="inputTo"]').value = ""
+        if(checkSelect.value == 1)
+        {
+            document.querySelector('input[name="inputFrom"]').disabled = true 
+            document.querySelector('input[name="inputTo"]').disabled = true
+        }
+        else 
+        {
+            document.querySelector('input[name="inputFrom"]').disabled = false 
+            document.querySelector('input[name="inputTo"]').disabled = false
+        }
+
     })
     document.querySelector('.button_search').addEventListener('click', function(event)
     {
         currentPage = 1
         pagination.innerHTML = ""
         var inputSearch = document.querySelector('.container_right-header-search input[type="text"]').value
-        copySearch = inputSearch
+        copySearchName = inputSearch
+        var categorySearchAdvanced = 0
+        var priceFrom = document.querySelector('input[name="inputFrom"]').value
+        copySearchPriceFrom = priceFrom
+        var priceTo = document.querySelector('input[name="inputTo"]').value
+        copySearchPriceTo = priceTo
         event.preventDefault();
       
         var indexSelect = checkSelect.value
         if(indexSelect == 0)
         {
-            SearchAllProduct()
+            if(copySearchPriceFrom == "" || copySearchPriceTo == "" || copySearchName == "")
+            {       
+                if((copySearchPriceFrom == "" || copySearchPriceTo == "") && copySearchName == "")
+                {
+                    DisPlayMain()
+
+                }
+                else if((copySearchPriceFrom == "" || copySearchPriceTo == "") && copySearchName != "")
+                {
+                    SearchAdvanced(copySearchName, 0, copySearchPriceFrom, copySearchPriceTo);
+                }
+                else if((copySearchPriceFrom != "" && copySearchPriceTo != "") && copySearchName == "")
+                {
+                    SearchAdvanced(copySearchName, 0, copySearchPriceFrom, copySearchPriceTo);
+                }
+            }  
+            else 
+            {
+                SearchAdvanced(inputSearch, categorySearchAdvanced, priceFrom, priceTo);
+            }
         }
         else if(indexSelect == 1)
         {
             SearchIdProduct(inputSearch)
         }
-        else if(indexSelect == 2) 
-        {
-            SearchNameProduct(inputSearch)
-        }
+
     })
 
 
@@ -733,15 +761,35 @@
         currentPage = index;
         if(check == 0)
         {
-            SearchAllProduct()
+            if(copySearchPriceFrom == "" || copySearchPriceTo == "" || copySearchName == "")
+            {       
+                if((copySearchPriceFrom == "" || copySearchPriceTo == "") && copySearchName == "")
+                {
+                    DisPlayMain()
+
+                }
+                else if((copySearchPriceFrom == "" || copySearchPriceTo == "") && copySearchName != "")
+                {
+                    SearchAdvanced(copySearchName, 0, copySearchPriceFrom, copySearchPriceTo);
+                }
+                else if((copySearchPriceFrom != "" && copySearchPriceTo != "") && copySearchName == "")
+                {
+                    SearchAdvanced(copySearchName, 0, copySearchPriceFrom, copySearchPriceTo);
+                }
+            }
+            else 
+            {
+                SearchAdvanced(copySearchName, 0, copySearchPriceFrom, copySearchPriceTo);
+            }
         }
         else if(check == 1)
         {
-            SearchIdProduct(copySearch)
+            SearchIdProduct(copySearchName)
         }
         else if(check == 2)
         {
-            SearchNameProduct(copySearch)
+            DisPlayMain()
         }
+        
     }
 </script>

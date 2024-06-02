@@ -40,6 +40,7 @@
         ?>
     </tbody>
 </table>
+<div class = "pagination"></div>
 <script>
 
     // Edit Category -------------------------------------------------------------------------------
@@ -169,7 +170,7 @@
                 <div style = "width : 42%; height : 35%" class = "categoryEdit">
                     <form method = "" action = "" class = "edit_category" enctype="multipart/form-data">               
                         <a href = "index.php?title=publisher" style = "cursor : pointer;" class = "exit_edit-category">x</a>
-                        <h2 class = "edit_category-title">Thêm tác giả</h2>
+                        <h2 class = "edit_category-title">Thêm nhà xuất bản</h2>
                         <ul class = "edit_category-content">
                             <li >
                                 <h4>Tên nhà cung cấp</h4>
@@ -177,7 +178,7 @@
                                 <span class = "form-message"></span>
                             </li>
                             <li style = "display : flex; margin : 0 auto; margin-top : 50px">
-                                <input name = "button_addPublisher" type="submit" class = "button_addAuthor" value = "Thêm">
+                                <input name = "button_addPublisher" type="submit" class = "button_AddPublisher" value = "Thêm">
                             </li>
                         </ul>
                     </form>
@@ -260,6 +261,7 @@
         {
             var link = await fetch(`crud/delete_publisher.php?id_delete=${id}`)
             LinkLoadPublisher()
+            DisplayDefaultPublisher(0, "")
         }
     }
     var elementDel = document.querySelectorAll(".deletePublisher")
@@ -329,5 +331,239 @@
             `
             tableBody.appendChild(row)
         })
+    }
+
+
+
+    // Search -------------------------------------------------------------
+    var currentPage = 1
+    var pageSize = 5
+    var pagination = document.querySelector('.pagination')
+    function DisplaySearchPublisher(data, element)
+    {
+        var informations
+        if(data.number != 0)
+        {
+            document.querySelector('table').innerHTML = ""
+            informations =
+                `  <thead>
+                        <tr>
+                            <th colspan = "4">
+                                <a class = "addPublisher" href="">Add Publisher</a>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th colspan = "2">Action</th>
+                        </tr>
+                    </thead>
+                <tbody>`
+                    data.informations.forEach(function(value)
+                    {
+                        informations += `
+                        <tr>
+                            <td>${value.id}</td>
+                            <td>${value.name}</td>
+                            <td>
+                                <a data-id-publisher = "${value.id}" class = "editPublisher" href="">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
+                                </a>
+                            </td>
+                            <td>
+                                <a data-id-publisher = "${value.id}" class = "deletePublisher" href="">
+                                    <i style = "color : red" class="fa-solid fa-trash"></i>
+                                    <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
+                                </a>
+                            </td>
+                        </tr>
+                        `
+                    })
+                informations += `
+                </tbody>
+                `
+        }
+        else 
+        {
+            informations = ""
+        }
+        document.querySelector(element).innerHTML = informations
+
+        var addPublisher = document.querySelector('.addPublisher')
+        addPublisher.addEventListener('click', function(e)
+        {
+            e.preventDefault()
+            AddPublisher()
+        })
+        
+        var elementEdit = document.querySelectorAll('.editPublisher')
+        elementEdit.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+            {
+                checkExit = true
+            event.preventDefault();
+            var idPublisher = this.getAttribute('data-id-publisher')
+            EditPublisher(idPublisher)
+            })
+        })
+
+        var elementDel = document.querySelectorAll(".deletePublisher")
+        elementDel.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+        {
+            event.preventDefault();
+            var idPublisher = this.getAttribute('data-id-publisher')
+            DeletePublisher(idPublisher)
+        })
+        })
+    }
+    
+    async function SearchIdAndName(idPublisher, nameAuthor)
+    {
+        var response = await fetch(`crud/search_category.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idPublisher}&
+        name_search=${nameAuthor}`);
+        var json = await response.json()
+        console.log(json)
+        DisplaySearchPublisher(json, "table")
+        // DisplayPagination(json, 0)
+        checkSelect.addEventListener("change", function(e)
+        {
+            if(checkSelect.value == 0)
+            {
+                DisplayPagination(json, 1)
+            }
+            else if(checkSelect.value == 2)
+            {
+                DisplayPagination(json, 1)
+            }
+
+        })
+    }
+
+    async function DisplayDefaultPublisher(idPublisher, nameAuthor)
+    {
+        var response = await fetch(`crud/search_publisher.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idPublisher}&
+        name_search=${nameAuthor}`);
+        var json = await response.json()
+        console.log(json)
+        DisplaySearchPublisher(json, "table")
+        DisplayPagination(json, 0)
+    }
+    DisplayDefaultPublisher(0, "")
+    async function SearchIdAndName(idPublisher, nameAuthor)
+    {
+        var response = await fetch(`crud/search_publisher.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idPublisher}&
+        name_search=${nameAuthor}`);
+        var json = await response.json()
+        console.log(json)
+        DisplaySearchPublisher(json, "table")
+        var indexSelect = checkSelect.value
+        if(indexSelect == 0)
+        {
+            DisplayPagination(json, 0)
+        }
+        else if(indexSelect == 2)
+        {
+            DisplayPagination(json, 1)
+        }
+    }
+    var copySearch
+    var checkSelect = document.querySelector("#select_search-publisher")
+    checkSelect.addEventListener("change", function(e)
+    {
+        document.querySelector('input[name="name_search-publisher"').value = ""
+
+    })
+    document.querySelector('.button_search').addEventListener('click', function(event)
+    {
+        currentPage = 1
+        pagination.innerHTML = ""
+        var inputSearch = document.querySelector('input[name="name_search-publisher"').value
+        copySearch = inputSearch
+        event.preventDefault();
+        var indexSelect = checkSelect.value
+        if(indexSelect == 0)
+        {
+           SearchIdAndName(0, "")
+        }
+        else if(indexSelect == 1)
+        {
+            SearchIdAndName(inputSearch, "")
+        }
+        else if(indexSelect == 2)
+        {
+            SearchIdAndName(0, inputSearch)
+        }
+
+    })
+
+
+    function DisplayPagination(data, check) {
+    pagination.innerHTML = "";
+    var maxPage = Math.ceil(data.number/ pageSize);
+    console.log(maxPage)
+    var start = 1;
+    var end = maxPage;
+    if(currentPage > 2 && maxPage > 3 && currentPage < maxPage)
+    {
+        start = currentPage - 1;
+        end = currentPage + 1;
+    }
+    else if(currentPage == maxPage && maxPage > 3)
+    {
+        start = currentPage - 2;
+        end = maxPage;
+    }
+    else if(maxPage > 3 && currentPage <= 2)
+    {
+        end = 3;
+    }
+    else if(maxPage == 1)
+    {
+        pagination.classList.add('hide');
+    }
+    if(maxPage > 1)
+    {
+        pagination.classList.remove('hide')
+    }
+    if(currentPage > 1)
+    {
+        var prevPage = document.createElement('li');
+        prevPage.innerText = "Prev";
+        prevPage.setAttribute('onclick', "ChangePage(" + (currentPage - 1) +", " + check + ")");
+        pagination.appendChild(prevPage);
+    }
+    for (var i = start; i <= end; i++) {
+        var pageButton = document.createElement('li');
+        pageButton.innerText = i;
+        if(i == currentPage)
+        {
+            pageButton.classList.add('headPage')
+        }
+        pageButton.setAttribute('onclick', "ChangePage(" + (i) + ", " + check + ")")
+        pagination.appendChild(pageButton);
+    }
+    if(currentPage < maxPage)
+    {
+        var nextPage = document.createElement('li')
+        nextPage.innerText = "Next";
+        nextPage.setAttribute('onclick', "ChangePage(" + (currentPage + 1) +", " + check + ")");
+        pagination.appendChild(nextPage)
+    }
+    }
+    function ChangePage(index, check)
+    {
+        currentPage = index
+        if(check == 0)
+        {
+            SearchIdAndName(0, "")
+        }
+        else if(check == 1)
+        {
+            SearchIdAndName(0, copySearch)
+        }
     }
 </script>

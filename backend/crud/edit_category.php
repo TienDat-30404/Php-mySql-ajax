@@ -5,11 +5,13 @@
         $idEdit = $_GET['id_edit'];
         $sql = "SELECT * FROM categories WHERE id = '$idEdit'";
         $result = DataSQL::querySQL($sql);
-        $data = array();
+        $data = new stdClass();
+        $informations = array();
         while($row = mysqli_fetch_array($result))
         {
-            $data[] = $row;
+            $informations[] = $row;
         }
+        $data->informations = $informations;
         echo json_encode($data);
     }
 ?>

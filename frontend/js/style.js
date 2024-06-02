@@ -99,7 +99,7 @@ async function fetchData(url) {
     return await response.json();
 }
 
-async function displayHomePage() {
+async function displayHomePage() { 
     var url = `frontend/pages/product.php?page=${currentPage}&pageSize=${pageSize}`;
     var data = await fetchData(url);
     displayProducts(data, contentProduct);
@@ -111,7 +111,7 @@ function displayProducts(data, content123) {
         <a class = "clickDetail" data-id_detail = ${value.id} >
             <div class="content_product">
                 <div class="content_product-information">
-                    <img src="${value.imageProduct}">
+                    <img src="${value.image}">
                     <div class="content_product-information-bought">
                         <a data-id_detail = ${value.id} class="content_product-information-bought-name">${value.nameProduct}</a>
                         <div class="content_product-information-bought-price">

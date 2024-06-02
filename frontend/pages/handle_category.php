@@ -8,7 +8,7 @@
     $page = isset($_GET['page']) ? $_GET['page'] : 1;
     $pageSize = isset($_GET['pageSize']) ? $_GET['pageSize'] : 5;
     $startPage = ($page - 1) * $pageSize;
-    $sql = "SELECT products.id, products.name as nameProduct, products.price, products.image as imageProduct FROM products  INNER JOIN product_categories ON products.id = product_categories.product_id INNER JOIN
+    $sql = "SELECT products.id, products.name as nameProduct, products.price, products.image FROM products  INNER JOIN product_categories ON products.id = product_categories.product_id INNER JOIN
             categories ON product_categories.category_id = categories.id WHERE categories.id = '$idCategory' AND isActive = 1 LIMIT $startPage, $pageSize";
     $result = mysqli_query($connection, $sql);
     $informations = array();
@@ -18,7 +18,7 @@
         $informations[] = $row;
     }
     $data->informations = $informations;
-    $sql_count = "SELECT products.isActive, products.id, products.name as nameProduct, products.price, products.image as imageProduct FROM products  INNER JOIN product_categories ON products.id = product_categories.product_id INNER JOIN
+    $sql_count = "SELECT products.isActive, products.id, products.name as nameProduct, products.price, products.image FROM products  INNER JOIN product_categories ON products.id = product_categories.product_id INNER JOIN
     categories ON product_categories.category_id = categories.id WHERE categories.id = '$idCategory' AND products.isActive = 1";
     $result_count = mysqli_query($connection, $sql_count);
     $row_count = mysqli_num_rows($result_count);

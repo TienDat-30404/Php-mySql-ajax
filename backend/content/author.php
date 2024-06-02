@@ -48,7 +48,6 @@
     {
         var link = await fetch(`crud/edit_author.php?id_edit=${id}`)
         var json = await link.json();
-        console.log(json)
         DisplayAuthor(json)
     }
     var elementEdit = document.querySelectorAll('.editAuthor')
@@ -269,7 +268,6 @@
     {
         item.addEventListener('click', function(event)
         {
-            console.log(item)
             event.preventDefault();
             var idAuthor = this.getAttribute('data-id-author')
             DeleteAuthor(idAuthor)
@@ -285,7 +283,6 @@
         {
             item.addEventListener('click', function(event)
             {
-            console.log(item)
             event.preventDefault();
             var idAuthor = this.getAttribute('data-id-author')
             DeleteAuthor(idAuthor)
@@ -412,28 +409,6 @@
         })
     }
     
-    async function SearchIdAndName(idAuthor, nameAuthor)
-    {
-        var response = await fetch(`crud/search_author.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idAuthor}&
-        name_search=${nameAuthor}`);
-        var json = await response.json()
-        console.log(json)
-        DisplaySearchAuthor(json, "table")
-        // DisplayPagination(json, 0)
-        checkSelect.addEventListener("change", function(e)
-        {
-            if(checkSelect.value == 0)
-            {
-                DisplayPagination(json, 1)
-            }
-            else if(checkSelect.value == 2)
-            {
-                DisplayPagination(json, 1)
-            }
-
-        })
-    }
-
     async function DisplayDefaultAuthor(idAuthor, nameAuthor)
     {
         var response = await fetch(`crud/search_author.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idAuthor}&
@@ -449,7 +424,6 @@
         var response = await fetch(`crud/search_author.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idAuthor}&
         name_search=${nameAuthor}`);
         var json = await response.json()
-        console.log(json)
         DisplaySearchAuthor(json, "table")
         var indexSelect = checkSelect.value
         if(indexSelect == 0)

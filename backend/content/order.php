@@ -13,7 +13,7 @@
         </tr>
     </thead>
     <tbody>
-        <?php 
+    <?php 
               include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
             $sql = "SELECT users.*, bills.*, bills.id as idBill FROM bills JOIN users ON bills.user_id = users.id";
             $result = DataSQL::querySQl($sql);
@@ -62,6 +62,7 @@
         ?>
     </tbody>
 </table>
+<div class = "pagination"></div>
 <script>
 
     // Detail Order -------------------------------------------------------------------------------
@@ -300,13 +301,279 @@
         })
     }
 
-    // Seacrh Order -----------------------------------
+
+
+     // Search -------------------------------------------------------------
+     var currentPage = 1
+    var pageSize = 7
+    var pagination = document.querySelector('.pagination')
+    function DisplaySearchOrder(data, element)
+    {
+        var informations
+        if(data.number != 0)
+        {
+            document.querySelector('table').innerHTML = ""
+            informations =
+                `  <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Customer</th>
+                            <th>Staff</th>
+                            <th>Date Created</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                            <th>Chi tiết</th>
+                            <th>Xóa</th>
+                        </tr>
+                    </thead>
+                <tbody>`
+                    data.informations.forEach(function(value)
+                    {
+                        if(value.staff_id == null)
+                        {
+                            value.staff_id = ""
+                        }
+                        informations += `
+                        <tr>
+                            <td>${value.idBill}</td>
+                            <td>${value.fullname}</td>
+                            <td>${value.staff_id}</td>
+                            <td>${value.date_create}</td>
+                            <td>${value.total_price}</td>
+                            <td>
+                                <a data-id-order = "${value.id}" class = "confirmOrder" href="">`
+                                  if(value.bill_status_id == 1)
+                                  {
+                                    informations += 
+                                    `
+                                        <i style = "color : red" class="fa-solid fa-spinner"></i>
+                                        <h5 style="color : red; display: inline-block; vertical-align: middle; margin-left: 5px;">Chờ xử lí</h5>
+                                    `
+                                  } 
+                                  else 
+                                  {
+                                        informations += `
+                                            <i style="color: green" class="fa-solid fa-check-circle"></i>
+                                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Đã xử lí</h5>
+                                       `
+                                  }
+          
+                                informations += `</a>
+                            </td>
+                            <td>
+                                <a data-id-order = "${value.idBill}" class = "detailOrder" href="">
+                                    <i style = "color : blue" class="fa-solid fa-circle-info"></i>
+                                    <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Chi tiết</h5>
+                                </a>
+                            </td>
+                            <td>
+                                <a data-id-order = "${value.idBill}" class = "deleteOrder" href="">
+                                    <i style = "color : red" class="fa-solid fa-trash"></i>
+                                    <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody> `
+                    })
+                
+        }
+        else 
+        {
+            informations = ""
+        }
+        document.querySelector(element).innerHTML = informations
+
+        
+        var elementDetail = document.querySelectorAll('.detailOrder')
+        elementEdit.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+            {
+                event.preventDefault();
+                var idOrder = this.getAttribute('data-id-order')
+                DetailOrder(idOrder)
+            })
+        })
+
+        var elementDel = document.querySelectorAll(".deleteOrder")
+        elementDel.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+        {
+            event.preventDefault();
+            var idOrder = this.getAttribute('data-id-order')
+            DeleteOrder(idOrder)
+            // SearchOrder(0, "")
+
+        })
+        })
+    }
+    
     async function SearchOrder(idOrder, nameCustomer, dateFrom, dateTo, status)
     {
-        var response = await fetch(`crud/search_order.php?id_order=${idOrder}&name_customer=${nameCustomer}&date_from=${dateFrom}&
-        date_to=${dateTo}&status=${status}`)
-        var json = await response.json();
+        var response = await fetch(`crud/search_order.php?page=${currentPage}&pageSize=${pageSize}&id_order=${idOrder}&
+        name_customer=${nameCustomer}&date_from=${dateFrom}&date_to=${dateTo}&status=${status}`);
+        var json = await response.json()
         console.log(json)
+        DisplaySearchOrder(json, "table")
+        // DisplayPagination(json, 0)
+
+        var indexSelect = checkSelect.value
+        if(indexSelect == 0)
+        {
+            DisplayPagination(json, 5)
+        }
+        else if(indexSelect == 1)
+        {
+            DisplayPagination(json, 1)
+        }
+        else if(indexSelect == 2)
+        {
+            DisplayPagination(json, 2)
+        }
+        else if(indexSelect == 3)
+        {
+            DisplayPagination(json, 3)
+        }
+        else if(indexSelect == 4)
+        {
+            DisplayPagination(json, 4)
+        }
+
     }
-    SearchOrder(51, "", "", "", 0)
+
+    async function DisplayDefaultOrder(idOrder, nameCustomer, dateFrom, dateTo, status)
+    {
+        var response = await fetch(`crud/search_order.php?page=${currentPage}&pageSize=${pageSize}&id_order=${idOrder}&
+        name_customer=${nameCustomer}&date_from=${dateFrom}&date_to=${dateTo}&status=${status}`);
+        var json = await response.json()
+        console.log(json)
+        DisplaySearchOrder(json, "table")
+        DisplayPagination(json, 5)
+    }
+    DisplayDefaultOrder(0, "", "", "", 0);
+
+    var copySearch
+    var checkSelect = document.querySelector("#select_search-order")
+    checkSelect.addEventListener("change", function(e)
+    {
+        document.querySelector('input[name="name_search-order"').value = ""
+
+    })
+    document.querySelector('.button_search').addEventListener('click', function(event)
+    {
+        currentPage = 1
+        pagination.innerHTML = ""
+        var inputSearch = document.querySelector('input[name="name_search-order"').value
+        var dateFrom = document.querySelector('input[name="date_from"').value
+        var dateTo = document.querySelector('input[name="date_to"').value
+        copySearch = inputSearch
+        event.preventDefault();
+        var indexSelect = checkSelect.value
+        if(indexSelect == 0)
+        {
+           SearchOrder(0, inputSearch, dateFrom, dateTo, 0)
+        }
+        else if(indexSelect == 1)
+        {
+            SearchOrder(inputSearch, "", "", "", 0)
+        }
+        else if(indexSelect == 2)
+        {
+            SearchOrder(0, inputSearch, "", "", 0);
+        }
+        else if(indexSelect == 3)
+        {
+            SearchOrder(0, "", "", "", 1)
+        }
+        else if(indexSelect == 4)
+        {
+            SearchOrder(0, "", "", "", 2);
+        }
+
+    })
+
+
+    function DisplayPagination(data, check) {
+    pagination.innerHTML = "";
+    var maxPage = Math.ceil(data.number/ pageSize);
+    console.log(maxPage)
+    var start = 1;
+    var end = maxPage;
+    if(currentPage > 2 && maxPage > 3 && currentPage < maxPage)
+    {
+        start = currentPage - 1;
+        end = currentPage + 1;
+    }
+    else if(currentPage == maxPage && maxPage > 3)
+    {
+        start = currentPage - 2;
+        end = maxPage;
+    }
+    else if(maxPage > 3 && currentPage <= 2)
+    {
+        end = 3;
+    }
+    else if(maxPage == 1)
+    {
+        pagination.classList.add('hide');
+    }
+    if(maxPage > 1)
+    {
+        pagination.classList.remove('hide')
+    }
+    if(currentPage > 1)
+    {
+        var prevPage = document.createElement('li');
+        prevPage.innerText = "Prev";
+        prevPage.setAttribute('onclick', "ChangePage(" + (currentPage - 1) +", " + check + ")");
+        pagination.appendChild(prevPage);
+    }
+    for (var i = start; i <= end; i++) {
+        var pageButton = document.createElement('li');
+        pageButton.innerText = i;
+        if(i == currentPage)
+        {
+            pageButton.classList.add('headPage')
+        }
+        pageButton.setAttribute('onclick', "ChangePage(" + (i) + ", " + check + ")")
+        pagination.appendChild(pageButton);
+    }
+    if(currentPage < maxPage)
+    {
+        var nextPage = document.createElement('li')
+        nextPage.innerText = "Next";
+        nextPage.setAttribute('onclick', "ChangePage(" + (currentPage + 1) +", " + check + ")");
+        pagination.appendChild(nextPage)
+    }
+    }
+    function ChangePage(index, check)
+    {
+        currentPage = index
+        console.log(currentPage)
+        if(check == 0)
+        {
+           SearchOrder(0, copySearch, dateFrom, dateTo, 0)
+        }
+        else if(check == 1)
+        {
+            SearchOrder(copySearch, "", "", "", 0)
+        }
+        else if(check == 2)
+        {
+            SearchOrder(0, copySearch, "", "", 0);
+        }
+        else if(check == 3)
+        {
+            SearchOrder(0, "", "", "", 1)
+        }
+        else if(check == 4)
+        {
+            SearchOrder(0, "", "", "", 2);
+        }
+        else if(check == 5)
+        {
+            SearchOrder(0, "", "", "", 0);
+        }
+    }
 </script>

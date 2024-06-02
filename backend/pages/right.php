@@ -130,7 +130,7 @@
                             <div style = "width : 200px" class = "container_right-header-search">
                                 <input name = "name_search-order" style = "text-align : center;" type="text" placeholder = "Search here">
                             </div>
-                            <input type="date"> đến <input type="date">
+                            <input name = "date_from" type="date"> đến <input name = "date_to" type="date">
                             <input class = "button_search" type="submit" value = "Tìm kiếm">
                             <img src="image/user.png" alt="">
                         </div>

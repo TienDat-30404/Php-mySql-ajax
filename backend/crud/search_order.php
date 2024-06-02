@@ -7,7 +7,7 @@ $dateFrom = isset($_GET['date_from']) ? trim($_GET['date_from'], '"') : '';
 $dateTo = isset($_GET['date_to']) ? trim($_GET['date_to'], '"') : '';
 $status = isset($_GET['status']) ? $_GET['status'] : 0;
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
-$pageSize = isset($_GET['pageSize']) ? $_GET['pageSize'] : 5;
+$pageSize = isset($_GET['pageSize']) ? $_GET['pageSize'] : 7;
 $startPage = ($page - 1) * $pageSize;
 
 $sql = "";
@@ -15,26 +15,34 @@ $check = "";
 
 if ($idOrder == 0 && $nameCustomer == "" && $dateFrom == "" && $dateTo == "") {
     if ($status == 1) {
-        $sql = "SELECT * FROM bills WHERE bill_status_id = 1 LIMIT $startPage, $pageSize";
+        $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id WHERE bill_status_id = 1 LIMIT $startPage, $pageSize";
         $check = 1;
     } elseif ($status == 2) {
-        $sql = "SELECT * FROM bills WHERE bill_status_id = 2 LIMIT $startPage, $pageSize";
+        $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id WHERE bill_status_id = 2 LIMIT $startPage, $pageSize";
         $check = 2;
     } else if($status == 0) {
-        $sql = "SELECT * FROM bills LIMIT $startPage, $pageSize";
+        $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id LIMIT $startPage, $pageSize";
         $check = 3;
     }
-} else if ($idOrder != 0 && $nameCustomer == "" && $dateFrom == "" && $dateTo == "" && $status == 0) {
-    $sql = "SELECT * FROM bills WHERE id = '$idOrder' LIMIT $startPage, $pageSize";
+}   
+else if ($idOrder != 0 && $nameCustomer == "" && $dateFrom == "" && $dateTo == "" && $status == 0)
+{
+    $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id WHERE bills.id = '$idOrder' LIMIT $startPage, $pageSize";
     $check = 4;
-    } else if ($idOrder == 0 && $nameCustomer != "" && $dateFrom == "" && $dateTo == "" && $status == 0) {
-    $sql = "SELECT * FROM bills JOIN users ON bills.user_id = users.id WHERE users.fullname LIKE '%" . $nameCustomer. "%' LIMIT $startPage, $pageSize";
+}
+else if ($idOrder == 0 && $nameCustomer != "" && $dateFrom == "" && $dateTo == "" && $status == 0) 
+{
+    $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills JOIN users ON bills.user_id = users.id WHERE users.fullname LIKE '%" . $nameCustomer. "%' LIMIT $startPage, $pageSize";
     $check = 5;
-} else if ($idOrder == 0 && $nameCustomer == "" && $dateFrom != "" && $dateTo != "" && $status == 0) {
-    $sql = "SELECT * FROM bills WHERE DATE(date_create) BETWEEN '$dateFrom' AND '$dateTo' LIMIT $startPage, $pageSize";
+} 
+else if ($idOrder == 0 && $nameCustomer == "" && $dateFrom != "" && $dateTo != "" && $status == 0) 
+{
+    $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id WHERE DATE(date_create) BETWEEN '$dateFrom' AND '$dateTo' LIMIT $startPage, $pageSize";
     $check = 6;
-} else if ($idOrder == 0 && $nameCustomer != "" && $dateFrom != "" && $dateTo != "" && $status == 0) {
-    $sql = "SELECT * FROM bills JOIN users ON bills.user_id = users.id WHERE users.fullname LIKE '%$nameCustomer%' AND DATE(date_create) BETWEEN '$dateFrom' AND '$dateTo' LIMIT $startPage, $pageSize";
+} 
+else if ($idOrder == 0 && $nameCustomer != "" && $dateFrom != "" && $dateTo != "" && $status == 0) 
+{
+    $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills JOIN users ON bills.user_id = users.id WHERE users.fullname LIKE '%$nameCustomer%' AND DATE(date_create) BETWEEN '$dateFrom' AND '$dateTo' LIMIT $startPage, $pageSize";
     $check = 7;
 }
 

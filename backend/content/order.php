@@ -13,54 +13,7 @@
         </tr>
     </thead>
     <tbody>
-    <?php 
-              include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
-            $sql = "SELECT users.*, bills.*, bills.id as idBill FROM bills JOIN users ON bills.user_id = users.id";
-            $result = DataSQL::querySQl($sql);
-            while($row = mysqli_fetch_array($result))
-            {
-
-                ?>
-                <tr>
-                    <td><?php echo $row['idBill']; ?></td>
-                    <td><?php echo $row['fullname']; ?></td>
-                    <td><?php echo $row['staff_id']; ?></td>
-                    <td><?php echo $row['date_create']; ?></td>
-                    <td><?php echo $row['total_price']; ?></td>
-                    <td>
-                        <a data-id-order = <?php echo $row['idBill']; ?> class = "confirmOrder" href="">
-                            <?php 
-                                if($row['bill_status_id'] == 1)
-                                {
-                                    ?>
-                                        <i style = "color : red" class="fa-solid fa-spinner"></i>
-                                        <h5 style="color : red; display: inline-block; vertical-align: middle; margin-left: 5px;">Chờ xử lí</h5>
-                                <?php }
-                                else 
-                                {
-                                    ?> 
-                                        <i style="color: green" class="fa-solid fa-check-circle"></i>
-                                        <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Đã xử lí</h5>
-                                <?php }
-                            ?>
-                        </a>
-                    </td>
-                    <td>
-                        <a data-id-order = <?php echo $row['idBill']; ?> class = "detailOrder" href="">
-                            <i style = "color : blue" class="fa-solid fa-circle-info"></i>
-                            <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Chi tiết</h5>
-                        </a>
-                    </td>
-                    <td>
-                        <a data-id-order = <?php echo $row['idBill']; ?> class = "deleteOrder" href="">
-                            <i style = "color : red" class="fa-solid fa-trash"></i>
-                            <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
-                        </a>
-                    </td>
-                </tr>
-            <?php }
-        ?>
-    </tbody>
+    
 </table>
 <div class = "pagination"></div>
 <script>
@@ -161,6 +114,7 @@
         {
             var link = await fetch(`crud/delete_order.php?id_delete=${id}`)
             LinkLoadOrder()
+            DisplayDefaultOrder(0, "", "", "", 0)
         }
     }
     var elementDel = document.querySelectorAll(".deleteOrder")
@@ -383,9 +337,19 @@
         }
         document.querySelector(element).innerHTML = informations
 
+        var buttonConfirm = document.querySelectorAll('.confirmOrder')
+        buttonConfirm.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+            {
+                event.preventDefault()
+                var idBill = this.getAttribute('data-id-order')
+                ConfirmOrder(idBill)
+            })
+        })
         
         var elementDetail = document.querySelectorAll('.detailOrder')
-        elementEdit.forEach(function(item)
+        elementDetail.forEach(function(item)
         {
             item.addEventListener('click', function(event)
             {
@@ -421,7 +385,18 @@
         var indexSelect = checkSelect.value
         if(indexSelect == 0)
         {
-            DisplayPagination(json, 5)
+            if(copySearch == "" && copyDateFrom != "" && copyDateTo != "")
+            {
+                DisplayPagination(json, 6)
+            }
+            else if(copySearch == "" && copyDateFrom == "" && copyDateTo == "")
+            {
+                DisplayPagination(json, 5)
+            }
+            else if(copySearch != "" && copyDateFrom != "" && copyDateTo != "")
+            {
+                DisplayPagination(json, 6)
+            }
         }
         else if(indexSelect == 1)
         {
@@ -454,11 +429,12 @@
     DisplayDefaultOrder(0, "", "", "", 0);
 
     var copySearch
+    var copyDateFrom
+    var copyDateTo
     var checkSelect = document.querySelector("#select_search-order")
     checkSelect.addEventListener("change", function(e)
     {
         document.querySelector('input[name="name_search-order"').value = ""
-
     })
     document.querySelector('.button_search').addEventListener('click', function(event)
     {
@@ -468,11 +444,25 @@
         var dateFrom = document.querySelector('input[name="date_from"').value
         var dateTo = document.querySelector('input[name="date_to"').value
         copySearch = inputSearch
+        copyDateFrom = dateFrom
+        copyDateTo = dateTo
         event.preventDefault();
         var indexSelect = checkSelect.value
         if(indexSelect == 0)
         {
-           SearchOrder(0, inputSearch, dateFrom, dateTo, 0)
+            
+            if(copySearch == "" && copyDateFrom != "" && copyDateTo != "")
+            {
+                SearchOrder(0, "", copyDateFrom, copyDateTo, 0)
+            }
+            else if(copySearch != "" && copyDateFrom != "" && copyDateTo != "")
+            {
+                SearchOrder(0, copySearch, copyDateFrom, copyDateTo, 0)
+            }
+            else if(copySearch == "" && copyDateFrom == "" && copyDateTo == "")
+            {
+                SearchOrder(0, "", "", "", 0)
+            }
         }
         else if(indexSelect == 1)
         {
@@ -553,7 +543,7 @@
         console.log(currentPage)
         if(check == 0)
         {
-           SearchOrder(0, copySearch, dateFrom, dateTo, 0)
+           SearchOrder(0, copySearch, copyDateFrom, copyDateTo, 0)
         }
         else if(check == 1)
         {
@@ -574,6 +564,10 @@
         else if(check == 5)
         {
             SearchOrder(0, "", "", "", 0);
+        }
+        else if(check == 6)
+        {
+            SearchOrder(0, "", copyDateFrom, copyDateTo, 0)
         }
     }
 </script>

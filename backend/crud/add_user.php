@@ -61,13 +61,14 @@
         if(confirm("Xác nhận thêm ?"))
         {
             var formData = new FormData();
+            formData.append('choice', 'add_user')
             formData.append('user_add-roleId', idRole);
             formData.append('user_add-name', name);
             formData.append('user_add-email', email);
             formData.append('user_add-password', password);
             formData.append('user_add-address', address);
             formData.append('user_add-phone', phone);
-            var link = await fetch('crud/handle_addUser.php', {
+            var link = await fetch('crud/user_api.php', {
                 method: 'POST',
                 body: formData
             });

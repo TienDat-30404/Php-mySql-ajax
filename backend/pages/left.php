@@ -2,7 +2,7 @@
     <ul class = "container_left-content">
         <a href="index.php?title=dashboard">
             <li>
-                <i class="fa-solid fa-house"></i>
+                <!-- <i class="fa-solid fa-house"></i> -->
                 <h3>Dashboard</h3>
             </li>
         </a>
@@ -22,43 +22,43 @@
         </div>
         <a href="index.php?title=product">
             <li>
-                <i class="fa-brands fa-product-hunt"></i>
+                <!-- <i class="fa-brands fa-product-hunt"></i> -->
                 <h3>Product</h3>
             </li>
         </a>
         <a href="index.php?title=category">
             <li>
-                <i class="fa-solid fa-copyright"></i>
+                <!-- <i class="fa-solid fa-copyright"></i> -->
                 <h3>Category</h3>
             </li>
         </a>
         <a href="index.php?title=author">
             <li>
-                <i class="fa-solid fa-copyright"></i>
+                <!-- <i class="fa-solid fa-copyright"></i> -->
                 <h3>Author</h3>
             </li>
         </a>
         <a href="index.php?title=publisher">
             <li>
-                <i class="fa-solid fa-copyright"></i>
+                <!-- <i class="fa-solid fa-copyright"></i> -->
                 <h3>Publisher</h3>
             </li>
         </a>
         <a href="index.php?title=order">
             <li>
-                <i class="fa-solid fa-copyright"></i>
+                <!-- <i class="fa-solid fa-copyright"></i> -->
                 <h3>Order</h3>
             </li>
         </a>
         <a href="index.php?title=receipt">
             <li>
-                <i class="fa-solid fa-copyright"></i>
+                <!-- <i class="fa-solid fa-copyright"></i> -->
                 <h3>Receipt</h3>
             </li>
         </a>
         <a href="index.php?title=statistical">
             <li>
-                <i class="fa-solid fa-copyright"></i>
+                <!-- <i class="fa-solid fa-copyright"></i> -->
                 <h3>Statistical</h3>
             </li>
         </a>

@@ -126,7 +126,6 @@
                                 <option value="2">Tìm kiếm theo tên khách hàng</option>
                                 <option value="3">Chờ xử lí</option>
                                 <option value="4">Đã xử lí</option>
-                                <option value="5">Tìm kiếm theo tên nhân viên</option>
                             </select>
                             <div style = "width : 200px" class = "container_right-header-search">
                                 <input name = "name_search-order" style = "text-align : center;" type="text" placeholder = "Search here">

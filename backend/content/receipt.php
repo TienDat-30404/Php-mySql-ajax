@@ -52,7 +52,13 @@
     // Detail Order -------------------------------------------------------------------------------
     async function DetailReceipt(id)
     {
-        var link = await fetch(`crud/detail_receipt.php?id_receipt=${id}`)
+        var formData = new FormData()
+        formData.append('choice', 'detail_receipt')
+        formData.append('id_receipt', id)
+        var link = await fetch(`crud/receipt_api.php`, {
+            method : 'POST',
+            body : formData
+        })
         var json = await link.json();
         DisplayDetailReceipt(json)
     }
@@ -527,6 +533,7 @@
         if(confirm("Bạn có chắc muốn nhập hàng?"))
         {
             var formData = new FormData();
+            formData.append('choice', 'create_receipt')
             formData.append('id_staff', idStaff);
             formData.append('id_supplier', idSupplier);
             for(var i = 0; i < informations.length; i++)
@@ -537,7 +544,7 @@
             }
     
            
-            var response = await fetch('crud/handle_createReceipt.php', {
+            var response = await fetch('crud/receipt_api.php', {
                 method: 'POST',
                 body: formData
             });
@@ -556,7 +563,12 @@
     // Load Receipt -----------------------------------------------------------------------------
     async function LinkLoadReceipt()
     {
-        var link = await fetch('crud/get_all_receipt.php');
+        var formData = new FormData();
+        formData.append('choice', 'get_all_receipt');
+        var link = await fetch('crud/receipt_api.php', {
+            method : 'POST',
+            body : formData
+        });
         var json =  await link.json();
         LoadReceipt(json)
         var elementDel = document.querySelectorAll(".deleteReceipt")
@@ -621,7 +633,13 @@
     {
         if(confirm("Bạn có chắc muốn xóa phiếu nhập này?"))
         {
-            var link = await fetch(`crud/delete_receipt.php?id_delete=${id}`)
+            var formData = new FormData();
+            formData.append('choice', 'delete_receipt')
+            formData.append('id_delete', id)
+            var link = await fetch(`crud/receipt_api.php`, {
+                method : 'POST',
+                body : formData
+            })
             LinkLoadReceipt()
         }
     }

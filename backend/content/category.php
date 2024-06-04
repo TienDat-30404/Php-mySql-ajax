@@ -23,7 +23,13 @@
     // Edit Category -------------------------------------------------------------------------------
     async function EditCategory(id)
     {
-        var link = await fetch(`crud/edit_category.php?id_edit=${id}`)
+        var formData = new FormData();
+        formData.append('choice', 'display_edit_category')
+        formData.append('id_edit', id);
+        var link = await fetch(`crud/category_api.php`, {
+            method : 'POST',
+            body : formData
+        })
         var json = await link.json();
         console.log(json)
         DisplayCategory(json)
@@ -154,10 +160,11 @@
         if(confirm("Xác nhân chỉnh sửa thể loại?"))
         {
             var formData = new FormData();
+            formData.append('choice', 'handle_edit_category')
             formData.append('id_category', idCategory);
             formData.append('name_category', nameCategory);
             formData.append('image_category', imageCategory);
-            var link = await fetch('crud/handle_editCategory.php', {
+            var link = await fetch('crud/category_api.php', {
                 method: 'POST',
                 body: formData
             });
@@ -292,7 +299,7 @@
     addCategory.addEventListener('click', function(e)
     {
         e.preventDefault()
-        AddCategory()
+        AddCategory() 
     })
 
     async function HandleAddCategory(nameCategory, imageCategory)
@@ -300,10 +307,11 @@
         if(confirm("Xác nhận thêm thể loại?"))
         {
             var formData = new FormData();
+            formData.append('choice', 'add_category')
             formData.append('name_category', nameCategory);
             formData.append('image_category', imageCategory);
            
-            var link = await fetch('crud/handle_addCategory.php', {
+            var link = await fetch('crud/category_api.php', {
                 method: 'POST',
                 body: formData
             });
@@ -327,7 +335,13 @@
     {
         if(confirm("Xác nhận xóa thể loại?"))
         {
-            var link = await fetch(`crud/delete_category.php?id_delete=${id}`)
+            var formData = new FormData()
+            formData.append('choice', 'delete_category')
+            formData.append('id_delete', id)
+            var link = await fetch(`crud/category_api.php`, {
+                method : 'POST',
+                body : formData
+            })
             LinkLoadCategory()
             DisplayDefaultCategory(0, "")
         }
@@ -345,7 +359,12 @@
     })
     async function LinkLoadCategory()
     {
-        var link = await fetch('crud/get_all_category.php');
+        var formData = new FormData();
+        formData.append('choice', 'get_all_category')
+        var link = await fetch('crud/category_api.php', {
+            method : 'POST',
+            body : formData
+        });
         var json =  await link.json();
         LoadCategory(json)
         var elementDel = document.querySelectorAll(".deleteCategory")
@@ -480,49 +499,43 @@
             event.preventDefault();
             var idCategory = this.getAttribute('data-id-category')
             DeleteCategory(idCategory)
-            // SearchIdAndName(0, "")
+            // SearchCategory(0, "")
 
         })
-        })
-    }
-    
-    async function SearchIdAndName(idCategory, nameCategory)
-    {
-        var response = await fetch(`crud/search_category.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idCategory}&
-        name_search=${nameCategory}`);
-        var json = await response.json()
-        console.log(json)
-        DisplaySearchCategory(json, "table")
-        // DisplayPagination(json, 0)
-        checkSelect.addEventListener("change", function(e)
-        {
-            if(checkSelect.value == 0)
-            {
-                DisplayPagination(json, 1)
-            }
-            else if(checkSelect.value == 2)
-            {
-                DisplayPagination(json, 1)
-            }
-
         })
     }
 
 
     async function DisplayDefaultCategory(idCategory, nameCategory)
     {
-        var response = await fetch(`crud/search_category.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idCategory}&
-        name_search=${nameCategory}`);
+        var formData = new FormData();
+        formData.append('choice', 'search_category')
+        formData.append('id_search', idCategory)
+        formData.append('name_search', nameCategory)
+        formData.append('page', currentPage)
+        formData.append('pageSize', pageSize)
+        var response = await fetch(`crud/category_api.php`, {
+            method : 'POST',
+            body : formData
+        });
         var json = await response.json()
         console.log(json)
         DisplaySearchCategory(json, "table")
         DisplayPagination(json, 0)
     }
     DisplayDefaultCategory(0, "")
-    async function SearchIdAndName(idCategory, nameCategory)
+    async function SearchCategory(idCategory, nameCategory)
     {
-        var response = await fetch(`crud/search_category.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idCategory}&
-        name_search=${nameCategory}`);
+        var formData = new FormData();
+        formData.append('choice', 'search_category')
+        formData.append('id_search', idCategory)
+        formData.append('name_search', nameCategory)
+        formData.append('page', currentPage)
+        formData.append('pageSize', pageSize)
+        var response = await fetch(`crud/category_api.php`, {
+            method : 'POST',
+            body : formData
+        });
         var json = await response.json()
         console.log(json)
         DisplaySearchCategory(json, "table")
@@ -553,15 +566,15 @@
         var indexSelect = checkSelect.value
         if(indexSelect == 0)
         {
-           SearchIdAndName(0, "")
+           SearchCategory(0, "")
         }
         else if(indexSelect == 1)
         {
-            SearchIdAndName(inputSearch, "")
+            SearchCategory(inputSearch, "")
         }
         else if(indexSelect == 2)
         {
-            SearchIdAndName(0, inputSearch)
+            SearchCategory(0, inputSearch)
         }
 
     })
@@ -625,11 +638,11 @@
         currentPage = index
         if(check == 0)
         {
-            SearchIdAndName(0, "")
+            SearchCategory(0, "")
         }
         else if(check == 1)
         {
-            SearchIdAndName(0, copySearch)
+            SearchCategory(0, copySearch)
         }
     }
 </script>

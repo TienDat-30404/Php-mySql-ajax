@@ -21,7 +21,12 @@
 // Doanh thu bán hàng và biến động theo từng tháng
 async function GetRevenueProduct()
 {
-    var response = await fetch(`crud/statistics_product.php`);
+    var formData = new FormData();
+    formData.append('choice', 'statistics_product')
+    var response = await fetch(`crud/statistics_api.php`, {
+        method : 'POST',
+        body : formData
+    });
     var json = await response.json();
     var xValues1 = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
     var yValues1 = []
@@ -114,7 +119,12 @@ GetRevenueProduct()
 // Thống kê thể loại sản phẩm bán ra ------------------------------------------------------------------
 async function GetRevenueCategory()
 {
-    var response = await fetch(`crud/statistics_category.php`)
+    var formData = new FormData();
+    formData.append('choice', 'statistics_category')
+    var response = await fetch(`crud/statistics_api.php`, {
+        method : 'POST',
+        body : formData
+    })
     var json = await response.json()
     var dataArray = Object.entries(json);
     dataArray.sort((a, b) => b[1] - a[1]);

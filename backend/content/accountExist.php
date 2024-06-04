@@ -55,7 +55,13 @@
     {
         if(confirm("Xác nhận xóa?"))
         {
-            var link = await fetch(`crud/delete_user.php?id_delete=${id}`)
+            var formData = new FormData()
+            formData.append('choice', 'delete_user')
+            formData.append('id_delete', id)
+            var link = await fetch(`crud/user_api.php`, {
+                method : 'POST',
+                body : formData
+            })
             LinkLoadUser()
         }
     }
@@ -72,7 +78,12 @@
     })
     async function LinkLoadUser()
     {
-        var link = await fetch('crud/get_all_user.php');
+        var formData = new FormData();
+        formData.append('choice', 'get_all_user_exist')
+        var link = await fetch('crud/user_api.php', {
+            method : 'POST',
+            body : formData
+        });
         var json =  await link.json();
         LoadUser(json)
         var elementDel = document.querySelectorAll(".delete_user")

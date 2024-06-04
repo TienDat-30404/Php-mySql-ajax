@@ -46,7 +46,13 @@
     // Edit Category -------------------------------------------------------------------------------
     async function EditAuthor(id)
     {
-        var link = await fetch(`crud/edit_author.php?id_edit=${id}`)
+        var formData = new FormData()
+        formData.append('choice', 'display_edit_author')
+        formData.append('id_edit', id)
+        var link = await fetch(`crud/author_api.php`, {
+            method : 'POST',
+            body : formData
+        })
         var json = await link.json();
         DisplayAuthor(json)
     }
@@ -127,9 +133,10 @@
         if(confirm("Xác nhân chỉnh sửa?"))
         {
             var formData = new FormData();
+            formData.append('choice', 'handle_edit_author')
             formData.append('id_author', idAuthor);
             formData.append('name_author', nameAuthor);
-            var link = await fetch('crud/handle_editAuthor.php', {
+            var link = await fetch('crud/author_api.php', {
                 method: 'POST',
                 body: formData
             });
@@ -224,8 +231,9 @@
         if(confirm("Xác nhận thêm?"))
         {
             var formData = new FormData();
+            formData.append('choice', 'add_author')
             formData.append('name_author', nameAuthor);
-            var link = await fetch('crud/handle_addAuthor.php', {
+            var link = await fetch('crud/author_api.php', {
                 method: 'POST',
                 body: formData
             });
@@ -258,7 +266,13 @@
     {
         if(confirm("Xác nhận xóa tác giả?"))
         {     
-            var link = await fetch(`crud/delete_author.php?id_delete=${id}`)
+            var formData = new FormData();
+            formData.append('choice', 'delete_author')
+            formData.append('id_delete', id)
+            var link = await fetch(`crud/author_api.php`, {
+                method : 'POST',
+                body : formData
+            })
             LinkLoadAuthor()
             DisplayDefaultAuthor(0, "")
         }
@@ -275,7 +289,12 @@
     })
     async function LinkLoadAuthor()
     {
-        var link = await fetch('crud/get_all_authors.php');
+        var formData = new FormData();
+        formData.append('choice', 'get_all_author')
+        var link = await fetch('crud/author_api.php', {
+            method : 'POST',
+            body : formData
+        });
         var json =  await link.json();
         LoadAuthor(json)
         var elementDel = document.querySelectorAll(".deleteAuthor")
@@ -411,8 +430,16 @@
     
     async function DisplayDefaultAuthor(idAuthor, nameAuthor)
     {
-        var response = await fetch(`crud/search_author.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idAuthor}&
-        name_search=${nameAuthor}`);
+        var formData = new FormData();
+        formData.append('choice', 'search_author')
+        formData.append('id_search', idAuthor)
+        formData.append('name_search', nameAuthor)
+        formData.append('page', currentPage)
+        formData.append('pageSize', pageSize)
+        var response = await fetch(`crud/author_api.php`, {
+            method : 'POST',
+            body : formData
+        });
         var json = await response.json()
         console.log(json)
         DisplaySearchAuthor(json, "table")
@@ -421,8 +448,16 @@
     DisplayDefaultAuthor(0, "")
     async function SearchIdAndName(idAuthor, nameAuthor)
     {
-        var response = await fetch(`crud/search_author.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idAuthor}&
-        name_search=${nameAuthor}`);
+        var formData = new FormData();
+        formData.append('choice', 'search_author')
+        formData.append('id_search', idAuthor)
+        formData.append('name_search', nameAuthor)
+        formData.append('page', currentPage)
+        formData.append('pageSize', pageSize)
+        var response = await fetch(`crud/author_api.php`, {
+            method : 'POST',
+            body : formData
+        });
         var json = await response.json()
         DisplaySearchAuthor(json, "table")
         var indexSelect = checkSelect.value

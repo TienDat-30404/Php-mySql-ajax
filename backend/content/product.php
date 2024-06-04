@@ -26,7 +26,13 @@
     {
         if(confirm("Xác nhận xóa sản phẩm?"))
         {
-            var link = await fetch(`crud/delete_product.php?id_delete=${id}`)
+            var formData = new FormData()
+            formData.append('choice', 'delete_product')
+            formData.append('id_delete', id)
+            var link = await fetch('crud/product_api.php', {
+                method : 'POST',
+                body : formData
+            })
             LinkLoadProduct()
         }
     }
@@ -42,7 +48,12 @@
     })
     async function LinkLoadProduct()
     {
-        var link = await fetch('crud/get_all_product.php');
+        var fomrData = new FormData()
+        formData.append('choice', 'get_all_product')
+        var link = await fetch('crud/product_api.php', {
+            method : 'POST',
+            body : formData
+        })
         var json =  await link.json();
         LoadProduct(json)
         var elementDel = document.querySelectorAll(".elementDel")
@@ -93,8 +104,13 @@
 
     async function EditProduct(id)
     {
-
-        var link = await fetch(`crud/edit_product.php?id_edit=${id}`)
+        var formData = new FormData();
+        formData.append('choice', 'display_edit_product')
+        formData.append('id_edit', id)
+        var link = await fetch('crud/product_api.php', {
+            method : 'POST',
+            body : formData 
+        });
         var json = await link.json();
         DisplayEditProduct(json)
         
@@ -117,6 +133,7 @@
         if(confirm("Xác nhận chỉnh sửa sản phẩm?"))
         {
             var formData = new FormData();
+            formData.append('choice', 'handle_edit_product');
             formData.append('id_product', idProduct);
             formData.append('name_product', nameProduct);
             formData.append('image_product', imageProduct);
@@ -128,7 +145,7 @@
             formData.append('category_product', categoryProduct);
             formData.append('author_product', authorProduct);
             
-            var link = await fetch('crud/handle_editProduct.php', {
+            var link = await fetch('crud/product_api.php', {
                 method: 'POST',
                 body: formData
             });
@@ -609,32 +626,51 @@
     }
     async function DisPlayMain()
     {
-        var response = await fetch(`../frontend/pages/product.php?page=${currentPage}&pageSize=${pageSize}`);
+        var formData = new FormData();
+        formData.append('choice', 'default_display_product')
+        formData.append('page', currentPage);
+        formData.append('pageSize', pageSize);
+        var response = await fetch(`crud/product_api.php`, {
+            method : 'POST',
+            body : formData
+        });
         var json = await response.json()
         DisplayProduct(json, "table")
         DisplayPagination(json, 2)
     }
     DisPlayMain()
-    async function SearchAllProduct()
-    {
-        var response = await fetch(`../frontend/pages/product.php?page=${currentPage}&pageSize=${pageSize}`);
-        var json = await response.json()
-        DisplayProduct(json, "table")
-        DisplayPagination(json, 0)
-    }
     async function SearchIdProduct(idProduct)
     {
-        var response = await fetch(`crud/searchIdProduct.php?page=${currentPage}&pageSize=${pageSize}&inputSearchName=${idProduct}`);
+        var formData = new FormData();
+        formData.append('choice', 'search_id_product')
+        formData.append('inputSearchName', idProduct)
+        formData.append('page', currentPage)
+        formData.append('pageSize', pageSize)
+        var response = await fetch(`crud/product_api.php`, {
+            method : 'POST',
+            body : formData
+        });
         var json = await response.json()
         DisplayProduct(json, "table")
     }
     async function SearchAdvanced(nameSearch, categorySearch, priceFrom, priceTo)
     {
-        var link = await fetch(`../frontend/pages/search_advanced.php?page=${currentPage}&pageSize=${pageSize}&nameSearchAdvanced=${nameSearch}&search_select=${categorySearch}
-        &priceFrom=${priceFrom}&priceTo=${priceTo}`)
-        var json =  await link.json();
+        var formData = new FormData();
+        formData.append('choice', 'search_product')
+        formData.append('nameSearchAdvanced', nameSearch)
+        formData.append('search_select', categorySearch)
+        formData.append('priceFrom', priceFrom)
+        formData.append('priceTo', priceTo)
+        formData.append('page', currentPage)
+        formData.append('pageSize', pageSize)
+        var response = await fetch(`crud/product_api.php`, {
+            method : 'POST',
+            body : formData
+        });
+        var json = await response.json()
+        console.log(json)
         DisplayProduct(json, "table")
-        DisplayPagination(json, 0)
+        DisplayPagination(json, 0) 
     }
     
     var copySearchName
@@ -658,6 +694,8 @@
         }
 
     })
+
+    // Xu li an submit tìm kiếm
     document.querySelector('.button_search').addEventListener('click', function(event)
     {
         currentPage = 1
@@ -678,8 +716,7 @@
             {       
                 if((copySearchPriceFrom == "" || copySearchPriceTo == "") && copySearchName == "")
                 {
-                    DisPlayMain()
-
+                    SearchAdvanced("", 0, "", "")
                 }
                 else if((copySearchPriceFrom == "" || copySearchPriceTo == "") && copySearchName != "")
                 {

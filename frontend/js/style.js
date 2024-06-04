@@ -100,8 +100,15 @@ async function fetchData(url) {
 }
 
 async function displayHomePage() { 
-    var url = `frontend/pages/product.php?page=${currentPage}&pageSize=${pageSize}`;
-    var data = await fetchData(url);
+    var formData = new FormData();
+    formData.append('choice', 'default_display_product')
+    formData.append('page', currentPage)
+    formData.append('pageSize', pageSize)
+    var response = await fetch('backend/crud/product_api.php', {
+        method : 'POST',
+        body : formData
+    })
+    var data = await response.json()
     displayProducts(data, contentProduct);
     displayPagination(data, paginationHomePage, 1);
 }

@@ -148,8 +148,9 @@
     async function RestoreProduct(id)
     {
         var formData = new FormData();
+        formData.append('choice', 'restore_product')
         formData.append('id_restore', id);
-        var link = await fetch('crud/restore_product.php', {
+        var link = await fetch('crud/product.php', {
             method : 'POST',
             body : formData
         });
@@ -168,7 +169,12 @@
     })
     async function LinkLoadProduct()
     {
-        var link = await fetch('crud/productNoExist.php');
+        var formData = new FormData();
+        formData.append('choice', 'product_noExist')
+        var link = await fetch('crud/product.php', {
+            method : 'POST',
+            body : formData
+        })
         var json = await link.json();
         console.log(json);
         LoadProduct(json)
@@ -215,6 +221,7 @@
         if(confirm("Xác nhận thêm sản phẩm?"))
         {
             var formData = new FormData();
+            formData.append('choice', 'add_product')
             formData.append('name_product', nameProduct);
             formData.append('image_product', imageProduct);
             formData.append('price_product', priceProduct);
@@ -225,7 +232,7 @@
             formData.append('category_product', categoryProduct);
             formData.append('author_product', authorProduct);
     
-            var link = await fetch('crud/handle_addProduct.php', {
+            var link = await fetch('crud/product.php', {
                 method: 'POST',
                 body: formData
             });

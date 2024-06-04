@@ -46,9 +46,14 @@
     // Edit Category -------------------------------------------------------------------------------
     async function EditPublisher(id)
     {
-        var link = await fetch(`crud/edit_publisher.php?id_edit=${id}`)
-        var json = await link.json();
-        console.log(json)
+        var formData = new FormData();
+        formData.append('choice', 'display_edit_publisher')
+        formData.append('id_edit', id)
+        var response = await fetch(`crud/publisher_api.php`, {
+            method : 'POST',
+            body : formData
+        });
+        var json = await response.json();
         DisplayPublisher(json)
     }
     var elementEdit = document.querySelectorAll('.editPublisher')
@@ -76,7 +81,7 @@
                             <h2 class = "edit_category-title">Chỉnh sửa nhà xuất bản</h2>
                             <ul class = "edit_category-content">
                                 <li>
-                                    <h4>Id nhà cung cấp</h4>
+                                    <h4>Id nhà xuất bản</h4>
                                     <input name = "id_publisher" style = "text-align : center; margin-left : 40px; width : 100px; outline : none; border : 1px solid black; background-color : transparent" value = "${value.id}" type="text" readonly>
                                 </li>
                                 <li>
@@ -128,15 +133,16 @@
         if(confirm("Xác nhận chỉnh sửa"))
         {
             var formData = new FormData();
+            formData.append('choice', 'handle_edit_publisher')
             formData.append('id_publisher', idPublisher);
             formData.append('name_publisher', namePublisher);
-            var link = await fetch('crud/handle_editPublisher.php', {
+            var link = await fetch('crud/publisher_api.php', {
                 method: 'POST',
                 body: formData
             });
             var json = await link.json();
-            var success = `Chỉnh sửa nhà cung cấp ${namePublisher} thành công`
-            var fail = `Nhà cung cấp ${namePublisher} đã tồn tại. Không thể chỉnh sửa nhà cung cấp này`
+            var success = `Chỉnh sửa nhà xuất bản ${namePublisher} thành công`
+            var fail = `Nhà xuất bản ${namePublisher} đã tồn tại. Không thể chỉnh sửa nhà xuất bản này`
             if(json.success === success)
             {
                 alert(success)
@@ -151,7 +157,7 @@
                 var ElementP = document.querySelector('input[name="name_publisher"]')
                 ElementP.focus()
                 var notification = ElementP.nextElementSibling;
-                notification.innerText = "Tên nhà cung cấp đã tồn tại";
+                notification.innerText = "Tên nhà xuất bản đã tồn tại";
                 ElementP.classList.add('border-message')
             }
         }
@@ -173,7 +179,7 @@
                         <h2 class = "edit_category-title">Thêm nhà xuất bản</h2>
                         <ul class = "edit_category-content">
                             <li >
-                                <h4>Tên nhà cung cấp</h4>
+                                <h4>Tên nhà xuất bản</h4>
                                 <input style = "width : 400px" name = "name_publisher" type="text">
                                 <span class = "form-message"></span>
                             </li>
@@ -222,17 +228,18 @@
 
     async function HandleAddPublisher(namePublisher)
     {
-        if(confirm("Xác nhân thêm nhà cung cấp này?"))
+        if(confirm("Xác nhân thêm nhà xuất bản này?"))
         {
             var formData = new FormData();
+            formData.append('choice', 'add_publisher')
             formData.append('name_publisher', namePublisher);
-            var link = await fetch('crud/handle_addPublisher.php', {
+            var link = await fetch('crud/publisher_api.php', {
                 method: 'POST',
                 body: formData
             });
             var json = await link.json();
-            var success = `Thêm nhà cung cấp ${namePublisher} vào cửa hàng thành công`;
-            var fail = `Nhà cung cấp ${namePublisher} đã tồn tại trong cửa hàng`;
+            var success = `Thêm nhà xuất bản ${namePublisher} vào cửa hàng thành công`;
+            var fail = `Nhà xuất bản ${namePublisher} đã tồn tại trong cửa hàng`;
             if(json.status === success)
             {
                 alert(success)
@@ -247,7 +254,7 @@
                 var ElementP = document.querySelector('input[name="name_publisher"]')
                 ElementP.focus()
                 var notification = ElementP.nextElementSibling;
-                notification.innerText = "Tên nhà cung cấp đã tồn tại";
+                notification.innerText = "Tên nhà xuất bản đã tồn tại";
                 ElementP.classList.remove('border-message')
             }
         }
@@ -257,9 +264,15 @@
     // Delete Publisher
     async function DeletePublisher(id)
     {
-        if(confirm("Xác nhận xóa nhà cung cấp này?"))
+        if(confirm("Xác nhận xóa nhà xuất bản này?"))
         {
-            var link = await fetch(`crud/delete_publisher.php?id_delete=${id}`)
+            var formData = new FormData();
+            formData.append('choice', 'delete_publisher')
+            formData.append('id_delete', id)
+            var link = await fetch(`crud/publisher_api.php`, {
+                method : 'POST',
+                body : formData
+            })
             LinkLoadPublisher()
             DisplayDefaultPublisher(0, "")
         }
@@ -277,7 +290,12 @@
     })
     async function LinkLoadPublisher()
     {
-        var link = await fetch('crud/get_all_publishers.php');
+        var formData = new FormData();
+        formData.append('choice', 'get_all_publisher')
+        var link = await fetch('crud/publisher_api.php', {
+            method : 'POST',
+            body : formDta
+        });
         var json =  await link.json();
         LoadPublisher(json)
         var elementDel = document.querySelectorAll(".deletePublisher")
@@ -421,42 +439,37 @@
         })
     }
     
-    async function SearchIdAndName(idPublisher, nameAuthor)
-    {
-        var response = await fetch(`crud/search_category.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idPublisher}&
-        name_search=${nameAuthor}`);
-        var json = await response.json()
-        console.log(json)
-        DisplaySearchPublisher(json, "table")
-        // DisplayPagination(json, 0)
-        checkSelect.addEventListener("change", function(e)
-        {
-            if(checkSelect.value == 0)
-            {
-                DisplayPagination(json, 1)
-            }
-            else if(checkSelect.value == 2)
-            {
-                DisplayPagination(json, 1)
-            }
 
-        })
-    }
-
-    async function DisplayDefaultPublisher(idPublisher, nameAuthor)
+    async function DisplayDefaultPublisher(idPublisher, namePublisher)
     {
-        var response = await fetch(`crud/search_publisher.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idPublisher}&
-        name_search=${nameAuthor}`);
+        var formData = new FormData();
+        formData.append('choice', 'search_publisher')
+        formData.append('id_search', idPublisher)
+        formData.append('name_search', namePublisher)
+        formData.append('page', currentPage)
+        formData.append('pageSize', pageSize)
+        var response = await fetch(`crud/publisher_api.php`, {
+            method : 'POST',
+            body : formData
+        });
         var json = await response.json()
         console.log(json)
         DisplaySearchPublisher(json, "table")
         DisplayPagination(json, 0)
     }
     DisplayDefaultPublisher(0, "")
-    async function SearchIdAndName(idPublisher, nameAuthor)
+    async function SearchPublisher(idPublisher, namePublisher)
     {
-        var response = await fetch(`crud/search_publisher.php?page=${currentPage}&pageSize=${pageSize}&id_search=${idPublisher}&
-        name_search=${nameAuthor}`);
+        var formData = new FormData();
+        formData.append('choice', 'search_publisher')
+        formData.append('id_search', idPublisher)
+        formData.append('name_search', namePublisher)
+        formData.append('page', currentPage)
+        formData.append('pageSize', pageSize)
+        var response = await fetch(`crud/publisher_api.php`, {
+            method : 'POST',
+            body : formData
+        });
         var json = await response.json()
         console.log(json)
         DisplaySearchPublisher(json, "table")
@@ -487,15 +500,15 @@
         var indexSelect = checkSelect.value
         if(indexSelect == 0)
         {
-           SearchIdAndName(0, "")
+           SearchPublisher(0, "")
         }
         else if(indexSelect == 1)
         {
-            SearchIdAndName(inputSearch, "")
+            SearchPublisher(inputSearch, "")
         }
         else if(indexSelect == 2)
         {
-            SearchIdAndName(0, inputSearch)
+            SearchPublisher(0, inputSearch)
         }
 
     })
@@ -559,11 +572,11 @@
         currentPage = index
         if(check == 0)
         {
-            SearchIdAndName(0, "")
+            SearchPublisher(0, "")
         }
         else if(check == 1)
         {
-            SearchIdAndName(0, copySearch)
+            SearchPublisher(0, copySearch)
         }
     }
 </script>

@@ -21,7 +21,13 @@
     // Detail Order -------------------------------------------------------------------------------
     async function DetailOrder(id)
     {
-        var link = await fetch(`crud/detail_order.php?id_order=${id}`)
+        var formData = new FormData()
+        formData.append('choice', 'detail_order')
+        formData.append('id_order', id)
+        var link = await fetch(`crud/order_api.php`, {
+            method : 'POST',
+            body : formData
+        })
         var json = await link.json();
         DisplayDetailOrder(json)
     }
@@ -112,9 +118,14 @@
     {
         if(confirm("Xác nhận xóa đơn hàng này?"))
         {
-            var link = await fetch(`crud/delete_order.php?id_delete=${id}`)
-            LinkLoadOrder()
-            DisplayDefaultOrder(0, "", "", "", 0)
+            var formData = new FormData();
+            formData.append('choice', 'delete_order')
+            formData.append('id_delete', id)
+            var link = await fetch(`crud/order_api.php`, {
+                method : 'POST',
+                body : formData
+            })
+            DisplayDefaultOrder()
         }
     }
     var elementDel = document.querySelectorAll(".deleteOrder")
@@ -133,10 +144,11 @@
     // Confirm Order
     async function ConfirmOrder(id)
     {
-        var formData = new FormData();
-        formData.append('id_bill', id)
         if (confirm("Xác nhận đơn hàng?")) {
-            var link = await fetch(`crud/handle_confirmOrder.php`, {
+            var formData = new FormData();
+            formData.append('choice', 'confirm_order')
+            formData.append('id_bill', id)
+            var link = await fetch(`crud/order_api.php`, {
             method : 'POST',
             body : formData
         })
@@ -144,7 +156,7 @@
         else {
             console.log("Hủy bỏ xóa!");
         }
-        LinkLoadOrder()
+        DisplayDefaultOrder()
     }
     var buttonConfirm = document.querySelectorAll('.confirmOrder')
     buttonConfirm.forEach(function(item)
@@ -158,44 +170,6 @@
     })
 
 
-
-
-    async function LinkLoadOrder()
-    {
-        var link = await fetch('crud/get_all_bill.php');
-        var json =  await link.json();
-        LoadOrder(json)
-        var buttonConfirm = document.querySelectorAll('.confirmOrder')
-        buttonConfirm.forEach(function(item)
-        {
-            item.addEventListener('click', function(event)
-            {
-                event.preventDefault()
-                var idBill = this.getAttribute('data-id-order')
-                ConfirmOrder(idBill)
-            })
-        })
-        var buttonConfirm = document.querySelectorAll('.deleteOrder')
-        buttonConfirm.forEach(function(item)
-        {
-            item.addEventListener('click', function(event)
-            {
-                event.preventDefault()
-                var idBill = this.getAttribute('data-id-order')
-                DeleteOrder(idBill)
-            })
-        })
-        var elementEdit = document.querySelectorAll('.detailOrder')
-        elementEdit.forEach(function(item)
-        {
-            item.addEventListener('click', function(event)
-            {
-                event.preventDefault();
-                var idOrder = this.getAttribute('data-id-order')
-                DetailOrder(idOrder)
-            })
-        })
-    }
     function LoadOrder(data)
     {
         var tableBody = document.querySelector('table tbody')
@@ -375,8 +349,19 @@
     
     async function SearchOrder(idOrder, nameCustomer, dateFrom, dateTo, status)
     {
-        var response = await fetch(`crud/search_order.php?page=${currentPage}&pageSize=${pageSize}&id_order=${idOrder}&
-        name_customer=${nameCustomer}&date_from=${dateFrom}&date_to=${dateTo}&status=${status}`);
+        var formData = new FormData();
+        formData.append('choice', 'search_order')
+        formData.append('id_order', idOrder)
+        formData.append('name_customer', nameCustomer)
+        formData.append('date_from', dateFrom)
+        formData.append('date_to', dateTo)
+        formData.append('status', status)
+        formData.append('page', currentPage)
+        formData.append('pageSize', pageSize)
+        var response = await fetch(`crud/order_api.php`, {
+            method : 'POST',
+            body : formData
+        });
         var json = await response.json()
         console.log(json)
         DisplaySearchOrder(json, "table")
@@ -417,16 +402,24 @@
 
     }
 
-    async function DisplayDefaultOrder(idOrder, nameCustomer, dateFrom, dateTo, status)
+    async function DisplayDefaultOrder()
     {
-        var response = await fetch(`crud/search_order.php?page=${currentPage}&pageSize=${pageSize}&id_order=${idOrder}&
-        name_customer=${nameCustomer}&date_from=${dateFrom}&date_to=${dateTo}&status=${status}`);
+        var formData = new FormData();
+        formData.append('choice', 'display_default_order')
+        formData.append('page', currentPage)
+        formData.append('pageSize', pageSize)
+        var response = await fetch(`crud/order_api.php`, 
+            {
+                method : 'POST',
+                body : formData
+            }
+        );
         var json = await response.json()
         console.log(json)
         DisplaySearchOrder(json, "table")
         DisplayPagination(json, 5)
     }
-    DisplayDefaultOrder(0, "", "", "", 0);
+    DisplayDefaultOrder();
 
     var copySearch
     var copyDateFrom
@@ -563,7 +556,7 @@
         }
         else if(check == 5)
         {
-            SearchOrder(0, "", "", "", 0);
+            DisplayDefaultOrder();
         }
         else if(check == 6)
         {

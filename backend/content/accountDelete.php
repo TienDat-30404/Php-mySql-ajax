@@ -49,8 +49,9 @@
     async function RestoreUser(id)
     {
         var formData = new FormData();
+        formData.append('choice', 'restore_user')
         formData.append('id_user', id);
-        var link = await fetch('crud/restore_user.php', {
+        var link = await fetch('crud/user_api.php', {
             method : 'POST',
             body : formData
         });
@@ -69,7 +70,12 @@
     })
     async function LinkLoadUser()
     {
-        var link = await fetch('crud/get_all_noExistUser.php');
+        var formData = new FormData();
+        formData.append('choice', 'get_all_user_no_exist')
+        var link = await fetch('crud/user_api.php', {
+            method : 'POSt',
+            body : formData
+        });
         var json =  await link.json();
         LoadUser(json)
         var elementDel = document.querySelectorAll(".restore_user")

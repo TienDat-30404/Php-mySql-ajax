@@ -15,8 +15,9 @@
     <canvas id="myChart6" style="width:100%;max-width: 1000px;"></canvas>
     <div style = "margin-bottom : 30px;" class = "statistics_4"></div>
     <canvas id="myChart7" style="width:100%;max-width: 1000px;"></canvas>
+</body>
+</html>
 <script>
-
 
 // Doanh thu bán hàng và biến động theo từng tháng
 async function GetRevenueProduct()
@@ -212,7 +213,12 @@ GetRevenueCategory()
 /* Top 10 sản phẩm bán chạy nhất ---------------------------------------------------------- */
 async function GetTop10Product()
 {
-    var response = await fetch(`crud/statistics_top10Product.php`)
+    var formData = new FormData();
+    formData.append('choice', 'statistics_top10_product')
+    var response = await fetch(`crud/statistics_api.php`, {
+        method : 'POST',
+        body : formData
+    })
     var json = await response.json()
     var nameProduct = [];
     var totalPrice = []
@@ -275,7 +281,12 @@ GetTop10Product()
 // Profit month_1 -> month_12 ----------------------------------------------------------
 async function GetProfitEachMonth()
 {
-    var response = await fetch(`crud/statistics_profit.php`)
+    var formData = new FormData()
+    formData.append('choice', 'statistics_profit')
+    var response = await fetch(`crud/statistics_api.php`, {
+        method : 'POST',
+        body : formData
+    })
     var json = await response.json();
     const xValues = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
     var profit = []
@@ -345,7 +356,12 @@ GetProfitEachMonth()
 
 async function GetTop10Staff()
 {
-    var response = await fetch(`crud/statistics_top10Staff.php`)
+    var formData = new FormData()
+    formData.append('choice', 'statistics_top_10_staff')
+    var response = await fetch(`crud/statistics_api.php`, {
+        method : 'POST',
+        body : formData
+    })
     var json = await response.json()
     console.log(json)
     var dataArray = Object.entries(json);
@@ -384,5 +400,3 @@ async function GetTop10Staff()
 GetTop10Staff()
 </script>
 
-</body>
-</html>

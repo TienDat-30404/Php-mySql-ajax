@@ -3,7 +3,7 @@
     <thead>
         <tr>
             <th colspan = "9">
-                <a href="index.php?title=accountExist&action=add">Add User</a>
+                <a class = "add_user" href="index.php?title=accountExist&action=add">Add User</a>
             </th>
         </tr>
         <tr>
@@ -35,7 +35,7 @@
                     <td><?php echo $row['phone_number']; ?></td>
                     
                     <td>
-                        <a href="index.php?title=accountExist&action=edit&id_edit=<?php echo $row['id']; ?>">
+                        <a data-id-user = "<?php echo $row['id']; ?>" class = "edit_user" href="">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </a>
                     </td>
@@ -130,5 +130,612 @@
             `
             tableBody.appendChild(row)
         })
+    }
+
+    async function HandleAddUser(idRole, name, email, password, address, phone)
+    {
+        if(confirm("Xác nhận thêm ?"))
+        {
+            var formData = new FormData();
+            formData.append('choice', 'add_user')
+            formData.append('user_add-roleId', idRole);
+            formData.append('user_add-name', name);
+            formData.append('user_add-email', email);
+            formData.append('user_add-password', password);
+            formData.append('user_add-address', address);
+            formData.append('user_add-phone', phone);
+            var link = await fetch('crud/user_api.php', {
+                method: 'POST',
+                body: formData
+            });
+            var json = await link.json();
+            var success = `Thêm tài khoản ${name} thành công`;
+            var fail = `Tài khoản ${name} đã tồn tại`;
+            if(json.status === success)
+            {
+                alert(success)
+                var ElementP = document.querySelector('input[name="user_add-name"]')
+                var notification = ElementP.nextElementSibling;
+                notification.innerText = "";
+                ElementP.classList.remove('border-message')
+    
+                var ElementP1 = document.querySelector('input[name="user_add-email"]')
+                var notification1 = ElementP1.nextElementSibling;
+                notification1.innerText = "";
+                ElementP1.classList.remove('border-message')
+    
+                var ElementP2 = document.querySelector('input[name="user_add-password"]')
+                var notification2 = ElementP2.nextElementSibling;
+                notification2.innerText = "";
+                ElementP2.classList.remove('border-message')
+    
+                var ElementP3 = document.querySelector('input[name="user_add-address"]')
+                var notification3 = ElementP3.nextElementSibling;
+                notification3.innerText = "";
+                ElementP3.classList.remove('border-message')
+    
+                var ElementP4 = document.querySelector('input[name="user_add-phone"]')
+                var notification4 = ElementP4.nextElementSibling;
+                notification4.innerText = "";
+                ElementP4.classList.remove('border-message')
+            }
+            if(json.status === fail)
+            {
+                alert(fail)
+            }
+        }
+    }
+
+    function AddUser()
+    {
+        var addUser = `
+            <div class = modal>
+                <div class = "modal_base">
+                    <form action="crud/add_user.php" method = "POST">
+                        <div class = "modal_base-account">
+                            <h3 class = "user_title">Add User</h3>
+                            <a href="index.php?title=accountExist" style = "position : absolute; top : 20px; right : 50px; font-size : 20px">X</a>
+                            <ul class = "user_add">
+                                <li style = "margin-right : 60px">
+                                    <h4 style = "margin-top : 0; margin-bottom : 10px" class = "">Name Role</h4>
+                                    <select name="user_add-roleId" id="select_add">
+                                    <?php 
+                                        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
+                                        $sql = "SELECT * FROM roles";
+                                        $result = DataSQL::querySQL($sql);
+                                        while($row = mysqli_fetch_array($result))
+                                        {
+                                            ?>
+                                            <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+                                        <?php }
+                                    ?>
+                                        
+                                    </select>
+                                </li>
+                                
+                                <li>
+                                    <h4 style = "margin-top : 5px; margin-bottom : 5px">Full Name</h4>
+                                    <input name = "user_add-name" type="text">
+                                    <span class = "form-message"></span>
+                                </li>
+                                <li>
+                                    <h4>Email</h4>
+                                    <input name = "user_add-email" type="text">
+                                    <span class = "form-message"></span>
+                                </li>
+                                <li>
+                                    <h4>Password</h4>
+                                    <input name = "user_add-password" type="text">
+                                    <span class = "form-message"></span>
+                                </li>
+                                <li>
+                                    <h4>Address</h4>
+                                    <input name = "user_add-address" type="text">
+                                    <span class = "form-message"></span>
+                                </li>
+                                <li>
+                                    <h4>Phone</h4>
+                                    <input name = "user_add-phone" type="text">
+                                    <span class = "form-message"></span>
+                                </li>
+                                <li>
+                                    <input name = "button_add" type = "submit" class = "button_add">
+                                </li>
+                            </ul>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `
+        document.body.insertAdjacentHTML('beforeend', addUser);
+        var addButton = document.querySelector('input[name="button_add"]')
+        addButton.addEventListener('click', function(event)
+        {
+            event.preventDefault();
+            var idRole = document.querySelector('select[name="user_add-roleId"]').value
+            var fullname = document.querySelector('input[name="user_add-name"]').value
+            var email = document.querySelector('input[name="user_add-email"]').value
+            var checkEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            var password = document.querySelector('input[name="user_add-password"]').value
+            var address = document.querySelector('input[name="user_add-address"]').value
+            var phone = document.querySelector('input[name="user_add-phone"]').value
+            var checkPhone = /^09\d{8,9}$/;
+            var firstFocus = null;
+            if(password.length < 6 || fullname == "" || email == "" || password == "" || address == "" || phone == "" ||
+            !email.match(checkEmail) || !phone.match(checkPhone))
+            {
+                if(fullname == "")
+                {
+                    var ElementP = document.querySelector('input[name="user_add-name"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "Tên không được rông";
+                    ElementP.classList.add('border-message')
+                    if(firstFocus == null)
+                    {
+                        firstFocus = ElementP;
+                    }
+
+                }
+                else 
+                {
+                    var ElementP = document.querySelector('input[name="user_add-name"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "";
+                    ElementP.classList.remove('border-message')
+                }
+                if(email == "")
+                {
+                    var ElementP = document.querySelector('input[name="user_add-email"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "Email không được rỗng";
+                    ElementP.classList.add('border-message')
+                    if(firstFocus == null)
+                    {
+                        firstFocus = ElementP;
+                    }
+                
+                }
+                else 
+                {
+                    var ElementP = document.querySelector('input[name="user_add-email"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "";
+                    ElementP.classList.remove('border-message')
+                }
+                if(!email.match(checkEmail))
+                {
+                    var ElementP = document.querySelector('input[name="user_add-email"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "Email không hợp lệ";
+                    ElementP.classList.add('border-message')
+                    if(firstFocus == null)
+                    {
+                        firstFocus = ElementP;
+                    }
+                }
+                else 
+                {
+                    var ElementP = document.querySelector('input[name="user_add-email"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "";
+                    ElementP.classList.remove('border-message')
+                }
+                if(password == "")
+                {
+                    var ElementP = document.querySelector('input[name="user_add-password"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "Mật khẩu không được rỗng";
+                    ElementP.classList.add('border-message')
+                    if(firstFocus == null)
+                    {
+                        firstFocus = ElementP;
+                    }
+                    
+                }
+                else 
+                {
+                    var ElementP = document.querySelector('input[name="user_add-password"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "";
+                    ElementP.classList.remove('border-message')
+                }
+                if(password.length < 6)
+                {
+                    var ElementP = document.querySelector('input[name="user_add-password"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "Mật khẩu phải chứa ít nhất 6 kí tự";
+                    ElementP.classList.add('border-message')
+                    if(firstFocus == null)
+                    {
+                        firstFocus = ElementP;
+                    }
+                    
+                }
+                else 
+                {
+                    var ElementP = document.querySelector('input[name="user_add-password"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "";
+                    ElementP.classList.remove('border-message')
+                }
+                if(address == "")
+                {
+                    var ElementP = document.querySelector('input[name="user_add-address"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "Địa chỉ không được rông";
+                    ElementP.classList.add('border-message')
+                    if(firstFocus == null)
+                    {
+                        firstFocus = ElementP;
+                    }
+                    
+                }
+                else 
+                {
+                    var ElementP = document.querySelector('input[name="user_add-address"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "";
+                    ElementP.classList.remove('border-message')
+                }
+                if(phone == "")
+                {
+                    var ElementP = document.querySelector('input[name="user_add-phone"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "Số điện thoại không được rỗng";
+                    ElementP.classList.add('border-message')
+                    if(firstFocus == null)
+                    {
+                        firstFocus = ElementP;
+                    }
+                    
+                }
+                else 
+                {
+                    var ElementP = document.querySelector('input[name="user_add-phone"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "";
+                    ElementP.classList.remove('border-message')
+                }
+                if(!phone.match(checkPhone))
+                {
+                    var ElementP = document.querySelector('input[name="user_add-phone"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "Số điện thoại không hợp lệ";
+                    ElementP.classList.add('border-message')
+                    if(firstFocus == null)
+                    {
+                        firstFocus = ElementP;
+                    }
+                }
+                else 
+                {
+                    var ElementP = document.querySelector('input[name="user_add-phone"]')
+                    var notification = ElementP.nextElementSibling;
+                    notification.innerText = "";
+                    ElementP.classList.remove('border-message')
+                }
+                firstFocus.focus();
+            }
+            else 
+            {
+                HandleAddUser(idRole, fullname, email, password, address, phone)
+            }
+        })
+    }
+    var addUser = document.querySelector('.add_user')
+    addUser.addEventListener('click', function(e)
+    {
+        e.preventDefault()
+        AddUser()
+    })
+
+
+    // Edit User 
+
+    async function EditUser(id)
+    {
+        var formData = new FormData()
+        formData.append('choice', 'display_edit_user')
+        formData.append('id_edit', id)
+        var link = await fetch(`crud/user_api.php`, {
+            method : 'POST',
+            body : formData
+        })
+        var json = await link.json();
+        DisplayEditUser(json)
+    }
+    var elementEdit = document.querySelectorAll('.edit_user')
+    elementEdit.forEach(function(item)
+    {
+        item.addEventListener('click', function(event)
+        {
+            checkExit = true
+           event.preventDefault();
+           var idUser = this.getAttribute('data-id-user')
+           EditUser(idUser)
+        })
+    })
+
+
+    async function HandleEditUser(idUser, idRole, name, email, password, address, phone)
+    {
+        if(confirm("Xác nhân chỉnh sửa?"))
+        {
+            var formData = new FormData();
+            formData.append('choice', 'handle_edit_user')
+            formData.append('id_hidden', idUser);
+            formData.append('user_edit-roleId', idRole);
+            formData.append('user_edit-name', name)
+            formData.append('user_edit-email', email)
+            formData.append('user_edit-password', password)
+            formData.append('user_edit-address', address)
+            formData.append('user_edit-phone', phone)
+            var link = await fetch('crud/user_api.php', {
+                method: 'POST',
+                body: formData
+            });
+            
+        }
+    }
+
+    function DisplayEditUser(data)
+    {
+        data.forEach(function(value)
+        {
+            var editUser = `
+                <div class = "modal">
+                    <div class = "modal_base">
+                        <form action="" method = "">
+                            <div class = "modal_base-account">
+                                <h3 class = "user_title">Edit User</h3>
+                                <a href="index.php?title=accountExist" style = "position : absolute; top : 20px; right : 50px; font-size : 20px">X</a>
+                                <ul class = "user_add">
+
+                                    <li>
+                                        <h4 style = "margin-top : 0; margin-bottom : 10px" class = "">Name Role</h4>
+                                        <select name="user_edit-roleName" id="select_edit" onChange="OnChangeIdRole()">
+                                        <?php 
+                                            include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
+                                            $sql = "SELECT * FROM roles";
+                                            $result = DataSQL::querySQL($sql);
+                                            while($row = mysqli_fetch_array($result))
+                                            {
+                                                ?> 
+                                                <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>  
+                                            <?php }
+                                        ?>
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <h4 style = "margin-top : 0; margin-bottom : 10px">Id Role</h4>
+                                        <input value = "1" class = "IdRole" name = "user_edit-roleId" type="text">
+                                    </li>
+                                    <?php 
+                                        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
+                                        if(isset($_GET['id_edit']))
+                                        {
+                                            $idEdit = $_GET['id_edit'];
+                                            $sql = "SELECT * FROM users WHERE id = '$idEdit'";
+                                            $result = DataSQL::querySQL($sql);
+                                            $valueRow = mysqli_fetch_assoc($result);
+                                        }
+                                    ?>
+                                    <li>
+                                        <h4>Full Name</h4>
+                                        <input value = "${value.fullname}" style = "margin-left : 20px" name = "user_edit-name" type="text">
+                                        <span class = "form-message"></span>
+                                    </li>
+                                    <li>
+                                        <h4>Email</h4>
+                                        <input value = "${value.email}" name = "user_edit-email" type="text">
+                                        <span class = "form-message"></span>
+                                    </li>
+                                    <li>
+                                        <h4>Password</h4>
+                                        <input value = "${value.password}" style = "margin-left : 30px" name = "user_edit-password" type="text">
+                                        <span class = "form-message"></span>
+                                    </li>
+                                    <li>
+                                        <h4>Address</h4>
+                                        <input value = "${value.address}" style = "margin-left : 40px" name = "user_edit-address" type="text">
+                                        <input value = "${value.id}" type="hidden" name = "id_hidden" >
+                                        <span class = "form-message"></span>
+                                    </li>
+                                    <li>
+                                        <h4>Phone</h4>
+                                        <input value = "${value.phone_number}" name = "user_edit-phone" type="text">
+                                        <span class = "form-message"></span>
+                                    </li>
+                                    <li>
+                                        <input style = "padding : 10px; font-size : 17px; color : white" name = "button_edit" type = "submit" class = "button_add" value = "Chỉnh sửa">
+                                    </li>
+                                </ul>
+                            </div>
+                        </form>
+                    </div> 
+                </div>
+            `
+            document.body.insertAdjacentHTML('beforeend', editUser);
+            var addButton = document.querySelector('input[name="button_edit"]')
+            addButton.addEventListener('click', function(event)
+            {
+                event.preventDefault();
+                var idUser = document.querySelector('input[name="id_hidden"]').value
+                var idRole = document.querySelector('input[name="user_edit-roleId"]').value
+                var fullname = document.querySelector('input[name="user_edit-name"]').value
+                var email = document.querySelector('input[name="user_edit-email"]').value
+                var checkEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                var password = document.querySelector('input[name="user_edit-password"]').value
+                var address = document.querySelector('input[name="user_edit-address"]').value
+                var phone = document.querySelector('input[name="user_edit-phone"]').value
+                var checkPhone = /^09\d{8,9}$/;
+                var firstFocus = null;
+                if(password.length < 6 || fullname == "" || email == "" || password == "" || address == "" || phone == "" ||
+                !email.match(checkEmail) || !phone.match(checkPhone))
+                {
+                    if(fullname == "")
+                    {
+                        var ElementP = document.querySelector('input[name="user_add-name"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "Tên không được rông";
+                        ElementP.classList.add('border-message')
+                        if(firstFocus == null)
+                        {
+                            firstFocus = ElementP;
+                        }
+
+                    }
+                    else 
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-name"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "";
+                        ElementP.classList.remove('border-message')
+                    }
+                    if(email == "")
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-email"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "Email không được rỗng";
+                        ElementP.classList.add('border-message')
+                        if(firstFocus == null)
+                        {
+                            firstFocus = ElementP;
+                        }
+                    
+                    }
+                    else 
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-email"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "";
+                        ElementP.classList.remove('border-message')
+                    }
+                    if(!email.match(checkEmail))
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-email"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "Email không hợp lệ";
+                        ElementP.classList.add('border-message')
+                        if(firstFocus == null)
+                        {
+                            firstFocus = ElementP;
+                        }
+                    }
+                    else 
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-email"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "";
+                        ElementP.classList.remove('border-message')
+                    }
+                    if(password == "")
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-password"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "Mật khẩu không được rỗng";
+                        ElementP.classList.add('border-message')
+                        if(firstFocus == null)
+                        {
+                            firstFocus = ElementP;
+                        }
+                        
+                    }
+                    else 
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-password"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "";
+                        ElementP.classList.remove('border-message')
+                    }
+                    if(password.length < 6)
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-password"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "Mật khẩu phải chứa ít nhất 6 kí tự";
+                        ElementP.classList.add('border-message')
+                        if(firstFocus == null)
+                        {
+                            firstFocus = ElementP;
+                        }
+                        
+                    }
+                    else 
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-password"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "";
+                        ElementP.classList.remove('border-message')
+                    }
+                    if(address == "")
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-address"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "Địa chỉ không được rông";
+                        ElementP.classList.add('border-message')
+                        if(firstFocus == null)
+                        {
+                            firstFocus = ElementP;
+                        }
+                        
+                    }
+                    else 
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-address"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "";
+                        ElementP.classList.remove('border-message')
+                    }
+                    if(phone == "")
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-phone"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "Số điện thoại không được rỗng";
+                        ElementP.classList.add('border-message')
+                        if(firstFocus == null)
+                        {
+                            firstFocus = ElementP;
+                        }
+                        
+                    }
+                    else 
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-phone"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "";
+                        ElementP.classList.remove('border-message')
+                    }
+                    if(!phone.match(checkPhone))
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-phone"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "Số điện thoại không hợp lệ";
+                        ElementP.classList.add('border-message')
+                        if(firstFocus == null)
+                        {
+                            firstFocus = ElementP;
+                        }
+                    }
+                    else 
+                    {
+                        var ElementP = document.querySelector('input[name="user_edit-phone"]')
+                        var notification = ElementP.nextElementSibling;
+                        notification.innerText = "";
+                        ElementP.classList.remove('border-message')
+                    }
+                    firstFocus.focus();
+                }
+                else 
+                {
+                    HandleEditUser(idUser, idRole, fullname, email, password, address, phone)
+                }
+            })
+            })
+    }
+    function OnChangeIdRole()
+    {
+        var selectIdRole = document.querySelector('#select_edit').value;
+        console.log(selectIdRole)
+        document.querySelector('.IdRole').value = selectIdRole
     }
 </script>

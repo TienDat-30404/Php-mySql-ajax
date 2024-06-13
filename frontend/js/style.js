@@ -309,8 +309,18 @@ var priceFrom;
 var priceTo;
 async function SearchAdvanced(nameSearch, categorySearch, priceFrom, priceTo)
 {
-    var link = await fetch(`frontend/pages/search_advanced.php?page=${currentPage}&pageSize=${pageSize}&nameSearchAdvanced=${nameSearch}&search_select=${categorySearch}
-    &priceFrom=${priceFrom}&priceTo=${priceTo}`)
+    var formData = new FormData()
+    formData.append('choice', 'search_product')
+    formData.append('nameSearchAdvanced', nameSearch)
+    formData.append('search_select', categorySearch)
+    formData.append('priceFrom', priceFrom)
+    formData.append('priceTo', priceTo)
+    formData.append('page', currentPage)
+    formData.append('pageSize', pageSize)
+    var link = await fetch(`backend/crud/product_api.php`, {
+        method : 'POST',
+        body : formData
+    })
    var json =  await link.json();
    DisplaySearchAdvanced(json)
    PaginationSearchAdvanced(json)

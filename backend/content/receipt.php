@@ -87,7 +87,7 @@
             `
                     <div class = "detail_order">
                         <form  class = "edit_category" >               
-                            <a href = "index.php?title=receipt" style = "cursor : pointer;" class = "exit_edit-category">x</a>
+                            <a href = "index.php?title=receipt" style = "cursor : pointer;" class = "exit_crud-all">x</a>
                             <h2 class = "edit_category-title">Chi tiết phiếu nhập</h2>
                             <div class = "information_order">
                                 <h3>Nhân viên nhập hàng : </h3>
@@ -137,6 +137,13 @@
         })
         modal.appendChild(modalBase);
         document.body.appendChild(modal)
+        var detailExit = document.querySelector('.exit_crud-all');
+        var modal = document.querySelector('.modal');
+        detailExit.addEventListener('click', function(e)
+        {
+            e.preventDefault();
+            modal.remove(); 
+        })
     }
 
 
@@ -151,7 +158,7 @@
             <div class = "modal_base">
                 <div style = "height : 70%" class = "productAdd">
                     <form class = "add_product">
-                        <a class = "exit_add-product" href="index.php?title=receipt">x</a>
+                        <a class = "exit_crud-all" href="index.php?title=receipt">x</a>
                         <h2 class = "add_product-title">Nhập hàng sản phẩm</h2>
                         <ul class = "add_product-content">
                             <li>
@@ -476,7 +483,13 @@
             HandleCreateReceipt(informations, idStaffReceipt, copyNameSupplier);
         })
 
-
+        var detailExit = document.querySelector('.exit_crud-all');
+        var modal = document.querySelector('.modal');
+        detailExit.addEventListener('click', function(e)
+        {
+            e.preventDefault();
+            modal.remove(); 
+        })
     }
 
 

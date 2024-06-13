@@ -26,7 +26,7 @@ function DisplayDetail(data)
         <div class = "modal"> 
             <div class = "modal_base">  
                 <div class = "detail">
-                    <a class = "detail_exit" href="index.php">X</a>
+                    <a class = "detail_exit" href="">X</a>
                     <div class = "detail_img">
                         <img class = "detail_img-css" src="${value.image}" alt="">
                     </div>

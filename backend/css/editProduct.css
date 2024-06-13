@@ -15,17 +15,7 @@
     width : 100%;
     
 }
-.exit_edit-product 
-{
-    position : absolute;
-    right : 20px;
-    top : 10px;
-    font-size : 35px;
-}
-.exit_edit-product:hover 
-{
-    opacity: 0.5;
-}
+
 .edit_product-title 
 {
     text-align: center;

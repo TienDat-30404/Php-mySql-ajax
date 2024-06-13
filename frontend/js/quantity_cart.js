@@ -43,7 +43,6 @@ function CrudCart()
     
                     total = total + parseInt(numberPriceProduct[i].textContent)
                 }
-                console.log(total)
                 var totalCartUser = document.querySelector('.total_price-cart-user');
                 totalCartUser.innerText = total
                 QuantityCart(idProduct, inputQuantity.value, idUser);
@@ -107,11 +106,12 @@ async function HandleDisplayCart()
 
 
 function DisplayCart(data) {
+   
     var informationCart = `
     <div class = "modal"> 
         <div class = "modal_base">  
             <div class = "cart">
-                <a class = "detail_exit" href="index.php">X</a>
+                <a class = "detail_exit" href="">X</a>
                 <table cellpadding = "10" cellspacing = "0">
                     `
                     if(!data.status)
@@ -165,7 +165,6 @@ function DisplayCart(data) {
                             `
                             number++
                             totalPrice = totalPrice + value.price * value.cart_quantity
-                            console.log(totalPrice)
                             })
                             if(data.informations.length > 0)
                             {
@@ -203,6 +202,13 @@ function DisplayCart(data) {
     </div>
     `
     document.body.insertAdjacentHTML('beforeend', informationCart);
+    var detailExit = document.querySelector('.detail_exit');
+    var modal = document.querySelector('.modal');
+    detailExit.addEventListener('click', function(e)
+    {
+        e.preventDefault();
+        modal.remove(); 
+    })
     CrudCart()
 }
 

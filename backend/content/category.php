@@ -55,7 +55,7 @@
                 <div class = "modal_base">
                     <div class = "categoryEdit">
                         <form method = "" action = "" class = "edit_category" enctype="multipart/form-data">               
-                            <a href = "index.php?title=category" style = "cursor : pointer;" class = "exit_edit-category">x</a>
+                            <a href = "" style = "cursor : pointer;" class = "exit_crud-all">x</a>
                             <h2 class = "edit_category-title">Chỉnh sửa thể loại sản phẩm</h2>
                             <ul class = "edit_category-content">
                                 <li>
@@ -154,6 +154,14 @@
             });
 
         })
+
+        var detailExit = document.querySelector('.exit_crud-all');
+        var modal = document.querySelector('.modal');
+        detailExit.addEventListener('click', function(e)
+        {
+            e.preventDefault();
+            modal.remove(); 
+        })
     }
     async function HandleEditCategory(idCategory, nameCategory, imageCategory)
     {
@@ -202,7 +210,7 @@
             <div class = "modal_base">
                 <div class = "categoryEdit">
                     <form method = "" action = "" class = "edit_category" enctype="multipart/form-data">               
-                        <a href = "index.php?title=category" style = "cursor : pointer;" class = "exit_edit-category">x</a>
+                        <a href = "" style = "cursor : pointer;" class = "exit_crud-all">x</a>
                         <h2 class = "edit_category-title">Thêm thể loại sản phẩm</h2>
                         <ul class = "edit_category-content">
                             <li>
@@ -293,6 +301,14 @@
                 }
                 reader.readAsDataURL(fileImage);
             }
+        })
+
+        var detailExit = document.querySelector('.exit_crud-all');
+        var modal = document.querySelector('.modal');
+        detailExit.addEventListener('click', function(e)
+        {
+            e.preventDefault();
+            modal.remove(); 
         })
     }
     var addCategory = document.querySelector('.addCategory')

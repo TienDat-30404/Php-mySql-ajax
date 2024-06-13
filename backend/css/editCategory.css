@@ -15,14 +15,15 @@
     width : 100%;
     
 }
-.exit_edit-category
+.exit_crud-all
 {
     position : absolute;
     right : 20px;
     top : 10px;
     font-size : 35px;
 }
-.exit_edit-category:hover 
+
+.exit_crud-all:hover 
 {
     opacity: 0.5;
 }

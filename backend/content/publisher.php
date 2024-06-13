@@ -77,7 +77,7 @@
                 <div class = "modal_base">
                     <div class = "categoryEdit">
                         <form method = "" action = "" class = "edit_category" enctype="multipart/form-data">               
-                            <a href = "index.php?title=publisher" style = "cursor : pointer;" class = "exit_edit-category">x</a>
+                            <a href = "index.php?title=publisher" style = "cursor : pointer;" class = "exit_crud-all">x</a>
                             <h2 class = "edit_category-title">Chỉnh sửa nhà xuất bản</h2>
                             <ul class = "edit_category-content">
                                 <li>
@@ -124,6 +124,14 @@
                     ElementP.classList.remove('border-message')
                     HandleEditPublisher(idPublisher, namePublisher);
                 }
+            })
+
+            var detailExit = document.querySelector('.exit_crud-all');
+            var modal = document.querySelector('.modal');
+            detailExit.addEventListener('click', function(e)
+            {
+                e.preventDefault();
+                modal.remove(); 
             })
 
         })
@@ -175,9 +183,9 @@
             <div class = "modal_base">
                 <div style = "width : 42%; height : 35%" class = "categoryEdit">
                     <form method = "" action = "" class = "edit_category" enctype="multipart/form-data">               
-                        <a href = "index.php?title=publisher" style = "cursor : pointer;" class = "exit_edit-category">x</a>
+                        <a href = "index.php?title=publisher" style = "cursor : pointer;" class = "exit_crud-all">x</a>
                         <h2 class = "edit_category-title">Thêm nhà xuất bản</h2>
-                        <ul class = "edit_category-content">
+                        <ul class = "edit_category-content">z
                             <li >
                                 <h4>Tên nhà xuất bản</h4>
                                 <input style = "width : 400px" name = "name_publisher" type="text">
@@ -217,6 +225,14 @@
                 ElementP.classList.remove('border-message')
                 HandleAddPublisher(namePublisher);
             }
+        })
+
+        var detailExit = document.querySelector('.exit_crud-all');
+        var modal = document.querySelector('.modal');
+        detailExit.addEventListener('click', function(e)
+        {
+            e.preventDefault();
+            modal.remove(); 
         })
     }
     var addPublisher = document.querySelector('.addPublisher')

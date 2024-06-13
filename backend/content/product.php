@@ -189,7 +189,7 @@
                     <div class = "productEdit">
                         <form method = "" action = "" class = "edit_product" enctype="multipart/form-data">
                                             
-                            <a href = "" style = "cursor : pointer;" class = "exit_edit-product">x</a>
+                            <a href = "" style = "cursor : pointer;" class = "exit_crud-all">x</a>
                             <h2 class = "edit_product-title">Chỉnh sửa sản phẩm</h2>
                             <ul class = "edit_product-content">
                             
@@ -535,6 +535,13 @@
                 }
             })
 
+            var detailExit = document.querySelector('.exit_crud-all');
+            var modal = document.querySelector('.modal');
+            detailExit.addEventListener('click', function(e)
+            {
+                e.preventDefault();
+                modal.remove();
+            })
 
         })
     }
@@ -900,7 +907,7 @@
                 <div class = "modal_base">
                     <div class = "productAdd">
                         <form method = "POST" action = "" class = "add_product" enctype="multipart/form-data">
-                            <a class = "exit_add-product" href="index.php?title=product">x</a>
+                            <a class = "exit_crud-all" href="">x</a>
                             <h2 class = "add_product-title">Tạo mới sản phẩm</h2>
                             <ul class = "add_product-content">
                                 <li>
@@ -1345,6 +1352,14 @@
                 console.log(idProduct)
                 RestoreProduct(idProduct);
             })
+        })
+
+        var detailExit = document.querySelector('.exit_crud-all');
+        var modal = document.querySelector('.modal');
+        detailExit.addEventListener('click', function(e)
+        {
+            e.preventDefault();
+            modal.remove(); 
         })
     }
 

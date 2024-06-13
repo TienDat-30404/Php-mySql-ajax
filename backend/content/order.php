@@ -54,7 +54,7 @@
             `
                     <div class = "detail_order">
                         <form  class = "edit_category" >               
-                            <a href = "index.php?title=order" style = "cursor : pointer;" class = "exit_edit-category">x</a>
+                            <a href = "index.php?title=order" style = "cursor : pointer;" class = "exit_crud-all">x</a>
                             <h2 class = "edit_category-title">Chi tiết đơn hàng</h2>
                             <div class = "information_order">
                                 <h3>Nhân viên bán hàng : </h3>
@@ -107,6 +107,14 @@
         })
         modal.appendChild(modalBase);
         document.body.appendChild(modal)
+
+        var detailExit = document.querySelector('.exit_crud-all');
+        var modal = document.querySelector('.modal');
+        detailExit.addEventListener('click', function(e)
+        {
+            e.preventDefault();
+            modal.remove(); 
+        })
     }
 
 

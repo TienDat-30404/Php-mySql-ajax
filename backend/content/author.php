@@ -77,7 +77,7 @@
                 <div class = "modal_base">
                     <div class = "categoryEdit">
                         <form method = "" action = "" class = "edit_category" enctype="multipart/form-data">               
-                            <a href = "index.php?title=author" style = "cursor : pointer;" class = "exit_edit-category">x</a>
+                            <a href = "index.php?title=author" style = "cursor : pointer;" class = "exit_crud-all">x</a>
                             <h2 class = "edit_category-title">Chỉnh sửa tác giả</h2>
                             <ul class = "edit_category-content">
                                 <li>
@@ -124,6 +124,14 @@
                     ElementP.classList.remove('border-message')
                     HandleEditAuthor(idAuthor, nameAuthor);
                 }
+            })
+
+            var detailExit = document.querySelector('.exit_crud-all');
+            var modal = document.querySelector('.modal');
+            detailExit.addEventListener('click', function(e)
+            {
+                e.preventDefault();
+                modal.remove(); 
             })
 
         })
@@ -175,7 +183,7 @@
             <div class = "modal_base">
                 <div style = "width : 42%; height : 35%" class = "categoryEdit">
                     <form method = "" action = "" class = "edit_category" enctype="multipart/form-data">               
-                        <a href = "index.php?title=author" style = "cursor : pointer;" class = "exit_edit-category">x</a>
+                        <a href = "index.php?title=author" style = "cursor : pointer;" class = "exit_crud-all">x</a>
                         <h2 class = "edit_category-title">Thêm tác giả</h2>
                         <ul class = "edit_category-content">
                             <li >
@@ -217,6 +225,14 @@
                 ElementP.classList.remove('border-message')
                 HandleAddAuthor(nameAuthor);
             }
+        })
+
+        var detailExit = document.querySelector('.exit_crud-all');
+        var modal = document.querySelector('.modal');
+        detailExit.addEventListener('click', function(e)
+        {
+            e.preventDefault();
+            modal.remove(); 
         })
     }
     var addAuthor = document.querySelector('.addAuthor')

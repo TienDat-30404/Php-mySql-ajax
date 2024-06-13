@@ -47,6 +47,7 @@
         ?>
     </tbody>
 </table>
+<div class = "pagination"></div>
 <script>
 
     // Detail Order -------------------------------------------------------------------------------
@@ -640,7 +641,7 @@
                 method : 'POST',
                 body : formData
             })
-            LinkLoadReceipt()
+            DisplayDefaultReceipt()
         }
     }
     var elementDel = document.querySelectorAll(".deleteReceipt")
@@ -656,5 +657,290 @@
     })
     
 
-    // 
+    // Search Receipt
+
+    var currentPage = 1
+    var pageSize = 7
+    var pagination = document.querySelector('.pagination')
+    function DisplaySearchReceipt(data, element)
+    {
+        var informations
+        if(data.number != 0)
+        {
+            document.querySelector('table').innerHTML = ""
+            informations =
+                `  <thead>
+                        <tr>
+                            <th colspan = "7">
+                                <a class = "addReceipt" href="">Create Receipt</a>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Id</th>
+                            <th>Staff</th>
+                            <th>Date Created</th>
+                            <th>Total Price</th>
+                            <th>Supplier</th>
+                            <th>Chi tiết</th>
+                            <th>Xóa</th>
+                        </tr>
+                    </thead>
+                <tbody>`
+                    data.informations.forEach(function(value)
+                    {
+                        informations += `
+                        <tr>
+                            <td>${value.id}</td>
+                            <td>${value.staff_id}</td>
+                            <td>${value.date_entry}</td>
+                            <td>${value.total_price}</td>
+                            <td>${value.supplier_id}</td>
+                            
+                            <td>
+                                <a data-id-receipt = "${value.id}" class = "detailReceipt" href="">
+                                    <i style = "color : blue" class="fa-solid fa-circle-info"></i>
+                                    <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Chi tiết</h5>
+                                </a>
+                            </td>
+                            <td>
+                                <a data-id-receipt = "${value.id}" class = "deleteReceipt" href="">
+                                    <i style = "color : red" class="fa-solid fa-trash"></i>
+                                    <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody> `
+                    })
+                
+        }
+        else 
+        {
+            informations = ""
+        }
+        document.querySelector(element).innerHTML = informations
+
+        var addReceipt = document.querySelector('.addReceipt')
+        addReceipt.addEventListener('click', function(e)
+        {
+            e.preventDefault()
+            CreateReceipt()
+        })
+
+        var elementDetail = document.querySelectorAll('.detailReceipt')
+        elementDetail.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+            {
+                event.preventDefault();
+                var idReceipt = this.getAttribute('data-id-receipt')
+                DetailReceipt(idReceipt)
+            })
+        })
+
+        var elementDel = document.querySelectorAll(".deleteReceipt")
+        elementDel.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+        {
+            event.preventDefault();
+            var idReceipt = this.getAttribute('data-id-receipt')
+            DeleteReceipt(idReceipt)
+
+        })
+        })
+    }
+    
+    async function SearchReceipt(idReceipt, dateFrom, dateTo, priceFrom, priceTo)
+    {
+        var formData = new FormData();
+        formData.append('choice', 'search_receipt')
+        formData.append('id_receipt', idReceipt)
+        formData.append('date_from', dateFrom)
+        formData.append('date_to', dateTo)
+        formData.append('price_from', priceFrom)
+        formData.append('price_to', priceTo)
+        formData.append('page', currentPage)
+        formData.append('pageSize', pageSize)
+        var response = await fetch(`crud/receipt_api.php`, {
+            method : 'POST',
+            body : formData
+        });
+        var json = await response.json()
+        console.log(json)
+        DisplaySearchReceipt(json, "table")
+        // DisplayPagination(json, 0)
+
+        var indexSelect = checkSelect.value
+        if(indexSelect == 0)
+        {
+            if(copySearch == "" && copyDateFrom == "" && copyDateTo == "" && copyPriceFrom == "" && copyPriceTo == "")
+            {
+                DisplayPagination(json, 1)
+            }
+            else if(copySearch == "" && copyDateFrom != "" && copyDateTo != "" && copyPriceFrom == "" && copyPriceTo == "")
+            {
+                DisplayPagination(json, 2)
+            }
+            else if(copySearch == "" && copyDateFrom == "" && copyDateTo == "" && copyPriceFrom != "" && copyPriceTo != "")
+            {
+                DisplayPagination(json, 3)
+            }
+            else if(copySearch == "" && copyDateFrom != "" && copyDateTo != "" && copyPriceFrom != "" && copyPriceTo != "")
+            {
+                DisplayPagination(json, 4)
+            }
+        }
+        else if(indexSelect == 1)
+        {
+            DisplayPagination(json, 5)
+        }
+
+    }
+
+    async function DisplayDefaultReceipt()
+    {
+        var formData = new FormData();
+        formData.append('choice', 'display_default_receipt')
+        formData.append('page', currentPage)
+        formData.append('pageSize', pageSize)
+        var response = await fetch(`crud/receipt_api.php`, 
+            {
+                method : 'POST',
+                body : formData
+            }
+        );
+        var json = await response.json()
+        console.log(json)
+        DisplaySearchReceipt(json, "table")
+        DisplayPagination(json, 1)
+    }
+    DisplayDefaultReceipt();
+    var copySearch
+    var copyDateFrom
+    var copyDateTo
+    var copyPriceFrom
+    var copyPriceTo
+    var checkSelect = document.querySelector("#select_search-receipt")
+    checkSelect.addEventListener("change", function(e)
+    {
+        document.querySelector('input[name="name_search-receipt"').value = ""
+    })
+    document.querySelector('.button_search').addEventListener('click', function(event)
+    {
+        currentPage = 1
+        pagination.innerHTML = ""
+        var inputSearch = document.querySelector('input[name="name_search-receipt"').value
+        var dateFrom = document.querySelector('input[name="date_from"').value
+        var dateTo = document.querySelector('input[name="date_to"').value
+        var priceFrom = document.querySelector('input[name="price_from"').value
+        var priceTo = document.querySelector('input[name="price_to"').value
+
+        copySearch = inputSearch
+        copyDateFrom = dateFrom
+        copyDateTo = dateTo
+        copyPriceFrom = priceFrom
+        copyPriceTo = priceTo
+        event.preventDefault();
+        var indexSelect = checkSelect.value
+        if(indexSelect == 0)
+        {
+            if(copySearch == "" && copyDateFrom == "" && copyDateTo == "" && copyPriceFrom == "" && copyPriceTo == "")
+            {
+                SearchReceipt(0, "", "", "", "", "")
+            }
+            else if(copySearch == "" && copyDateFrom != "" && copyDateTo != "" && copyPriceFrom == "" && copyPriceTo == "")
+            {
+                SearchReceipt(0, copyDateFrom, copyDateTo, "", "")
+            }
+            else if(copySearch == "" && copyDateFrom == "" && copyDateTo == "" && copyPriceFrom != "" && copyPriceTo != "")
+            {
+                SearchReceipt(0, "", "", copyPriceFrom, copyPriceTo)
+            }
+            else if(copySearch == "" && copyDateFrom != "" && copyDateTo != "" && copyPriceFrom != "" && copyPriceTo != "")
+            {
+                SearchReceipt(0, copyDateFrom, copyDateTo, copyPriceFrom, copyPriceTo)
+            }
+        }
+        else if(indexSelect == 1)
+        {
+            SearchReceipt(copySearch, "", "", "", "")
+        }
+
+    })
+
+
+    function DisplayPagination(data, check) {
+    pagination.innerHTML = "";
+    var maxPage = Math.ceil(data.number/ pageSize);
+    console.log(maxPage)
+    var start = 1;
+    var end = maxPage;
+    if(currentPage > 2 && maxPage > 3 && currentPage < maxPage)
+    {
+        start = currentPage - 1;
+        end = currentPage + 1;
+    }
+    else if(currentPage == maxPage && maxPage > 3)
+    {
+        start = currentPage - 2;
+        end = maxPage;
+    }
+    else if(maxPage > 3 && currentPage <= 2)
+    {
+        end = 3;
+    }
+    else if(maxPage == 1)
+    {
+        pagination.classList.add('hide');
+    }
+    if(maxPage > 1)
+    {
+        pagination.classList.remove('hide')
+    }
+    if(currentPage > 1)
+    {
+        var prevPage = document.createElement('li');
+        prevPage.innerText = "Prev";
+        prevPage.setAttribute('onclick', "ChangePage(" + (currentPage - 1) +", " + check + ")");
+        pagination.appendChild(prevPage);
+    }
+    for (var i = start; i <= end; i++) {
+        var pageButton = document.createElement('li');
+        pageButton.innerText = i;
+        if(i == currentPage)
+        {
+            pageButton.classList.add('headPage')
+        }
+        pageButton.setAttribute('onclick', "ChangePage(" + (i) + ", " + check + ")")
+        pagination.appendChild(pageButton);
+    }
+    if(currentPage < maxPage)
+    {
+        var nextPage = document.createElement('li')
+        nextPage.innerText = "Next";
+        nextPage.setAttribute('onclick', "ChangePage(" + (currentPage + 1) +", " + check + ")");
+        pagination.appendChild(nextPage)
+    }
+    }
+    function ChangePage(index, check)
+    {
+        currentPage = index
+        console.log(currentPage)
+        if(check == 1)
+        {
+           DisplayDefaultReceipt()
+        }
+        else if(check == 2)
+        {
+            SearchReceipt(0, copyDateFrom, copyDateTo, "", "")
+        }
+        else if(check == 3)
+        {
+            SearchReceipt(0, "", "", copyPriceFrom, copyPriceTo);
+        }
+        else if(check == 4)
+        {
+            SearchReceipt(0, copyDateFrom, copyDateTo, copyPriceFrom, copyPriceTo)
+        }
+    }
 </script>

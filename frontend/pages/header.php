@@ -15,7 +15,7 @@
         </div>
         <ul class = "header_content-user">
          
-            <li>
+            <li class = "element_cart">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <a href = "index.php?title=cart">Giỏ hàng</a>
             </li>

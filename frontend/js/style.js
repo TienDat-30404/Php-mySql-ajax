@@ -465,12 +465,28 @@ function ChangeSearchAdvanced(index)
 
 async function addToCart(idProduct)
 {
-    var link = await fetch(`frontend/pages/add_cart.php?id_product=${idProduct}`)
+    var formData = new FormData()
+    formData.append('choice', 'add_cart')
+    formData.append('id_product', idProduct)
+    var link = await fetch(`backend/crud/cart_api.php`, {
+        method : 'POST',
+        body : formData
+    })
     var json = await link.json();
     var fail = "Sản phẩm đã được thêm vào giỏ hàng";
+    var success = "Sản phẩm đã được thêm vào thành công";
+    var isRegister = "Vui lòng đăng nhập"
     if(json.status === fail)
     {
         toast_fail(fail);
+    }
+    else if(json.status === success)
+    {
+        toast_success(success)
+    }
+    else if(json.status === isRegister)
+    {
+        toast_fail(isRegister)
     }
 }
 

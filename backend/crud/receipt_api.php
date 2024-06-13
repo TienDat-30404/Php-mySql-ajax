@@ -14,6 +14,11 @@
         case 'delete_receipt':
             DeleteReceipt();
             break;
+        case 'display_default_receipt':
+            DisplayDefaultReceipt();
+            break;
+        case 'search_receipt':
+            SearchReceipt();
     }
     function DetailReceipt()
     {
@@ -95,6 +100,109 @@
             DataSQL::querySQL($sqlEntrySLipDetails);
             $sqlEntrySlip = "DELETE FROM entry_slips WHERE id = '$idDelete'";
             DataSQL::querySQL($sqlEntrySlip);
+        }
+    }
+
+    function DisplayDefaultReceipt()
+    {
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $pageSize = isset($_POST['pageSize']) ? $_POST['pageSize'] : 5;
+        $startPage = ($page - 1) * $pageSize;
+        $sql = "SELECT * FROM entry_slips LIMIT $startPage, $pageSize";
+        $result = DataSQL::querySQL($sql);
+        $informations = array();
+        $data = new stdClass();
+        while($row = mysqli_fetch_array($result))
+        {
+            $informations[] = $row;
+        }
+        $data->informations = $informations;
+        $sql_count = "SELECT * FROM entry_slips";
+        $result_count = DataSQL::querySQL($sql_count);
+        $row_count = mysqli_num_rows($result_count);
+        $data->number = $row_count;
+        echo json_encode($data);
+    }
+
+
+    function SearchReceipt()
+    {
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/frontend/includes/config.php";
+
+        $idReceipt = isset($_POST['id_receipt']) ? $_POST['id_receipt'] : 0;
+        $dateFrom = isset($_POST['date_from']) ? trim($_POST['date_from'], '"') : '';
+        $dateTo = isset($_POST['date_to']) ? trim($_POST['date_to'], '"') : '';
+        $priceFrom = isset($_POST['price_from']) ? $_POST['price_from'] : 0;
+        $priceTo = isset($_POST['price_to']) ? $_POST['price_to'] : 0;
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $pageSize = isset($_POST['pageSize']) ? $_POST['pageSize'] : 7;
+        $startPage = ($page - 1) * $pageSize;
+
+        $sql = "";
+        $check = "";
+
+        if ($idReceipt == 0 && $dateFrom == "" && $dateTo == "" && $priceFrom == "" && $priceTo == "") {
+            $sql = "SELECT * FROM entry_slips LIMIT $startPage, $pageSize";
+            $check = 1;
+        }   
+        else if ($idReceipt != 0 && $dateFrom == "" && $dateTo == ""  && $priceFrom == "" && $priceTo == "")
+        {
+            $sql = "SELECT * FROM entry_slips WHERE id = '$idReceipt' LIMIT $startPage, $pageSize";
+            $check = 2;
+        }
+        else if ($idReceipt == 0 && $dateFrom != "" && $dateTo != "" && $priceFrom == "" && $priceTo == "") 
+        {
+            $sql = "SELECT * FROM entry_slips WHERE DATE(date_entry) BETWEEN '$dateFrom' AND '$dateTo' LIMIT $startPage, $pageSize";
+            $check = 3;
+        } 
+        else if ($idReceipt == 0 && $dateFrom == "" && $dateTo == "" && $priceFrom != "" && $priceTo != "") 
+        {
+            $sql = "SELECT * FROM entry_slips WHERE total_price >= $priceFrom AND total_price <= $priceTo LIMIT $startPage, $pageSize";
+            $check = 4;
+        } 
+        else if($idReceipt == 0 && $dateFrom != "" && $dateTo != "" && $priceFrom != "" && $priceTo != "")
+        {
+            $sql = "SELECT * FROM entry_slips WHERE total_price >= $priceFrom AND total_price <= $priceTo AND DATE(date_entry) BETWEEN 
+            '$dateFrom' AND '$dateTo' LIMIT $startPage, $pageSize";
+            $check = 5;
+        }
+        if (!empty($sql)) {
+            $result = mysqli_query($connection, $sql);
+            $data = new stdClass();
+            $informations = array();
+            while ($row = mysqli_fetch_array($result)) {
+                $informations[] = $row;
+            }
+            $data->informations = $informations;
+
+            $sql_count = "";
+            switch ($check) {
+                case 1:
+                    $sql_count = "SELECT * FROM entry_slips";
+                    break;
+                case 2:
+                    $sql_count = "SELECT * FROM entry_slips WHERE id = '$idReceipt'";
+                    break;
+                case 3:
+                    $sql_count = "SELECT * FROM entry_slips WHERE DATE(date_entry) BETWEEN '$dateFrom' AND '$dateTo'";
+                    break;
+                case 4:
+                    $sql_count = "SELECT * FROM entry_slips WHERE total_price >= $priceFrom AND total_price <= $priceTo";
+                    break; 
+                case 5:
+                    $sql_count = "SELECT * FROM entry_slips WHERE total_price >= $priceFrom AND total_price <= $priceTo AND DATE(date_entry) BETWEEN 
+                    '$dateFrom' AND '$dateTo'";
+                    break;
+            }
+
+            $result_count = mysqli_query($connection, $sql_count);
+            $row_count = mysqli_num_rows($result_count);
+            $data->number = $row_count;
+
+            echo json_encode($data);
+        } else {
+            echo json_encode(["error" => "Invalid query parameters"]);
         }
     }
 ?>

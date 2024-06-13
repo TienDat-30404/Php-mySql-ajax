@@ -170,69 +170,9 @@
     })
 
 
-    function LoadOrder(data)
-    {
-        var tableBody = document.querySelector('table tbody')
-        tableBody.innerHTML = ""
-        data.forEach(function(value)
-        {
-            if(value.staff_id == null)
-            {
-                value.staff_id = ""
-            }
-            var htmlStatus;
-            if(value.bill_status_id == 2)
-            {
-                htmlStatus = 
-                `
-                    <i style="color: green" class="fa-solid fa-check-circle"></i>
-                    <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Đã xử lí</h5>
-                `;
-            }
-            else 
-            {
-                htmlStatus = 
-                `
-                    <i style = "color : red" class="fa-solid fa-spinner"></i>
-                    <h5 style="color : red; display: inline-block; vertical-align: middle; margin-left: 5px;">Chờ xử lí</h5>
-                `
-            }
-            var row = document.createElement('tr')
-            row.innerHTML = 
-            `
-                <tr>
-                    <td>${value.idBill}</td>
-                    <td>${value.fullname}</td>
-                    <td>${value.staff_id}</td>
-                    <td>${value.date_create}</td>
-                    <td>${value.total_price}</td>
-                    <td>
-                        <a data-id-order = ${value.idBill} class = "confirmOrder" href="">
-                            ${htmlStatus}
-                        </a>
-                    </td>
-                    <td>
-                        <a data-id-order = ${value.idBill} class = "detailOrder" href="">
-                            <i style = "color : blue" class="fa-solid fa-circle-info"></i>
-                            <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Chi tiết</h5>
-                        </a>
-                    </td>
-                    <td>
-                        <a data-id-order = ${value.idBill} class = "deleteOrder" href="">
-                            <i style = "color : red" class="fa-solid fa-trash"></i>
-                            <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
-                        </a>
-                    </td>
-                </tr>
-            `
-            tableBody.appendChild(row)
-        })
-    }
-
-
 
      // Search -------------------------------------------------------------
-     var currentPage = 1
+    var currentPage = 1
     var pageSize = 7
     var pagination = document.querySelector('.pagination')
     function DisplaySearchOrder(data, element)
@@ -420,7 +360,6 @@
         DisplayPagination(json, 5)
     }
     DisplayDefaultOrder();
-
     var copySearch
     var copyDateFrom
     var copyDateTo
@@ -443,7 +382,6 @@
         var indexSelect = checkSelect.value
         if(indexSelect == 0)
         {
-            
             if(copySearch == "" && copyDateFrom != "" && copyDateTo != "")
             {
                 SearchOrder(0, "", copyDateFrom, copyDateTo, 0)

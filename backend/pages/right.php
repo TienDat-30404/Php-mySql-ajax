@@ -139,6 +139,23 @@
                 }
                 else if($title == 'receipt')
                 {
+                    ?>
+                    <div class = "container_right">
+                        <div class = "container_right-header">
+                            <!-- <i class="fa-solid fa-bars"></i> -->
+                            <select name="" id="select_search-receipt">
+                                <option value="0">Tất cả</option>
+                                <option value="1">Tìm kiếm theo mã phiếu nhập</option>
+                            </select>
+                            <div style = "width : 200px" class = "container_right-header-search">
+                                <input name = "name_search-receipt" style = "text-align : center;" type="text" placeholder = "Search here">
+                            </div>
+                            <input name = "date_from" type="date"> đến <input name = "date_to" type="date">
+                            <input type="text" name = "price_from"> đến <input type="text" name = "price_to">
+                            <input class = "button_search" type="submit" value = "Tìm kiếm">
+                            <img src="image/user.png" alt="">
+                        </div>
+                    <?php 
                     include "content/receipt.php";
                 }
                 else if($title == 'statistical')

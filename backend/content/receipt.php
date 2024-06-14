@@ -563,6 +563,7 @@
                 body: formData
             });
             alert("Tạo phiếu nhập thành công")
+            DisplayDefaultReceipt();
             informations = []
             UpdateDisplayReceipt(informations)
             // nameProductSelect.value = "0";

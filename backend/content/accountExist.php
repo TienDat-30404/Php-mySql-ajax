@@ -3,7 +3,7 @@
     <thead>
         <tr>
             <th colspan = "9">
-                <a class = "add_user" href="index.php?title=accountExist&action=add">Add User</a>
+                <a class = "add_user" href="">Add User</a>
             </th>
         </tr>
         <tr>
@@ -117,7 +117,7 @@
                 <td>${value.phone_number}</td>
                 
                 <td>
-                    <a href="index.php?title=accountExist&action=edit&id_edit=${value.id}">
+                    <a data-id-user = ${value.id} class = "edit_user" href="">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </a>
                 </td>
@@ -129,6 +129,17 @@
             </tr>
             `
             tableBody.appendChild(row)
+            
+        })
+        var elementEdit = document.querySelectorAll('.edit_user')
+        elementEdit.forEach(function(item)
+        {
+            item.addEventListener('click', function(event)
+            {
+                event.preventDefault();
+                var idUser = this.getAttribute('data-id-user')
+                EditUser(idUser)
+            })
         })
     }
 
@@ -178,6 +189,7 @@
                 var notification4 = ElementP4.nextElementSibling;
                 notification4.innerText = "";
                 ElementP4.classList.remove('border-message')
+                LinkLoadUser()
             }
             if(json.status === fail)
             {
@@ -194,7 +206,7 @@
                     <form action="crud/add_user.php" method = "POST">
                         <div class = "modal_base-account">
                             <h3 class = "user_title">Add User</h3>
-                            <a href="index.php?title=accountExist" style = "position : absolute; top : 20px; right : 50px; font-size : 20px">X</a>
+                            <a class = "exit_crud-all" href="" style = "position : absolute; top : 20px; right : 50px; font-size : 20px">X</a>
                             <ul class = "user_add">
                                 <li style = "margin-right : 60px">
                                     <h4 style = "margin-top : 0; margin-bottom : 10px" class = "">Name Role</h4>
@@ -421,6 +433,14 @@
                 HandleAddUser(idRole, fullname, email, password, address, phone)
             }
         })
+
+        var detailExit = document.querySelector('.exit_crud-all');
+        var modal = document.querySelector('.modal');
+        detailExit.addEventListener('click', function(e)
+        {
+            e.preventDefault();
+            modal.remove(); 
+        })
     }
     var addUser = document.querySelector('.add_user')
     addUser.addEventListener('click', function(e)
@@ -474,7 +494,7 @@
                 method: 'POST',
                 body: formData
             });
-            
+            LinkLoadUser()
         }
     }
 
@@ -488,7 +508,7 @@
                         <form action="" method = "">
                             <div class = "modal_base-account">
                                 <h3 class = "user_title">Edit User</h3>
-                                <a href="index.php?title=accountExist" style = "position : absolute; top : 20px; right : 50px; font-size : 20px">X</a>
+                                <a class = "exit_crud-all" href="" style = "position : absolute; top : 20px; right : 50px; font-size : 20px">X</a>
                                 <ul class = "user_add">
 
                                     <li>
@@ -730,7 +750,14 @@
                     HandleEditUser(idUser, idRole, fullname, email, password, address, phone)
                 }
             })
-            })
+        })
+        var detailExit = document.querySelector('.exit_crud-all');
+        var modal = document.querySelector('.modal');
+        detailExit.addEventListener('click', function(e)
+        {
+            e.preventDefault();
+            modal.remove(); 
+        })
     }
     function OnChangeIdRole()
     {

@@ -4,6 +4,7 @@
 </table>
 <div class = "pagination"></div>
 <script>
+
     async function deleteProduct(id)
     {
         if(confirm("Xác nhận xóa sản phẩm?"))
@@ -15,7 +16,7 @@
                 method : 'POST',
                 body : formData
             })
-            LinkLoadProduct()
+            DisPlayMain()
         }
     }
     var elementDel = document.querySelectorAll(".elementDel")
@@ -28,87 +29,6 @@
         deleteProduct(idProduct)
     })
     })
-    async function LinkLoadProduct()
-    {
-        var formData = new FormData()
-        formData.append('choice', 'get_all_product')
-        var link = await fetch('crud/product_api.php', {
-            method : 'POST',
-            body : formData
-        })
-        var json =  await link.json();
-        LoadProduct(json)
-        var elementDel = document.querySelectorAll(".elementDel")
-        elementDel.forEach(function(item)
-        {
-            item.addEventListener('click', function(event)
-        {
-            event.preventDefault();
-            var idProduct = this.getAttribute('data-id-product')
-            deleteProduct(idProduct)
-        })
-        })
-    }
-    function LoadProduct(data)
-    {
-        var tableBody = document.querySelector('table tbody')
-        tableBody.innerHTML = ""
-        data.forEach(function(value)
-        {
-            var row = document.createElement('tr')
-            row.innerHTML = 
-            `
-                <tr>
-                    <td>${value.id}</td>
-                    <td>${value.name}</td>
-                    <td>
-                        <img style = "width : 80px; height : 80px;" src="${value.image}" alt="">
-                    </td>
-                    <td>${value.price}</td>
-                    <td>${value.publish_year}</td>
-                    <td>
-                        <a data-id-product = "${value.id}" class = "elementEdit" href="">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
-                        </a>
-                    </td>
-                    <td>
-                        <a class = "elementDel" data-id-product = ${value.id} href="">
-                            <i style = "color : red" class="fa-solid fa-trash"></i>
-                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
-                        </a>
-                    </td>
-                </tr>
-            `
-            tableBody.appendChild(row)
-            var elementEdit = document.querySelectorAll('.elementEdit')
-            elementEdit.forEach(function(item)
-            {
-                item.addEventListener('click', function(event)
-                {
-                    checkExit = true
-                event.preventDefault();
-                var idProduct = this.getAttribute('data-id-product')
-                EditProduct(idProduct)
-                })
-            })
-
-            var elementDel = document.querySelectorAll(".elementDel")
-            elementDel.forEach(function(item)
-            {
-                item.addEventListener('click', function(event)
-            {
-                event.preventDefault();
-                var idProduct = this.getAttribute('data-id-product')
-                deleteProduct(idProduct)
-                document.querySelector('.container_right-header-search input[type="text"]').value = ""
-                document.querySelector("#select_search-product").value = "0"
-                DisPlayMain()
-
-            })
-            })
-        })
-    }
 
     async function EditProduct(id)
     {
@@ -163,6 +83,7 @@
             if(json.success === success)
             {
                 alert(success)
+                DisPlayMain()
             }
             if(json.fail === fail)
             {
@@ -882,6 +803,7 @@
             if(json.status === success)
             {
                 alert(success)
+                DisPlayMain()
                 document.querySelector('input[name="name_product"]').value = ""
                 document.querySelector('input[name="price_product"]').value = ""
                 document.querySelector('select[name="category_product"]').value = "0"
@@ -1422,6 +1344,8 @@
             `;
             tableBody.appendChild(row);
         })
+
+
     }
 
     

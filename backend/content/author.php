@@ -154,6 +154,7 @@
             if(json.success === success)
             {
                 alert(success)
+                DisplayDefaultAuthor(0, "")
                 var ElementP = document.querySelector('input[name="name_author"]')
                 var notification = ElementP.nextElementSibling;
                 notification.innerText = "";
@@ -259,6 +260,7 @@
             if(json.status === success)
             {
                 alert(success)
+                DisplayDefaultAuthor(0, "")
                 var ElementP = document.querySelector('input[name="name_author"]')
                 var notification = ElementP.nextElementSibling;
                 notification.innerText = "";
@@ -289,7 +291,6 @@
                 method : 'POST',
                 body : formData
             })
-            LinkLoadAuthor()
             DisplayDefaultAuthor(0, "")
         }
     }
@@ -303,59 +304,7 @@
             DeleteAuthor(idAuthor)
         })
     })
-    async function LinkLoadAuthor()
-    {
-        var formData = new FormData();
-        formData.append('choice', 'get_all_author')
-        var link = await fetch('crud/author_api.php', {
-            method : 'POST',
-            body : formData
-        });
-        var json =  await link.json();
-        LoadAuthor(json)
-        var elementDel = document.querySelectorAll(".deleteAuthor")
-        elementDel.forEach(function(item)
-        {
-            item.addEventListener('click', function(event)
-            {
-            event.preventDefault();
-            var idAuthor = this.getAttribute('data-id-author')
-            DeleteAuthor(idAuthor)
-            })
-        })
-    }
-    function LoadAuthor(data)
-    {
-        var tableBody = document.querySelector('table tbody')
-        tableBody.innerHTML = ""
-        data.forEach(function(value)
-        {
-            var row = document.createElement('tr')
-            row.innerHTML = 
-            `
-                <tr>
-                    <td>${value.id}</td>
-                    <td>${value.name}</td>
-                    <td>
-                        <a class = "editAuthor" data-id-author = ${value.id} href="">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
-                        </a>
-                    </td>
-                    <td>
-                        <a class = "deleteAuthor" data-id-author = ${value.id} href="">
-                            <i style = "color : red" class="fa-solid fa-trash"></i>
-                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
-                        </a>
-                    </td>
-                </tr>
-            `
-            tableBody.appendChild(row)
-        })
-    }
-
-
-
+    
     // Search -------------------------------------------------------------
     var currentPage = 1
     var pageSize = 7

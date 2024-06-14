@@ -182,6 +182,7 @@
             if(json.success === success)
             {
                 alert(success)
+                DisplayDefaultCategory(0, "")
                 var ElementP = document.querySelector('input[name="name_category"]')
                 var notification = ElementP.nextElementSibling;
                 notification.innerText = "";
@@ -337,6 +338,7 @@
             if(json.status === success)
             {
                 alert(success)
+                DisplayDefaultCategory(0, "")
             }
             if(json.status === fail)
             {
@@ -358,7 +360,6 @@
                 method : 'POST',
                 body : formData
             })
-            LinkLoadCategory()
             DisplayDefaultCategory(0, "")
         }
     }
@@ -373,63 +374,8 @@
             DeleteCategory(idCategory)
         })
     })
-    async function LinkLoadCategory()
-    {
-        var formData = new FormData();
-        formData.append('choice', 'get_all_category')
-        var link = await fetch('crud/category_api.php', {
-            method : 'POST',
-            body : formData
-        });
-        var json =  await link.json();
-        LoadCategory(json)
-        var elementDel = document.querySelectorAll(".deleteCategory")
-        elementDel.forEach(function(item)
-        {
-            item.addEventListener('click', function(event)
-        {
-            console.log(item)
-            event.preventDefault();
-            var idCategory = this.getAttribute('data-id-category')
-            DeleteCategory(idCategory)
-        })
-        })
-    }
-    function LoadCategory(data)
-    {
-        var tableBody = document.querySelector('table tbody')
-        tableBody.innerHTML = ""
-        data.forEach(function(value)
-        {
-            var row = document.createElement('tr')
-            row.innerHTML = 
-            `
-                <tr>
-                    <td>${value.id}</td>
-                    <td>${value.name}</td>
-                    <td>
-                        <img style = "width : 80px; height : 80px;" src="${value.image}" alt="">
-                    </td>
-                    <td>
-                        <a class = "editCategory" data-id-category = ${value.id} href="">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
-                        </a>
-                    </td>
-                    <td>
-                        <a class = "deleteCategory" data-id-category = ${value.id} href="">
-                            <i style = "color : red" class="fa-solid fa-trash"></i>
-                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
-                        </a>
-                    </td>
-                </tr>
-            `
-            tableBody.appendChild(row)
-        })
-    }
-
-
-
+    
+    
     /* Search ----------------------------------------------------------------------- */
     var currentPage = 1
     var pageSize = 7

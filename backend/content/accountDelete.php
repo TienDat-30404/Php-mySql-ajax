@@ -1,11 +1,7 @@
 
 <table style = "width : 100%; background-color : white" cellspacing = "0" cellpading = "10">
     <thead>
-        <tr>
-            <th colspan = "9">
-                <a href="index.php?title=account&action=add">Add User</a>
-            </th>
-        </tr>
+        
         <tr>
             <th style = "width : 40px">Id</th>
             <th>Role Id</th>

@@ -7,19 +7,7 @@
                 $title = $_GET['title'];
                 if($title == 'accountExist')
                 {
-                    include "content/accountExist.php";  
-                    if(isset($_GET['action']))
-                    {
-                        $action = $_GET['action'];
-                        if($action == 'add')
-                        {
-                            include "crud/add_user.php";
-                        }
-                        else if($action == 'edit')
-                        {
-                            include "crud/edit_user.php";
-                        }
-                    }
+                    include "content/accountExist.php"; 
                 }
                 else if($title == 'accountDelete')
                 {

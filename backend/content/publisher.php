@@ -154,6 +154,7 @@
             if(json.success === success)
             {
                 alert(success)
+                DisplayDefaultPublisher(0, "")
                 var ElementP = document.querySelector('input[name="name_publisher"]')
                 var notification = ElementP.nextElementSibling;
                 notification.innerText = "";
@@ -259,6 +260,7 @@
             if(json.status === success)
             {
                 alert(success)
+                DisplayDefaultPublisher(0, "")
                 var ElementP = document.querySelector('input[name="name_publisher"]')
                 var notification = ElementP.nextElementSibling;
                 notification.innerText = "";
@@ -289,7 +291,6 @@
                 method : 'POST',
                 body : formData
             })
-            LinkLoadPublisher()
             DisplayDefaultPublisher(0, "")
         }
     }
@@ -304,71 +305,7 @@
             DeletePublisher(idPublisher)
         })
     })
-    async function LinkLoadPublisher()
-    {
-        var formData = new FormData();
-        formData.append('choice', 'get_all_publisher')
-        var link = await fetch('crud/publisher_api.php', {
-            method : 'POST',
-            body : formDta
-        });
-        var json =  await link.json();
-        LoadPublisher(json)
-        var elementDel = document.querySelectorAll(".deletePublisher")
-        elementDel.forEach(function(item)
-        {
-            item.addEventListener('click', function(event)
-            {
-                console.log(item)
-                event.preventDefault();
-                var idPublisher = this.getAttribute('data-id-publisher')
-                DeletePublisher(idPublisher)
-            })
-        })
-        var elementEdit = document.querySelectorAll('.editPublisher')
-        elementEdit.forEach(function(item)
-        {
-            item.addEventListener('click', function(event)
-            {
-                checkExit = true
-                event.preventDefault();
-                var idPublisher = this.getAttribute('data-id-publisher')
-                EditPublisher(idPublisher)
-            })
-        })
-    }
-    function LoadPublisher(data)
-    {
-        var tableBody = document.querySelector('table tbody')
-        tableBody.innerHTML = ""
-        data.forEach(function(value)
-        {
-            var row = document.createElement('tr')
-            row.innerHTML = 
-            `
-                <tr>
-                    <td>${value.id}</td>
-                    <td>${value.name}</td>
-                    <td>
-                        <a class = "editPublisher" data-id-publisher = ${value.id} href="">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Chỉnh sửa</h5>
-                        </a>
-                    </td>
-                    <td>
-                        <a class = "deletePublisher" data-id-publisher = ${value.id} href="">
-                            <i style = "color : red" class="fa-solid fa-trash"></i>
-                            <h5 style="color: green; display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
-                        </a>
-                    </td>
-                </tr>
-            `
-            tableBody.appendChild(row)
-        })
-    }
-
-
-
+    
     // Search -------------------------------------------------------------
     var currentPage = 1
     var pageSize = 5

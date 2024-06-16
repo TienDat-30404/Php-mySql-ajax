@@ -5,9 +5,6 @@
         case 'delete_user':
             DeleteUser();
             break;
-        case 'get_all_user_exist':
-            GetAllUserExist();
-            break;
         case 'restore_user':
             RestoreUser();
             break;
@@ -22,6 +19,9 @@
             break;
         case 'handle_edit_user':
             HandleEditUser();
+            break;
+        case 'search_user':
+            SearchUser();
             break;
     }
     function DeleteUser()
@@ -135,4 +135,75 @@
             header("location: ../index.php?title=accountExist");
         }
     }
+
+    function SearchUser()
+    {
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/frontend/includes/config.php";
+        $nameSearch = $_POST['name_search'];
+        $typeSearch = $_POST['type'];
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $pageSize = isset($_POST['pageSize']) ? $_POST['pageSize'] : 7;
+        $startPage = ($page - 1) * $pageSize;
+        $check = "";
+        $sql = "";
+        if($typeSearch == 0)
+        {
+            $sql = "SELECT * FROM users WHERE active = 1  LIMIT $startPage, $pageSize";
+            $check = 0;
+        }
+        else if($typeSearch == 1)
+        {
+            $sql = "SELECT * FROM users WHERE id = '$nameSearch' AND active = 1 ";
+            $check = 1;
+        }
+        else if($typeSearch == 2)
+        {
+            $sql = "SELECT * FROM users WHERE fullname like '%" . $nameSearch . "%' AND active = 1 LIMIT $startPage, $pageSize ";
+            $check = 2;
+        }
+        else if($typeSearch == 3)
+        {
+            $sql = "SELECT * FROM users WHERE email like '%" . $nameSearch . "%' AND active = 1 LIMIT $startPage, $pageSize ";
+            $check = 3;
+        }
+        else if($typeSearch == 4)
+        {
+            $sql = "SELECT * FROM users WHERE phone_number like '%" . $nameSearch . "%' AND active = 1 LIMIT $startPage, $pageSize ";
+            $check = 4;
+        }
+        $result = mysqli_query($connection, $sql);
+        $informations = array();
+        $data = new stdClass();
+        while($row = mysqli_fetch_array($result))
+        {
+            $informations[] = $row;
+        }
+        $data->informations = $informations;
+        $sql_count = "";
+        if($check == 0)
+        {
+            $sql_count = "SELECT * FROM users WHERE active = 1 ";
+        }
+        else if($check == 1)
+        {
+            $sql_count = "SELECT * FROM users WHERE id = '$nameSearch' AND active = 1 ";
+        }
+        else if($check == 2)
+        {
+            $sql_count = "SELECT * FROM users WHERE active = 1 AND fullname like '%" . $nameSearch . "%' ";
+        }
+        else if($check == 3)
+        {
+            $sql_count = "SELECT * FROM users WHERE email like '%" . $nameSearch . "%' AND active = 1";
+        }
+        else if($check == 4)
+        {
+            $sql_count = "SELECT * FROM users WHERE phone_number like '%" . $nameSearch . "%' AND active = 1";
+        }
+        $result_count = mysqli_query($connection, $sql_count);
+        $row_count = mysqli_num_rows($result_count);
+        $data->number = $row_count;
+        echo json_encode($data);
+    }
+
 ?>

@@ -7,6 +7,24 @@
                 $title = $_GET['title'];
                 if($title == 'accountExist')
                 {
+                    ?>
+                    <div class = "container_right">
+                        <div class = "container_right-header">
+                            <!-- <i class="fa-solid fa-bars"></i> -->
+                            <select name="" id="select_search-user">
+                                <option value="0">Tất cả</option>
+                                <option value="1">Tìm kiếm theo mã</option>
+                                <option value="2">Tìm kiếm tên</option>
+                                <option value="3">Tìm kiếm email</option>
+                                <option value="4">Tìm kiếm theo số điện thoại</option>
+                            </select>
+                            <div style = "width : 300px" class = "container_right-header-search">
+                                <input name = "inputName" style = "text-align : center;" type="text" placeholder = "Search here">
+                            </div>
+                            <input class = "button_search" type="submit" value = "Tìm kiếm">
+                            <img src="image/user.png" alt="">
+                        </div>
+                    <?php 
                     include "content/accountExist.php"; 
                 }
                 else if($title == 'accountDelete')
@@ -32,14 +50,6 @@
                         </div>
                     <?php 
                     include "content/product.php";
-                    if(isset($_GET['action']))
-                    {
-                        $action = $_GET['action'];
-                        if($action == 'add')
-                        {
-                            include "crud/add_product.php";
-                        }
-                    }
                 }
                 else if($title == 'category')
                 {

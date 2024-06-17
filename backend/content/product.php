@@ -536,7 +536,6 @@
         document.querySelector('.tableMain').innerHTML = informations
 
         var addProduct = document.querySelector('.click_add-product')
-        console.log(addProduct)
         addProduct.addEventListener('click', function(e)
         {
             console.log("123")
@@ -582,6 +581,8 @@
             body : formData
         });
         var json = await response.json()
+        console.log(json)
+        console.log("123")
         DisplayProduct(json, "table")
         DisplayPagination(json, 2)
     }
@@ -944,8 +945,9 @@
                                 <tbody>
                                     <?php 
                                         include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
-                                        $sql = "SELECT * FROM products WHERE isActive = 0";
-                                        $result = DataSQL::querySQl($sql);
+                                        $isActive = 0;
+                                        $sql = "SELECT * FROM products WHERE isActive = ?";
+                                        $result = DataSQL::querySQlAll($sql, [$isActive]);
                                         while($row = mysqli_fetch_array($result))
                                         {
                                             ?>

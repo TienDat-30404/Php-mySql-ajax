@@ -186,7 +186,7 @@
                     <form method = "" action = "" class = "edit_category" enctype="multipart/form-data">               
                         <a href = "index.php?title=publisher" style = "cursor : pointer;" class = "exit_crud-all">x</a>
                         <h2 class = "edit_category-title">Thêm nhà xuất bản</h2>
-                        <ul class = "edit_category-content">z
+                        <ul class = "edit_category-content">
                             <li >
                                 <h4>Tên nhà xuất bản</h4>
                                 <input style = "width : 400px" name = "name_publisher" type="text">

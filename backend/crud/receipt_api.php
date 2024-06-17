@@ -30,9 +30,9 @@
                 FROM entry_slips JOIN suppliers ON entry_slips.supplier_id = suppliers.id
                 JOIN users ON entry_slips.staff_id = users.id
                 JOIN entry_slip_details ON entry_slips.id = entry_slip_details.entry_slip_id
-                JOIN products ON entry_slip_details.product_id = products.id WHERE entry_slips.id = '$idReceipt'";
+                JOIN products ON entry_slip_details.product_id = products.id WHERE entry_slips.id = ?";
         $data = array();
-        $result = DataSQL::querySQL($sql);
+        $result = DataSQL::querySQLAll($sql, [$idReceipt]);
         while($row = mysqli_fetch_array($result)) {
             $data[] = $row;
         }
@@ -41,8 +41,8 @@
     }
     function CreateReceipt()
     {
-        include "../../frontend/includes/config.php";
-
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
+        // $timeCurrent = date('Y-m-d H:i:s');
         $idStaff = $_POST['id_staff'];
         $idSupplier = $_POST['id_supplier'];
         $idProduct = $_POST['id_product'];
@@ -53,30 +53,32 @@
         {
             $totalPrice = $totalPrice + $priceProduct[$i];
         }
-        $sql_entry_slips = "INSERT INTO entry_slips(staff_id, date_entry, total_price, supplier_id) VALUES('$idStaff', NOW(), '$totalPrice', '$idSupplier')";
-        mysqli_query($connection, $sql_entry_slips);
+        
+        $sql_entry_slips = "INSERT INTO entry_slips(staff_id, date_entry, total_price, supplier_id) VALUES(?, NOW(), ?, ?)";
+        $stmt = DataSQL::executeSQLToSTMT($sql_entry_slips, [$idStaff, $totalPrice, $idSupplier]);
 
-
-        $idEntrySlips = mysqli_insert_id($connection);
-        for($i = 0; $i < count($idProduct); $i++)
-        {
-            // Insert entry_slip_details
-            $idDetailProduct = $idProduct[$i];
-            $detailQuantity = $quantityProduct[$i];
-            $detailPrice = $priceProduct[$i];
-            $sqlInsertDetail = "INSERT INTO entry_slip_details(entry_slip_id, product_id, quantity, entry_price) VALUES('$idEntrySlips', 
-            '$idDetailProduct', '$detailQuantity', '$detailPrice')";
-            mysqli_query($connection, $sqlInsertDetail);
-
-            // update quantity product 
-            $sqlSelectProduct = "SELECT * FROM products WHERE id = '$idDetailProduct'";
-            $resultSelectProduct = mysqli_query($connection, $sqlSelectProduct);
-            $rowSelectProduct = mysqli_fetch_array($resultSelectProduct);
-            $updateQuantityProduct = $rowSelectProduct['quantity'] + $detailQuantity;
-
-            $sqlUpdateQuantity = "UPDATE products SET quantity = '$updateQuantityProduct' WHERE id = '$idDetailProduct'";
-            mysqli_query($connection, $sqlUpdateQuantity);
-        }
+            if($stmt)
+            {
+                $idEntrySlips = $stmt->insert_id;
+                for($i = 0; $i < count($idProduct); $i++)
+                {
+                    // Insert entry_slip_details
+                    $idDetailProduct = $idProduct[$i];
+                    $detailQuantity = $quantityProduct[$i];
+                    $detailPrice = $priceProduct[$i];
+                    $sqlInsertDetail = "INSERT INTO entry_slip_details(entry_slip_id, product_id, quantity, entry_price) VALUES(?, ?, ?, ?)";
+                    DataSQL::executeSQL($sqlInsertDetail, [$idEntrySlips, $idDetailProduct, $detailQuantity, $detailPrice]);
+        
+                    // update quantity product 
+                    $sqlSelectProduct = "SELECT * FROM products WHERE id = '$idDetailProduct'";
+                    $resultSelectProduct = DataSQL::querySQLAll($sqlSelectProduct, [$idDetailProduct]);
+                    $rowSelectProduct = mysqli_fetch_array($resultSelectProduct);
+                    $updateQuantityProduct = $rowSelectProduct['quantity'] + $detailQuantity;
+        
+                    $sqlUpdateQuantity = "UPDATE products SET quantity = ? WHERE id = ?";
+                    DataSQL::executeSQL($sqlUpdateQuantity, [$updateQuantityProduct, $idDetailProduct]);
+                }
+            }
     }
     function GetAllReceipt()
     {

@@ -24,8 +24,8 @@
         if(isset($_POST['id_edit']))
         {
             $idEdit = $_POST['id_edit'];
-            $sql = "SELECT * FROM publishers WHERE id = '$idEdit'";
-            $result = DataSQL::querySQL($sql);
+            $sql = "SELECT * FROM publishers WHERE id = ?";
+            $result = DataSQL::querySQLAll($sql, [$idEdit]);
             $data = array();
             while($row = mysqli_fetch_array($result))
             {
@@ -36,16 +36,15 @@
     }
     function HandleEditPublisher()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/frontend/includes/config.php";
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
         $idPublisher = $_POST['id_publisher'];
         $namePublisher = $_POST['name_publisher'];
-        $sqlCheck = "SELECT * FROM publishers WHERE (name = '$namePublisher') AND id != '$idPublisher'";
-        $resultCheck = mysqli_query($connection, $sqlCheck);
-        $row = mysqli_num_rows($resultCheck);
+        $sqlCheck = "SELECT * FROM publishers WHERE (name = ?) AND id != ?";
+        $row = DataSQL::querySQLCount($sqlCheck, [$namePublisher, $idPublisher]);
         if($row == 0)   
         {
-            $sql = "UPDATE publishers SET name = '$namePublisher' WHERE id = '$idPublisher'";
-            mysqli_query($connection, $sql);
+            $sql = "UPDATE publishers SET name = ? WHERE id = ?";
+            DataSQL::executeSQL($sql, [$namePublisher, $idPublisher]);
             echo json_encode(array("success" => "Chỉnh sửa nhà xuất bản $namePublisher thành công"));
         }
         else 
@@ -55,15 +54,14 @@
     }
     function AddPublisher()
     {
-        include "../../frontend/includes/config.php";
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
         $namePublisher = $_POST['name_publisher'];
-        $sql_check = "SELECT * FROM publishers WHERE name = '$namePublisher'";
-        $result = mysqli_query($connection, $sql_check);
-        $row_check = mysqli_num_rows($result);
-        if($row_check == 0)
+        $sql_check = "SELECT * FROM publishers WHERE name = ?";
+        $row_check = DataSQL::querySQLCount($sql_check, [$namePublisher]);
+        if($row_check == 0) 
         {
-            $sql = "INSERT INTO publishers(name) VALUES ('$namePublisher')";
-            mysqli_query($connection, $sql);
+            $sql = "INSERT INTO publishers(name) VALUES (?)";
+            DataSQL::executeSQL($sql, [$namePublisher]);
             echo json_encode(array("status" => "Thêm nhà xuất bản $namePublisher vào cửa hàng thành công"));
         }
         else 
@@ -76,39 +74,43 @@
         include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
         if(isset($_POST['id_delete']))
         {
+            $idPublishProduct = 1;
             $idDelete = $_POST['id_delete'];
-            $sqlPublisherProduct = "UPDATE products SET publisher_id = 1 WHERE publisher_id = '$idDelete'";
-            DataSQL::querySQL($sqlPublisherProduct);
-            $sql = "DELETE FROM publishers WHERE id = '$idDelete'";
-            DataSQL::querySQL($sql);
+            $sqlPublisherProduct = "UPDATE products SET publisher_id = ? WHERE publisher_id = ?";
+            DataSQL::executeSQL($sqlPublisherProduct, [$idPublishProduct, $idDelete]);
+            $sql = "DELETE FROM publishers WHERE id = ?";
+            DataSQL::executeSQL($sql, [$idDelete]);
         }
     }
     function SearchPublisher()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/frontend/includes/config.php";
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
         $idSearch = $_POST['id_search'];
-        $nameSearch = $_POST['name_search'];
+        $nameSearch = "%" . $_POST['name_search'] . "%";
         $page = isset($_POST['page']) ? $_POST['page'] : 1;
         $pageSize = isset($_POST['pageSize']) ? $_POST['pageSize'] : 5;
         $startPage = ($page - 1) * $pageSize;
         $check = "";
         $sql = "";
-        if($idSearch == 0 && $nameSearch != "")
+        $result = "";
+        if($idSearch == 0 && $nameSearch != "") 
         {
-            $sql = "SELECT * FROM publishers WHERE name like '%" . $nameSearch . "%' LIMIT $startPage, $pageSize ";
+            $sql = "SELECT * FROM publishers WHERE name like ? LIMIT ?, ?";
             $check = 1;
+            $result = DataSQL::querySQLAll($sql, [$nameSearch, $startPage, $pageSize]);
         }
-        else if($idSearch != 0 && $nameSearch == "")
+        else if($idSearch != 0)
         {
-            $sql = "SELECT * FROM publishers WHERE id = '$idSearch' LIMIT $startPage, $pageSize ";
+            $sql = "SELECT * FROM publishers WHERE id = ? LIMIT ?, ? ";
             $check = 2;
+            $result = DataSQL::querySQLAll($sql, [$idSearch, $startPage, $pageSize]);
         }
         else if($idSearch == 0 && $nameSearch == "")
         {
-            $sql = "SELECT * FROM publishers LIMIT $startPage, $pageSize ";
+            $sql = "SELECT * FROM publishers LIMIT ?, ? ";
             $check = 3;
+            $result = DataSQL::querySQLAll($sql, [$startPage, $pageSize]);
         }
-        $result = mysqli_query($connection, $sql);
         $informations = array();
         $data = new stdClass();
         while($row = mysqli_fetch_array($result))
@@ -117,20 +119,22 @@
         }
         $data->informations = $informations;
         $sql_count = "";
+        $row_count = "";
         if($check == 1)
         {
-            $sql_count = "SELECT * FROM publishers WHERE name like '%" . $nameSearch . "%' ";
+            $sql_count = "SELECT * FROM publishers WHERE name like ? ";
+            $row_count = DataSQL::querySQLCount($sql_count, [$nameSearch]);
         }
         else if($check == 2)
         {
-            $sql_count = "SELECT * FROM publishers WHERE id = '$idSearch' ";
+            $sql_count = "SELECT * FROM publishers WHERE id = ?";
+            $row_count = DataSQL::querySQLCount($sql_count, [$idSearch]);
         }
         else if($check == 3)
         {
             $sql_count = "SELECT * FROM publishers ";
+            $row_count = DataSQL::querySQL($sql_count);
         }
-        $result_count = mysqli_query($connection, $sql_count);
-        $row_count = mysqli_num_rows($result_count);
         $data->number = $row_count;
         echo json_encode($data);
     }

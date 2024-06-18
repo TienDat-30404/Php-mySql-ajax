@@ -185,3 +185,6 @@ class DataSQL {
         return $stmt; // Trả về đối tượng mysqli_stmt
     }
 }
+
+
+

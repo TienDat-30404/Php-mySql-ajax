@@ -8,9 +8,6 @@
         case 'create_receipt':
             CreateReceipt();
             break;
-        case 'get_all_receipt':
-            GetAllReceipt();
-            break;
         case 'delete_receipt':
             DeleteReceipt();
             break;
@@ -56,10 +53,8 @@
         
         $sql_entry_slips = "INSERT INTO entry_slips(staff_id, date_entry, total_price, supplier_id) VALUES(?, NOW(), ?, ?)";
         $stmt = DataSQL::executeSQLToSTMT($sql_entry_slips, [$idStaff, $totalPrice, $idSupplier]);
-
-            if($stmt)
-            {
-                $idEntrySlips = $stmt->insert_id;
+        $idEntrySlips = $stmt->insert_id;
+    
                 for($i = 0; $i < count($idProduct); $i++)
                 {
                     // Insert entry_slip_details
@@ -70,28 +65,18 @@
                     DataSQL::executeSQL($sqlInsertDetail, [$idEntrySlips, $idDetailProduct, $detailQuantity, $detailPrice]);
         
                     // update quantity product 
-                    $sqlSelectProduct = "SELECT * FROM products WHERE id = '$idDetailProduct'";
+                    $sqlSelectProduct = "SELECT * FROM products WHERE id = ?";
                     $resultSelectProduct = DataSQL::querySQLAll($sqlSelectProduct, [$idDetailProduct]);
-                    $rowSelectProduct = mysqli_fetch_array($resultSelectProduct);
-                    $updateQuantityProduct = $rowSelectProduct['quantity'] + $detailQuantity;
+                    while($rowSelectProduct = mysqli_fetch_array($resultSelectProduct))
+                    {
+
+                        $updateQuantityProduct = $rowSelectProduct['quantity'] + $detailQuantity;
+                    }
         
                     $sqlUpdateQuantity = "UPDATE products SET quantity = ? WHERE id = ?";
                     DataSQL::executeSQL($sqlUpdateQuantity, [$updateQuantityProduct, $idDetailProduct]);
                 }
-            }
-    }
-    function GetAllReceipt()
-    {
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
-        $sql = "SELECT * FROM entry_slips";
-        $result = DataSQL::querySQL($sql);
-        $data = array();
-        while($row = mysqli_fetch_array($result))
-        {
-            $data[] = $row;
         }
-        echo json_encode($data);
-    }
     function DeleteReceipt()
     {
         include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
@@ -130,7 +115,7 @@
 
     function SearchReceipt()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/frontend/includes/config.php";
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
 
         $idReceipt = isset($_POST['id_receipt']) ? $_POST['id_receipt'] : 0;
         $dateFrom = isset($_POST['date_from']) ? trim($_POST['date_from'], '"') : '';
@@ -143,34 +128,38 @@
 
         $sql = "";
         $check = "";
-
+        $result = "";
         if ($idReceipt == 0 && $dateFrom == "" && $dateTo == "" && $priceFrom == "" && $priceTo == "") {
-            $sql = "SELECT * FROM entry_slips LIMIT $startPage, $pageSize";
+            $sql = "SELECT * FROM entry_slips LIMIT ?, ?";
             $check = 1;
+            $result = DataSQL::querySQLAll($sql, [$startPage, $pageSize]);
         }   
         else if ($idReceipt != 0 && $dateFrom == "" && $dateTo == ""  && $priceFrom == "" && $priceTo == "")
         {
-            $sql = "SELECT * FROM entry_slips WHERE id = '$idReceipt' LIMIT $startPage, $pageSize";
+            $sql = "SELECT * FROM entry_slips WHERE id = ? LIMIT ?, ?";
             $check = 2;
+            $result = DataSQL::querySQLAll($sql, [$idReceipt, $startPage, $pageSize]);
         }
         else if ($idReceipt == 0 && $dateFrom != "" && $dateTo != "" && $priceFrom == "" && $priceTo == "") 
         {
-            $sql = "SELECT * FROM entry_slips WHERE DATE(date_entry) BETWEEN '$dateFrom' AND '$dateTo' LIMIT $startPage, $pageSize";
+            $sql = "SELECT * FROM entry_slips WHERE DATE(date_entry) BETWEEN ? AND ? LIMIT ?, ?";
             $check = 3;
+            $result = DataSQL::querySQLAll($sql, [$dateFrom, $dateTo, $startPage, $pageSize]);
         } 
         else if ($idReceipt == 0 && $dateFrom == "" && $dateTo == "" && $priceFrom != "" && $priceTo != "") 
         {
-            $sql = "SELECT * FROM entry_slips WHERE total_price >= $priceFrom AND total_price <= $priceTo LIMIT $startPage, $pageSize";
+            $sql = "SELECT * FROM entry_slips WHERE total_price >= ? AND total_price <= ? LIMIT ?, ?";
             $check = 4;
+            $result = DataSQL::querySQLAll($sql, [$priceFrom, $priceTo, $startPage, $pageSize]);
         } 
         else if($idReceipt == 0 && $dateFrom != "" && $dateTo != "" && $priceFrom != "" && $priceTo != "")
         {
-            $sql = "SELECT * FROM entry_slips WHERE total_price >= $priceFrom AND total_price <= $priceTo AND DATE(date_entry) BETWEEN 
-            '$dateFrom' AND '$dateTo' LIMIT $startPage, $pageSize";
+            $sql = "SELECT * FROM entry_slips WHERE total_price >= ? AND total_price <= ? AND DATE(date_entry) BETWEEN 
+            ? AND ? LIMIT ?, ?";
             $check = 5;
+            $result = DataSQL::querySQLAll($sql, [$priceFrom, $priceTo, $dateFrom, $dateTo, $startPage, $pageSize]);
         }
         if (!empty($sql)) {
-            $result = mysqli_query($connection, $sql);
             $data = new stdClass();
             $informations = array();
             while ($row = mysqli_fetch_array($result)) {
@@ -179,27 +168,30 @@
             $data->informations = $informations;
 
             $sql_count = "";
+            $row_count = "";
             switch ($check) {
                 case 1:
                     $sql_count = "SELECT * FROM entry_slips";
+                    $row_count = DataSQL::querySQLCount($sql_count);
                     break;
                 case 2:
-                    $sql_count = "SELECT * FROM entry_slips WHERE id = '$idReceipt'";
+                    $sql_count = "SELECT * FROM entry_slips WHERE id = ?";
+                    $row_count = DataSQL::querySQLCount($sql_count, [$idReceipt]);
                     break;
                 case 3:
-                    $sql_count = "SELECT * FROM entry_slips WHERE DATE(date_entry) BETWEEN '$dateFrom' AND '$dateTo'";
+                    $sql_count = "SELECT * FROM entry_slips WHERE DATE(date_entry) BETWEEN ? AND ?";
+                    $row_count = DataSQL::querySQLCount($sql_count, [$dateFrom, $dateTo]);
                     break;
                 case 4:
-                    $sql_count = "SELECT * FROM entry_slips WHERE total_price >= $priceFrom AND total_price <= $priceTo";
+                    $sql_count = "SELECT * FROM entry_slips WHERE total_price >= ? AND total_price <= ?";
+                    $row_count = DataSQL::querySQLCount($sql_count, [$priceFrom, $priceTo]);
                     break; 
                 case 5:
-                    $sql_count = "SELECT * FROM entry_slips WHERE total_price >= $priceFrom AND total_price <= $priceTo AND DATE(date_entry) BETWEEN 
-                    '$dateFrom' AND '$dateTo'";
+                    $sql_count = "SELECT * FROM entry_slips WHERE total_price >= ? AND total_price <= ? AND DATE(date_entry) BETWEEN ? AND ?";
+                    $row_count = DataSQL::querySQLCount($sql_count, [$priceFrom, $priceTo, $dateFrom, $dateTo]);
                     break;
             }
 
-            $result_count = mysqli_query($connection, $sql_count);
-            $row_count = mysqli_num_rows($result_count);
             $data->number = $row_count;
 
             echo json_encode($data);

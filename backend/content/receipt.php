@@ -529,16 +529,13 @@
                 item.addEventListener('click', function(event) {
                     event.preventDefault();
                     var indexCreateReceipt = parseInt(this.getAttribute('id-data-create-receipt'));
-                    console.log(indexCreateReceipt)
                     informations = informations.filter(info => info.stt != indexCreateReceipt );
-                    console.log(informations)
                     UpdateDisplayReceipt(informations); 
                 });
             });
 
         })
     }
-    
 
 
     // Insert Data -------------------------------------------------------------------
@@ -575,73 +572,7 @@
     }
 
 
-    // Load Receipt -----------------------------------------------------------------------------
-    async function LinkLoadReceipt()
-    {
-        var formData = new FormData();
-        formData.append('choice', 'get_all_receipt');
-        var link = await fetch('crud/receipt_api.php', {
-            method : 'POST',
-            body : formData
-        });
-        var json =  await link.json();
-        LoadReceipt(json)
-        var elementDel = document.querySelectorAll(".deleteReceipt")
-        elementDel.forEach(function(item)
-        {
-            item.addEventListener('click', function(event)
-            {
-                event.preventDefault();
-                var idReceipt = this.getAttribute('data-id-receipt')
-                DeleteReceipt(idReceipt)
-            })
-        })
-        var elementEdit = document.querySelectorAll('.detailReceipt')
-        elementEdit.forEach(function(item)
-        {
-            item.addEventListener('click', function(event)
-            {
-                checkExit = true
-            event.preventDefault();
-            var idReceipt = this.getAttribute('data-id-receipt')
-            DetailReceipt(idReceipt)
-            })
-        })
-    }
-    function LoadReceipt(data)
-    {
-        var tableBody = document.querySelector('table tbody')
-        tableBody.innerHTML = ""
-        data.forEach(function(value)
-        {
-            var row = document.createElement('tr')
-            row.innerHTML = 
-            `
-            <tr>
-                <td>${value.id}</td>
-                <td>${value.staff_id}</td>
-                <td>${value.date_entry}</td>
-                <td>${value.total_price}</td>
-                <td>${value.supplier_id}</td>
-                <td>
-                    <a data-id-receipt = "${value.id}" class = "detailReceipt" href="">
-                        <i style = "color : blue" class="fa-solid fa-circle-info"></i>
-                        <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Chi tiết</h5>
-                    </a>
-                </td>
-                <td>
-                    <a data-id-receipt = "${value.id}" class = "deleteReceipt" href="">
-                        <i style = "color : red" class="fa-solid fa-trash"></i>
-                        <h5 style=" display: inline-block; vertical-align: middle; margin-left: 5px;">Xóa</h5>
-                    </a>
-                </td>
-            </tr>
-            `
-            tableBody.appendChild(row)
-        })
-    }
-
-
+   
 
     // DELETE RECEIPT ---------------------------------------------------------------------------------
     async function DeleteReceipt(id)
@@ -663,7 +594,6 @@
     {
         item.addEventListener('click', function(event)
         {
-            console.log(item)
             event.preventDefault();
             var idReceipt = this.getAttribute('data-id-receipt')
             DeleteReceipt(idReceipt)
@@ -782,7 +712,6 @@
         var json = await response.json()
         console.log(json)
         DisplaySearchReceipt(json, "table")
-        // DisplayPagination(json, 0)
 
         var indexSelect = checkSelect.value
         if(indexSelect == 0)
@@ -824,7 +753,6 @@
             }
         );
         var json = await response.json()
-        console.log(json)
         DisplaySearchReceipt(json, "table")
         DisplayPagination(json, 1)
     }
@@ -886,7 +814,6 @@
     function DisplayPagination(data, check) {
     pagination.innerHTML = "";
     var maxPage = Math.ceil(data.number/ pageSize);
-    console.log(maxPage)
     var start = 1;
     var end = maxPage;
     if(currentPage > 2 && maxPage > 3 && currentPage < maxPage)
@@ -939,7 +866,6 @@
     function ChangePage(index, check)
     {
         currentPage = index
-        console.log(currentPage)
         if(check == 1)
         {
            DisplayDefaultReceipt()

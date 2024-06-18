@@ -99,9 +99,9 @@
     {
         include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
         $idOrder = isset($_POST['id_order']) ? $_POST['id_order'] : 0;
-        $nameCustomer = isset($_POST['name_customer']) ? "%" . trim($_POST['name_customer'] . "%", '"') : '';
-        $dateFrom = isset($_POST['date_from']) ? trim($_POST['date_from'], '"') : '';
-        $dateTo = isset($_POST['date_to']) ? trim($_POST['date_to'], '"') : '';
+        $nameCustomer = isset($_POST['name_customer']) ? "%" . trim($_POST['name_customer'] . "%", '"') : "";
+        $dateFrom = isset($_POST['date_from']) ? trim($_POST['date_from'], '"') : "";
+        $dateTo = isset($_POST['date_to']) ? trim($_POST['date_to'], '"') : "";
         $status = isset($_POST['status']) ? $_POST['status'] : 0;
         $page = isset($_POST['page']) ? $_POST['page'] : 1;
         $pageSize = isset($_POST['pageSize']) ? $_POST['pageSize'] : 7;
@@ -117,7 +117,7 @@
                 $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id WHERE bill_status_id = ? LIMIT ?, ?";
                 $check = 1;
                 $result = DataSQL::querySQLAll($sql, [$noStatus, $startPage, $pageSize]);
-            } elseif ($status == 2) {
+            } else if ($status == 2) {
                 $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id WHERE bill_status_id = ? LIMIT ?, ?";
                 $check = 2;
                 $result = DataSQL::querySQLAll($sql, [$yesStatus, $startPage, $pageSize]);
@@ -127,7 +127,7 @@
                 $result = DataSQL::querySQLAll($sql, [$startPage, $pageSize]);
             }
         }   
-        else if ($idOrder != 0 && $nameCustomer == "" && $dateFrom == "" && $dateTo == "" && $status == 0)
+        else if ($idOrder != 0)
         {
             $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id WHERE bills.id = ? LIMIT ?, ?";
             $check = 4;

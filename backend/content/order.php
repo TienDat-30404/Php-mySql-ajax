@@ -363,7 +363,6 @@
             }
         );
         var json = await response.json()
-        console.log(json)
         DisplaySearchOrder(json, "table")
         DisplayPagination(json, 5)
     }
@@ -394,7 +393,7 @@
             {
                 SearchOrder(0, "", copyDateFrom, copyDateTo, 0)
             }
-            else if(copySearch != "" && copyDateFrom != "" && copyDateTo != "")
+            else if(copySearch != "")
             {
                 SearchOrder(0, copySearch, copyDateFrom, copyDateTo, 0)
             }
@@ -426,7 +425,6 @@
     function DisplayPagination(data, check) {
     pagination.innerHTML = "";
     var maxPage = Math.ceil(data.number/ pageSize);
-    console.log(maxPage)
     var start = 1;
     var end = maxPage;
     if(currentPage > 2 && maxPage > 3 && currentPage < maxPage)
@@ -479,7 +477,6 @@
     function ChangePage(index, check)
     {
         currentPage = index
-        console.log(currentPage)
         if(check == 0)
         {
            SearchOrder(0, copySearch, copyDateFrom, copyDateTo, 0)

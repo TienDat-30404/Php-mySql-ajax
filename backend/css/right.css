@@ -345,3 +345,19 @@ a:hover
     background-color: #f2586e;
     color : black;
 }
+.logout_admin 
+{
+    padding : 10px;
+    background-color: #ccc;
+    position : absolute;
+    right : 20px;
+    top : 60px;
+}
+.logout_admin a 
+{
+
+}
+.avatar_admin:hover 
+{
+    cursor : pointer;
+}

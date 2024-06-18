@@ -22,7 +22,10 @@
                                 <input name = "inputName" style = "text-align : center;" type="text" placeholder = "Search here">
                             </div>
                             <input class = "button_search" type="submit" value = "Tìm kiếm">
-                            <img src="image/user.png" alt="">
+                            <img class = "avatar_admin" src="image/user.png" alt="">
+                            <div class = "logout_admin">
+                                <a href = "../frontend/pages/login/unset_login.php">Đăng xuất</a>
+                            </div>
                         </div>
                     <?php 
                     include "content/accountExist.php"; 
@@ -46,7 +49,10 @@
                                 <input name = "inputName" style = "text-align : center;" type="text" placeholder = "Search here">
                             </div>
                             <input class = "button_search" type="submit" value = "Tìm kiếm">
-                            <img src="image/user.png" alt="">
+                            <img class = "avatar_admin" src="image/user.png" alt="">
+                            <div class = "logout_admin">
+                                <a href = "../frontend/pages/login/unset_login.php">Đăng xuất</a>
+                            </div>
                         </div>
                     <?php 
                     include "content/product.php";
@@ -66,7 +72,10 @@
                                 <input name = "name_search-category" style = "text-align : center;" type="text" placeholder = "Search here">
                             </div>
                             <input class = "button_search" type="submit" value = "Tìm kiếm">
-                            <img src="image/user.png" alt="">
+                            <img class = "avatar_admin" src="image/user.png" alt="">
+                            <div class = "logout_admin">
+                                <a href = "../frontend/pages/login/unset_login.php">Đăng xuất</a>
+                            </div>
                         </div>
                     <?php 
                     include "content/category.php";
@@ -86,7 +95,10 @@
                                 <input name = "name_search-author" style = "text-align : center;" type="text" placeholder = "Search here">
                             </div>
                             <input class = "button_search" type="submit" value = "Tìm kiếm">
-                            <img src="image/user.png" alt="">
+                            <img class = "avatar_admin" src="image/user.png" alt="">
+                            <div class = "logout_admin">
+                                <a href = "../frontend/pages/login/unset_login.php">Đăng xuất</a>
+                            </div>
                         </div>
                     <?php 
                     include "content/author.php";
@@ -107,7 +119,10 @@
                                 <input name = "name_search-publisher" style = "text-align : center;" type="text" placeholder = "Search here">
                             </div>
                             <input class = "button_search" type="submit" value = "Tìm kiếm">
-                            <img src="image/user.png" alt="">
+                            <img class = "avatar_admin" src="image/user.png" alt="">
+                            <div class = "logout_admin">
+                                <a href = "../frontend/pages/login/unset_login.php">Đăng xuất</a>
+                            </div>
                         </div>
                     <?php 
                     include "content/publisher.php";
@@ -130,7 +145,10 @@
                             </div>
                             <input name = "date_from" type="date"> đến <input name = "date_to" type="date">
                             <input class = "button_search" type="submit" value = "Tìm kiếm">
-                            <img src="image/user.png" alt="">
+                            <img class = "avatar_admin" src="image/user.png" alt="">
+                            <div class = "logout_admin">
+                                <a href = "../frontend/pages/login/unset_login.php">Đăng xuất</a>
+                            </div>
                         </div>
                     <?php 
                     include "content/order.php";
@@ -151,7 +169,10 @@
                             <input name = "date_from" type="date"> đến <input name = "date_to" type="date">
                             <input type="text" name = "price_from"> đến <input type="text" name = "price_to">
                             <input class = "button_search" type="submit" value = "Tìm kiếm">
-                            <img src="image/user.png" alt="">
+                            <img class = "avatar_admin" src="image/user.png" alt="">
+                            <div class = "logout_admin">
+                                <a href = "../frontend/pages/login/unset_login.php">Đăng xuất</a>
+                            </div>
                         </div>
                     <?php 
                     include "content/receipt.php";
@@ -168,3 +189,20 @@
         ?>
     </div>
 </div>
+
+
+<script>
+    var blockLogoutAdmin = document.querySelector('.logout_admin')
+    blockLogoutAdmin.style.display = 'none'
+    document.querySelector('.avatar_admin').addEventListener('click', function(e)
+    {
+        if(blockLogoutAdmin.style.display == 'none')
+        {
+            blockLogoutAdmin.style.display = 'block'
+        }
+        else 
+        {
+            blockLogoutAdmin.style.display = 'none'
+        }
+    })
+</script>

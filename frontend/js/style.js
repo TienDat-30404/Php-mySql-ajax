@@ -278,8 +278,6 @@ displaySearch(currentPage)
 
 
 
-
-
 var headerSearchBlock = document.querySelector('.header_search-block')
 headerSearchBlock.style.display = 'none'
 var iconAdvanced = document.querySelector('.icon_advanced')
@@ -509,18 +507,19 @@ var password
 var password_confirmation
 async function SignUp(fullname, email, password, password_confirmation)
 {
-    var link = await fetch(`frontend/pages/signup/handle_signup.php?fullname=${fullname}&email=${email}&password=${password}
+    var response = await fetch(`frontend/pages/signup/handle_signup.php?fullname=${fullname}&email=${email}&password=${password}
     &password_confirmation=${password_confirmation}`);
-    var text = await link.text();
-    var fail = "Tên đăng nhập hoặc tài khoản đã tồn tại";
+    var json = await response.json();
+    console.log(json)
+    var fail = "Tài khoản hoặc tên người dùng đã tồn tại";
     var success = "Đăng kí thành công";
-    if(text === fail)
-    {
-        toast_fail(text)
-    }
-    else 
+    if(json.isSuccess === success)
     {
         toast_success(success);
+    }
+    else if(json.isSuccess === fail)
+    {
+        toast_fail(fail)
     }
 }
 

@@ -55,3 +55,10 @@
         </div>
 </div>
 
+<!-- <script>
+    document.querySelector('.exitLogin').addEventListener('click', function(e)
+    {
+        e.preventDefault();
+        document.querySelector('.modal').remove()
+    })
+</script> -->

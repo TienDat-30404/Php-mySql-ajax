@@ -428,6 +428,18 @@
                 method: 'POST',
                 body: formData
             });
+            var json = await link.json();
+            console.log(json)
+            var success = "Chỉnh sửa thành công";
+            var fail = "Chỉnh sửa thất bại";
+            if(json.isSuccess === success)
+            {
+                alert(success)
+            }
+            else 
+            {
+                alert(fail)
+            }
             SearchUser(0, "")
         }
     }

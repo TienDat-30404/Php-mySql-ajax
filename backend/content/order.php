@@ -330,6 +330,10 @@
             {
                 DisplayPagination(json, 6)
             }
+            else if(copySearch != "" && copyDateFrom == "" && copyDateTo == "")
+            {
+                DisplayPagination(json, 7)
+            }
         }
         else if(indexSelect == 1)
         {
@@ -393,9 +397,13 @@
             {
                 SearchOrder(0, "", copyDateFrom, copyDateTo, 0)
             }
-            else if(copySearch != "")
+            else if(copySearch != "" && copyDateFrom != "" && copyDateTo != "")
             {
                 SearchOrder(0, copySearch, copyDateFrom, copyDateTo, 0)
+            }
+            else if(copySearch != "" && copyDateFrom == "" && copyDateTo == "")
+            {
+                SearchOrder(0, copySearch, "", "", 0)
             }
             else if(copySearch == "" && copyDateFrom == "" && copyDateTo == "")
             {
@@ -504,6 +512,10 @@
         else if(check == 6)
         {
             SearchOrder(0, "", copyDateFrom, copyDateTo, 0)
+        }
+        else if(check == 7)
+        {
+            SearchOrder(0, copySearch, "", "", 0)
         }
     }
 </script>

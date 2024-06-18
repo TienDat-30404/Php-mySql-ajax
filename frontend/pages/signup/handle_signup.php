@@ -1,5 +1,5 @@
 <?php 
-    include "../../includes/config.php";
+    include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
     session_start();
     $fullname = $_GET['fullname'];
     $email = $_GET['email'];
@@ -9,18 +9,17 @@
     $address = "";
     $phone = "";
     $active = 1;
-    $sql_all = "SELECT * FROM users WHERE email = '$email' OR fullname = '$fullname'";
-    $result_sql_all = mysqli_query($connection, $sql_all);
+    $sql_all = "SELECT * FROM users WHERE email = ? OR fullname = ?";
 
-    $row_sql_all = mysqli_num_rows($result_sql_all);
+    $row_sql_all = DataSQL::querySQLCount($sql_all, [$email, $fullname]);
     if($row_sql_all > 0)
     {
-        echo "Tên đăng nhập hoặc tài khoản đã tồn tại";
-        header('location: index.php');
+        echo json_encode(array("isSuccess" => "Tài khoản hoặc tên người dùng đã tồn tại"));
     }
     else 
     {
-        $sql = "INSERT INTO users(role_id, email, password, fullname, address, phone_number, active) VALUES ('$roleId', '$email', '$password', '$fullname', '$address', '$phone', '$active')";
-        mysqli_query($connection, $sql);  
+        echo json_encode(array("isSuccess" => "Đăng kí thành công"));
+        $sql = "INSERT INTO users(role_id, email, password, fullname, address, phone_number, active) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        DataSQL::executeSQL($sql, [$roleId, $email, $password, $fullname, $address, $phone, $active]);
     }
 ?>

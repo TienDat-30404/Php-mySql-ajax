@@ -31,35 +31,28 @@
         {
             $idDelete = $_POST['id_delete'];  
     
-            $sql = "UPDATE users SET active = 0 WHERE id = '$idDelete'";
-            DataSQL::querySQl($sql);
-            header('location: ../index.php?title=accountExist');
+            $sql = "UPDATE users SET active = 0 WHERE id = ?";
+            DataSQL::executeSQL($sql, [$idDelete]);
         }
     }
-    function GetAllUserExist()
-    {
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
-        $sql = "SELECT * FROM users WHERE active = 1";
-        $result = DataSQL::querySQL($sql);
-        $data = array();
-        while($row = mysqli_fetch_array($result))
-        {
-            $data[] = $row;
-        }
-        echo json_encode($data);
-    }
+
     function RestoreUser()
     {
         include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
+        $isActive = 1;
         $idUser = $_POST['id_user'];
-        $sqlUser = "UPDATE users SET active = 1 WHERE id = '$idUser'";
-        DataSQL::querySQL($sqlUser);
+        $sqlUser = "UPDATE users SET active = ? WHERE id = ?";
+        DataSQL::executeSQL($sqlUser, [$isActive, $idUser]);
     }
     function GetAllUserNoExist()
     {
         include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
-        $sql = "SELECT * FROM users WHERE active = 0";
-        $result = DataSQL::querySQL($sql);
+        $isActive = 0;
+        // $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        // $pageSize = isset($_POST['pageSize']) ? $_POST['pageSize'] : 7;
+        // $startPage = ($page - 1) * $pageSize;
+        $sql = "SELECT * FROM users WHERE active = ?";
+        $result = DataSQL::querySQLAll($sql, [$isActive]);
         $data = array();
         while($row = mysqli_fetch_array($result))
         {
@@ -77,14 +70,12 @@
         $address = $_POST['user_add-address'];
         $phone = $_POST['user_add-phone'];
         $active = 1;
-        $sqlCheck = "SELECT * FROM users WHERE email = '$email'";
-        $result = DataSQL::querySQL($sqlCheck);
-        $rowCheck = mysqli_num_rows($result);
+        $sqlCheck = "SELECT * FROM users WHERE email = ?";
+        $rowCheck = DataSQL::querySQLCount($sqlCheck, [$email]);
         if($rowCheck == 0)
         {
-            $sql = "INSERT INTO users(role_id, email, password, fullname, address, phone_number, active) VALUES('$idRole', '$email', '$password', 
-            '$fullname', '$address', '$phone', '$active')";
-            DataSQL::querySQl($sql);
+            $sql = "INSERT INTO users(role_id, email, password, fullname, address, phone_number, active) VALUES(?, ?, ?, ?, ?, ?, ?)";
+            DataSQL::executeSQL($sql, [$idRole, $email, $password, $fullname, $address, $phone, $active]);
             echo json_encode(array("status" => "Thêm tài khoản $fullname thành công"));
         }
         else 
@@ -97,9 +88,10 @@
         include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
         if(isset($_POST['id_edit']))
         {
+            $isActive = 1;
             $idEdit = $_POST['id_edit'];
-            $sql = "SELECT * FROM users WHERE active = 1 AND id = '$idEdit'";
-            $result = DataSQL::querySQL($sql);
+            $sql = "SELECT * FROM users WHERE active = ? AND id = ?";
+            $result = DataSQL::querySQLAll($sql, [$isActive, $idEdit]);
             $data = array();
             while($row = mysqli_fetch_array($result))
             {
@@ -119,27 +111,27 @@
         $passwordUser = $_POST['user_edit-password'];
         $addressUser = $_POST['user_edit-address'];
         $phoneUser = $_POST['user_edit-phone'];
-        $sqlCheck = "SELECT * FROM users WHERE (email = '$emailUser' OR fullname = '$nameUser' OR phone_number = '$phoneUser') AND id != '$idHidden'";
-        $result = DataSQL::querySQL($sqlCheck);
-        $rowCheck = mysqli_num_rows($result);
+        $sqlCheck = "SELECT * FROM users WHERE (email = ? OR fullname = ? OR phone_number = ?) AND id != ?";
+        $rowCheck = DataSQL::querySQLCount($sqlCheck, [$emailUser, $nameUser, $phoneUser, $idHidden]);
         if($rowCheck == 0 && strlen($passwordUser) >= 6 && $nameUser != "" && $emailUser != "" && $passwordUser != "" 
         && $addressUser != "" && $phoneUser != "" && preg_match($checkEmail, $emailUser))
         {
-            $sql = "UPDATE users SET role_id = '$idRole', email = '$emailUser', password = '$passwordUser', fullname = '$nameUser', 
-            address = '$addressUser', phone_number = '$phoneUser' WHERE id = '$idHidden'";
-            DataSQL::querySQL($sql);
-            header('location: ../index.php?title=accountExist');
+            $sql = "UPDATE users SET role_id = ?, email = ?, password = ?, fullname = ?, 
+            address = ?, phone_number = ? WHERE id = ?";
+            DataSQL::executeSQL($sql, [$idRole, $emailUser, $passwordUser, $nameUser, $addressUser, $phoneUser, $idHidden]);
+            echo json_encode(array("isSuccess" => "Chỉnh sửa thành công"));
         }
         else 
         {
-            header("location: ../index.php?title=accountExist");
+            echo json_encode(array("isSuccess" => "Chỉnh sửa thất bại"));
         }
     }
 
     function SearchUser()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/frontend/includes/config.php";
-        $nameSearch = $_POST['name_search'];
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/Php-thuan/backend/database/connect.php";
+        $isActive = 1;
+        $nameSearch = "%" . $_POST['name_search'] . "%";
         $typeSearch = $_POST['type'];
         $page = isset($_POST['page']) ? $_POST['page'] : 1;
         $pageSize = isset($_POST['pageSize']) ? $_POST['pageSize'] : 7;
@@ -148,30 +140,35 @@
         $sql = "";
         if($typeSearch == 0)
         {
-            $sql = "SELECT * FROM users WHERE active = 1  LIMIT $startPage, $pageSize";
+            $sql = "SELECT * FROM users WHERE active = ?  LIMIT ?, ?";
             $check = 0;
+            $result = DataSQL::querySQLAll($sql, [$isActive, $startPage, $pageSize]);
         }
         else if($typeSearch == 1)
         {
-            $sql = "SELECT * FROM users WHERE id = '$nameSearch' AND active = 1 ";
+            $sql = "SELECT * FROM users WHERE id = ? AND active = ? ";
             $check = 1;
+            $nameSearch = $_POST['name_search'];
+            $result = DataSQL::querySQLAll($sql, [$nameSearch, $isActive]);
         }
         else if($typeSearch == 2)
         {
-            $sql = "SELECT * FROM users WHERE fullname like '%" . $nameSearch . "%' AND active = 1 LIMIT $startPage, $pageSize ";
+            $sql = "SELECT * FROM users WHERE fullname like ? AND active = ? LIMIT ?, ? ";
             $check = 2;
+            $result = DataSQL::querySQLAll($sql, [$nameSearch, $isActive, $startPage, $pageSize]);
         }
         else if($typeSearch == 3)
         {
-            $sql = "SELECT * FROM users WHERE email like '%" . $nameSearch . "%' AND active = 1 LIMIT $startPage, $pageSize ";
+            $sql = "SELECT * FROM users WHERE email like ? AND active = ? LIMIT ?, ? ";
             $check = 3;
+            $result = DataSQL::querySQLAll($sql, [$nameSearch, $isActive, $startPage, $pageSize]);
         }
         else if($typeSearch == 4)
         {
-            $sql = "SELECT * FROM users WHERE phone_number like '%" . $nameSearch . "%' AND active = 1 LIMIT $startPage, $pageSize ";
+            $sql = "SELECT * FROM users WHERE phone_number like ? AND active = ? LIMIT ?, ? ";
             $check = 4;
+            $result = DataSQL::querySQLAll($sql, [$nameSearch, $isActive, $startPage, $pageSize]);
         }
-        $result = mysqli_query($connection, $sql);
         $informations = array();
         $data = new stdClass();
         while($row = mysqli_fetch_array($result))
@@ -180,28 +177,32 @@
         }
         $data->informations = $informations;
         $sql_count = "";
+        $row_count = "";
         if($check == 0)
         {
-            $sql_count = "SELECT * FROM users WHERE active = 1 ";
+            $sql_count = "SELECT * FROM users WHERE active = ? ";
+            $row_count = DataSQL::querySQLCount($sql_count, [$isActive]);
         }
         else if($check == 1)
         {
-            $sql_count = "SELECT * FROM users WHERE id = '$nameSearch' AND active = 1 ";
+            $sql_count = "SELECT * FROM users WHERE id = ? AND active = ? ";
+            $row_count = DataSQL::querySQLCount($sql_count, [$nameSearch, $isActive]);
         }
         else if($check == 2)
         {
-            $sql_count = "SELECT * FROM users WHERE active = 1 AND fullname like '%" . $nameSearch . "%' ";
+            $sql_count = "SELECT * FROM users WHERE active = ? AND fullname like ? ";
+            $row_count = DataSQL::querySQLCount($sql_count, [$isActive, $nameSearch]);
         }
         else if($check == 3)
         {
-            $sql_count = "SELECT * FROM users WHERE email like '%" . $nameSearch . "%' AND active = 1";
+            $sql_count = "SELECT * FROM users WHERE email like ? AND active = ?";
+            $row_count = DataSQL::querySQLCount($sql_count, [$nameSearch, $isActive]);
         }
         else if($check == 4)
         {
-            $sql_count = "SELECT * FROM users WHERE phone_number like '%" . $nameSearch . "%' AND active = 1";
+            $sql_count = "SELECT * FROM users WHERE phone_number like ? AND active = ?";
+            $row_count = DataSQL::querySQLCount($sql_count, [$nameSearch, $isActive]);
         }
-        $result_count = mysqli_query($connection, $sql_count);
-        $row_count = mysqli_num_rows($result_count);
         $data->number = $row_count;
         echo json_encode($data);
     }

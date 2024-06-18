@@ -112,28 +112,26 @@
         $result = "";
         $noStatus = 1;
         $yesStatus = 2;
-        if ($idOrder == 0 && $nameCustomer == "" && $dateFrom == "" && $dateTo == "") {
-            if ($status == 1) {
-                $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id WHERE bill_status_id = ? LIMIT ?, ?";
-                $check = 1;
-                $result = DataSQL::querySQLAll($sql, [$noStatus, $startPage, $pageSize]);
-            } else if ($status == 2) {
-                $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id WHERE bill_status_id = ? LIMIT ?, ?";
-                $check = 2;
-                $result = DataSQL::querySQLAll($sql, [$yesStatus, $startPage, $pageSize]);
-            } else if($status == 0) {
-                $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id LIMIT ?, ?";
-                $check = 3;
-                $result = DataSQL::querySQLAll($sql, [$startPage, $pageSize]);
-            }
-        }   
-        else if ($idOrder != 0)
+        if ($status == 1) {
+            $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id WHERE bill_status_id = ? LIMIT ?, ?";
+            $check = 1;
+            $result = DataSQL::querySQLAll($sql, [$noStatus, $startPage, $pageSize]);
+        } else if ($status == 2) {
+            $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id WHERE bill_status_id = ? LIMIT ?, ?";
+            $check = 2;
+            $result = DataSQL::querySQLAll($sql, [$yesStatus, $startPage, $pageSize]);
+        } else if($status == 0) {
+            $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id LIMIT ?, ?";
+            $check = 3;
+            $result = DataSQL::querySQLAll($sql, [$startPage, $pageSize]);
+        }
+        if ($idOrder != 0)
         {
             $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills LEFT JOIN users ON bills.user_id = users.id WHERE bills.id = ? LIMIT ?, ?";
             $check = 4;
             $result = DataSQL::querySQLAll($sql, [$idOrder, $startPage, $pageSize]);
         }
-        else if ($idOrder == 0 && $nameCustomer != "" && $dateFrom == "" && $dateTo == "" && $status == 0) 
+        if ($idOrder == 0 && $nameCustomer != "" && $dateFrom == "" && $dateTo == "" && $status == 0) 
         {
             $sql = "SELECT bills.*, bills.id as idBill, users.fullname FROM bills JOIN users ON bills.user_id = users.id WHERE users.fullname LIKE ? LIMIT ?, ?";
             $check = 5;

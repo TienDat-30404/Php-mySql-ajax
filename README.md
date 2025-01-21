@@ -1,2 +1,1 @@
-# Php-thuan
-# build website with php, mysql
+<h1 align="left">Hey 👋 What's up?</h1>
